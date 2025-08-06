@@ -6,6 +6,7 @@
     <title>Dashboard Gate</title>
     @vite('resources/css/app.css')
     <script src="https://unpkg.com/alpinejs" defer></script>
+    @yield('css')
 </head>
 <body class="bg-gray-100 h-screen flex flex-col"
       x-data="{ sidebarOpen: false, profileOpen: false }">
@@ -115,7 +116,15 @@
 
                 {{-- Menu khusus Gate --}}
                 @if(Auth::user()->ROLE == 'gate')
-                    <a href="/inputlead/gate"
+                    <a href="{{ route('inputlead.gate') }}"
+                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M4 6h16M4 12h8m-8 6h16"/>
+                        </svg>
+                        Input Lead
+                    </a>
+                    <a href="{{ route('datalead.gate') }}"
                     class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
@@ -139,6 +148,14 @@
 
                 {{-- Menu hanya Admin --}}
                 @if(Auth::user()->ROLE == 'admin')
+                    <a href="{{ route('datalead.admin') }}"
+                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Lead
+                    </a>
                     <a href="{{ route('kategori.index') }}"
                     class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
@@ -155,7 +172,7 @@
                         </svg>
                         Sub Kategori
                     </a>
-                    <a href="#"
+                    <a href="{{ route('produk.index') }}"
                     class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">

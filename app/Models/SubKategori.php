@@ -30,4 +30,9 @@ class SubKategori extends Model
     {
         return $this->hasMany(Produk::class, 'ID_SUB', 'ID_SUB');
     }
+
+    public function lead()
+    {
+        return $this->hasMany(Lead::class, 'ID_SUB', 'ID_SUB');
+    }
 }

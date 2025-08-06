@@ -3,20 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lead extends Model
 {
-
-    // Nama tabel jika bukan plural default
     protected $table = 'lead';
-
-    // Primary key bukan 'id'
     protected $primaryKey = 'LEAD_ID';
-    public $incrementing = false;   // karena tipe primary key varchar
-    protected $keyType = 'string';  // tipe primary key string
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false; // <<< ini penting
 
-    // Kolom yang bisa diisi mass assignment
     protected $fillable = [
         'LEAD_ID',
         'ID_SUB',
@@ -28,23 +23,21 @@ class Lead extends Model
         'STATUS',
         'LEAD_SOURCE',
         'NOTE',
+        'CREATED_AT',
+        'UPDATED_AT',
+        'DELETED_AT',
+        'CREATOR_ID'
     ];
-
-    // Laravel default timestamps diubah sesuai nama kolom
-    const CREATED_AT = 'CREATED_AT';
-    const UPDATED_AT = 'UPDATED_AT';
 
     protected $dates = ['DELETED_AT'];
 
-    // Relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'ID_USER', 'id');
+        return $this->belongsTo(User::class, 'ID_USER', 'ID_USER');
     }
 
-    // Relasi ke Sub (jika ada model Sub)
     public function sub_kategori()
     {
-        return $this->belongsTo(SubKategori::class, 'ID_SUB', 'id');
+        return $this->belongsTo(SubKategori::class, 'ID_SUB', 'ID_SUB');
     }
 }

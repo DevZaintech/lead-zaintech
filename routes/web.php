@@ -39,14 +39,30 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/subkategori/{id}/edit', [AdminController::class, 'subkategoriEdit'])->name('subkategori.edit');
     Route::put('/subkategori/{id}', [AdminController::class, 'subkategoriUpdate'])->name('subkategori.update');
     Route::delete('/subkategori/{id}', [AdminController::class, 'subkategoriDestroy'])->name('subkategori.destroy');
+
+    Route::get('/produk', [AdminController::class, 'produkIndex'])->name('produk.index');
+    Route::post('/produk/import', [AdminController::class, 'produkImport'])->name('produk.import');
+    Route::get('/produk/export', [AdminController::class, 'produkExport'])->name('produk.export');
+    Route::post('/produk/store', [AdminController::class, 'produkStore'])->name('produk.store');
+    Route::get('/api/subkategori', [AdminController::class, 'getSubkategori'])->name('subkategori.search');
+    Route::delete('/produk/{id}', [AdminController::class, 'produkDestroy'])->name('produk.destroy');
+    Route::get('/produk/{id}/edit', [AdminController::class, 'produkEdit'])->name('produk.edit');
+    Route::put('/produk/{id}', [AdminController::class, 'produkUpdate'])->name('produk.update');
+
+    Route::get('/datalead/admin', [AdminController::class, 'dataLead'])->name('datalead.admin');
+    Route::get('/exportlead/admin', [AdminController::class, 'exportLead'])->name('exportlead.admin');
+
 });
 
-Route::get('/dashboard/gate', function () {
-    return view('gate.dashboard');
-})->middleware(['auth','role:gate'])->name('dashboard.gate');
-Route::get('/inputlead/gate', [GateController::class, 'inputLead'])
-    ->middleware(['auth','role:gate'])
-    ->name('inputlead.gate');
+Route::middleware(['auth','role:gate'])->group(function () {
+    Route::get('/dashboard/gate', [GateController::class, 'index'])->name('dashboard.gate');
+    Route::get('/inputlead/gate', [GateController::class, 'inputLead'])->name('inputlead.gate');
+    Route::post('/storelead/gate', [GateController::class, 'storeLead'])->name('storelead.gate');
+    Route::get('/get-subkategori', [GateController::class, 'getSubkategori'])->name('get.subkategori');
+
+    Route::get('/datalead/gate', [GateController::class, 'dataLead'])->name('datalead.gate');
+});
+
 
 Route::get('/dashboard/sales', function () {
     return view('sales.dashboard');
