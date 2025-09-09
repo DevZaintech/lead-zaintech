@@ -53,4 +53,10 @@ class Opportunity extends Model
     {
         return $this->hasMany(ItemTable::class, 'OPPORTUNITY_ID', 'OPPORTUNITY_ID');
     }
+
+     // Relasi: 1 Opportunity punya banyak FollowUp
+    public function followUps()
+    {
+        return $this->hasMany(FollowUp::class, 'OPPORTUNITY_ID', 'OPPORTUNITY_ID');
+    }
 }

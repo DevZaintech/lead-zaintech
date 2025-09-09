@@ -101,6 +101,7 @@
         <div class="flex border-b mb-6">
             <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('opportunityTab', this)">Edit Opportunity</button>
             <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('quotationTab', this)">Create Quotation</button>
+            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('followupTab', this)">Follow Up</button>
         </div>
 
         <!-- Tab: Edit Opportunity -->
@@ -305,6 +306,54 @@
                 </div>
             </form>
         </div>
+
+        <!-- Tab: Follow Up -->
+        <div id="followupTab" class="tab-content hidden bg-white p-8 rounded shadow">
+            <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
+
+            <form action="" method="POST">
+                @csrf
+                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}">
+
+                <table class="w-full border text-sm mb-4">
+                    <thead>
+                        <tr>
+                            <th class="border p-2 w-[20%]">Tanggal Follow Up</th>
+                            <th class="border p-2 w-[30%]">Respon</th>
+                            <th class="border p-2 w-[30%]">Progress</th>
+                            <th class="border p-2 w-[5%]"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="followup-body">
+                        @php $rowIdxFU = 0; @endphp
+                        @foreach($followups as $fu)
+                        <tr data-id="{{ $fu->ID_FOLLOW }}">
+                            <td class="border p-2">
+                                <input type="datetime-local" name="followup[{{ $rowIdxFU }}][TANGGAL_FOLLOW]" value="{{ \Carbon\Carbon::parse($fu->TANGGAL_FOLLOW)->format('Y-m-d\TH:i') }}" class="w-full border px-2 py-1">
+                            </td>
+                            <td class="border p-2">
+                                <input type="text" name="followup[{{ $rowIdxFU }}][RESPON]" value="{{ $fu->RESPON }}" class="w-full border px-2 py-1">
+                            </td>
+                            <td class="border p-2">
+                                <input type="text" name="followup[{{ $rowIdxFU }}][PROGRESS]" value="{{ $fu->PROGRESS }}" class="w-full border px-2 py-1">
+                            </td>
+                            <td class="border p-2 text-center">
+                                <button type="button" class="remove-row text-red-500" data-id="{{ $fu->ID_FOLLOW }}">✖</button>
+                            </td>
+                        </tr>
+                            @php $rowIdxFU++; @endphp
+                        @endforeach
+                    </tbody>
+                </table>
+
+                <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Follow Up</button>
+
+                <div class="flex justify-end space-x-3 mt-4">
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan Follow Up</button>
+                </div>
+            </form>
+        </div>
+        
     </div>
 </div>
 @endsection
@@ -335,6 +384,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Jalankan saat status berubah
     statusSelect.addEventListener('change', toggleReason);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Tombol tambah baris Follow Up
+    document.getElementById('add-row-fu').addEventListener('click', function () {
+        let tbody = document.getElementById('followup-body');
+        let rowCount = tbody.querySelectorAll('tr').length;
+        let row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td class="border p-2">
+                <input type="datetime-local" name="followup[${rowCount}][TANGGAL_FOLLOW]" class="w-full border px-2 py-1">
+            </td>
+            <td class="border p-2">
+                <input type="text" name="followup[${rowCount}][RESPON]" class="w-full border px-2 py-1">
+            </td>
+            <td class="border p-2">
+                <input type="text" name="followup[${rowCount}][PROGRESS]" class="w-full border px-2 py-1">
+            </td>
+            <td class="border p-2 text-center">
+                <button type="button" class="remove-row text-red-500">✖</button>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    // Hapus baris (lama & baru)
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.classList.contains('remove-row')) {
+            let tr = e.target.closest('tr');
+            let followupId = e.target.getAttribute('data-id'); // kalau baris lama ada data-id
+
+            if (followupId) {
+                // Buat hidden input untuk menandai delete
+                let form = document.querySelector('#followupTab form');
+                let hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'delete_ids[]';
+                hidden.value = followupId;
+                form.appendChild(hidden);
+            }
+
+            // Hapus baris dari tampilan
+            tr.remove();
+        }
+    });
 });
 </script>
 

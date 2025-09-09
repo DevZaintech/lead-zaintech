@@ -12,6 +12,7 @@ use App\Models\Kota;
 use App\Models\Opportunity;
 use App\Models\ItemTable;
 use App\Models\Quotation;
+use App\Models\FollowUp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -487,8 +488,8 @@ class SalesController extends Controller
     {
         $opp = Opportunity::where('OPPORTUNITY_ID', $id)->firstOrFail();
         $item = ItemTable::where('OPPORTUNITY_ID', $id)->get();
-        // dd($opp);
-        return view('sales.quotation.create', compact('opp','item'));
+        $followups = $opp->followUps()->get(); // relasi hasMany
+        return view('sales.quotation.create', compact('opp','item','followups'));
     }
 
     public function storeQuotation(Request $request)
