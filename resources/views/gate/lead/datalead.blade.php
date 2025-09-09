@@ -1,5 +1,22 @@
 @extends('layouts.frontend')
 @section('css')
+<style>
+    /* semua option biar keliatan kayak badge */
+    #filterStatus option {
+        padding: 2px 6px;
+        border-radius: 0.375rem; /* rounded-md */
+        display: inline-block;
+        width: fit-content;
+        font-weight: 500;
+    }
+
+    option.status-lead        { background:#DBEAFE; color:#1D4ED8; } /* biru */
+    option.status-opportunity { background:#FFEDD5; color:#C2410C; } /* oranye */
+    option.status-quotation   { background:#FEE2E2; color:#B91C1C; } /* merah */
+    option.status-converted   { background:#DCFCE7; color:#166534; } /* hijau */
+    option.status-lost        { background:#E5E7EB; color:#374151; } /* abu */
+    option.status-norespon    { background:#FEF9C3; color:#854D0E; } /* kuning */
+</style>
 @endsection
 @section('content')
 
@@ -21,8 +38,8 @@
     <div class="flex flex-wrap gap-2 mb-4 items-center">
         {{-- Tombol My Lead --}}
         <button id="myLeadBtn" 
-            class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 transition">
-            My Lead: Off
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+            My Lead: On
         </button>
 
         {{-- Search (paling panjang) --}}
@@ -34,7 +51,7 @@
         <select id="filterSales" class="w-40 border p-2 rounded">
             <option value="">Semua Sales</option>
             @foreach($user as $s)
-                <option value="{{ $s->USER_ID }}">{{ $s->NAMA }}</option>
+                <option value="{{ $s->ID_USER }}">{{ $s->NAMA }}</option>
             @endforeach
         </select>
 
@@ -51,6 +68,17 @@
             <option value="Web">Web</option>
         </select>
 
+        {{-- Filter Status --}}
+        <select id="filterStatus" class="w-40 border p-2 rounded">
+            <option value="">Semua Status</option>
+            <option value="lead" class="status-lead">Cold</option>
+            <option value="opportunity" class="status-opportunity">Warm</option>
+            <option value="quotation" class="status-quotation">Hot</option>
+            <option value="converted" class="status-converted">Deal</option>
+            <option value="lost" class="status-lost">Lost</option>
+            <option value="norespon" class="status-norespon">No Respon</option>
+        </select>
+
         {{-- Filter Tanggal --}}
         <input type="date" id="startDate" class="w-40 border p-2 rounded">
         <input type="date" id="endDate" class="w-40 border p-2 rounded">
@@ -65,15 +93,16 @@
 
 
 {{-- Script Live Search + Pagination --}}
-{{-- jQuery sudah dipanggil --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    let myLead = false;
+    // ✅ Default My Lead ON
+    let myLead = true;
 
     function fetch_data(page = 1) {
         let search    = $('#searchInput').val();
         let sales     = $('#filterSales').val();
         let source    = $('#filterSource').val();
+        let status    = $('#filterStatus').val(); // ✅ tambahan
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
 
@@ -84,6 +113,7 @@
                 search: search,
                 sales: sales,
                 source: source,
+                status: status, // ✅ tambahan
                 startDate: startDate,
                 endDate: endDate,
                 myLead: myLead
@@ -94,16 +124,27 @@
         });
     }
 
-    $('#searchInput, #filterSales, #filterSource, #startDate, #endDate')
+    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate')
         .on('change keyup', function() {
             fetch_data();
         });
 
     $('#myLeadBtn').on('click', function() {
         myLead = !myLead;
-        $(this).text('My Lead: ' + (myLead ? 'On' : 'Off'))
-               .toggleClass('bg-blue-500 text-white', myLead)
-               .toggleClass('bg-gray-300', !myLead);
+        updateMyLeadBtn();
+        fetch_data();
+    });
+
+    function updateMyLeadBtn() {
+        $('#myLeadBtn')
+            .text('My Lead: ' + (myLead ? 'On' : 'Off'))
+            .toggleClass('bg-blue-500 text-white', myLead)
+            .toggleClass('bg-gray-300', !myLead);
+    }
+
+    // ✅ Set button & fetch data default pas page load
+    $(document).ready(function () {
+        updateMyLeadBtn();
         fetch_data();
     });
 
@@ -113,9 +154,5 @@
         fetch_data(page);
     });
 </script>
-
-
-
-
 
 @endsection

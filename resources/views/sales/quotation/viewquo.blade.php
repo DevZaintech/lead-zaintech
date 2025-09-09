@@ -20,23 +20,11 @@
     {{-- Filter --}}
     <div class="flex flex-wrap gap-2 mb-4 items-center">
 
-        <a href="#" id="btnExport"
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-            Export Excel
-        </a>
 
         {{-- Search (paling panjang) --}}
         <input type="text" id="searchInput"
             placeholder="Cari NAMA, NO TELP..."
             class="flex-1 min-w-[200px] border p-2 rounded">
-
-        {{-- Filter Sales --}}
-        <select id="filterSales" class="w-40 border p-2 rounded">
-            <option value="">Semua Sales</option>
-            @foreach($user as $s)
-                <option value="{{ $s->ID_USER }}">{{ $s->NAMA }}</option>
-            @endforeach
-        </select>
 
         {{-- Filter Source --}}
         <select id="filterSource" class="w-40 border p-2 rounded">
@@ -62,8 +50,8 @@
 
 
     {{-- Table Container --}}
-    <div class="bg-white p-6 rounded shadow overflow-x-auto" id="lead_table">
-        @include('admin.lead._table')
+    <div class="bg-white p-6 rounded shadow overflow-x-auto" id="opp_table">
+        @include('sales.quotation._table')
     </div>
 </div>
 
@@ -75,23 +63,21 @@
 
     function fetch_data(page = 1) {
         let search    = $('#searchInput').val();
-        let sales     = $('#filterSales').val();
         let source    = $('#filterSource').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
 
         $.ajax({
-            url: "{{ route('datalead.admin') }}",
+            url: "{{ route('quotation.sales') }}",
             data: {
                 page: page,
                 search: search,
-                sales: sales,
                 source: source,
                 startDate: startDate,
                 endDate: endDate,
             },
             success: function(data) {
-                $('#lead_table').html(data);
+                $('#opp_table').html(data);
             }
         });
     }
@@ -107,25 +93,7 @@
         fetch_data(page);
     });
 
-    $('#btnExport').on('click', function(e) {
-        e.preventDefault();
-        let search    = $('#searchInput').val();
-        let sales     = $('#filterSales').val();
-        let source    = $('#filterSource').val();
-        let startDate = $('#startDate').val();
-        let endDate   = $('#endDate').val();
-
-        window.location.href = "{{ route('exportlead.admin') }}" +
-            "?search=" + search +
-            "&sales=" + sales +
-            "&source=" + source +
-            "&startDate=" + startDate +
-            "&endDate=" + endDate;
-    });
+    
 </script>
-
-
-
-
 
 @endsection

@@ -24,7 +24,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">Email</label>
                 <input type="email" name="EMAIL" placeholder="you@example.com"
-                    class="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#3fa9f3] focus:outline-none transition" required>
+                    class="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#3fa9f3] focus:outline-none transition" autocomplete="off" required>
             </div>
 
             <!-- Input Password dengan Show/Hide -->
@@ -32,7 +32,7 @@
                 <label class="block text-sm font-medium text-gray-700">Password</label>
                 <div class="relative">
                     <input :type="show ? 'text' : 'password'" name="PASSWORD" placeholder="••••••••"
-                        class="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#3fa9f3] focus:outline-none transition" required>
+                        class="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#3fa9f3] focus:outline-none transition" autocomplete="off" required>
                     <button type="button" @click="show = !show"
                         class="absolute inset-y-0 right-3 flex items-center text-gray-500 focus:outline-none">
                         <!-- Mata terbuka -->

@@ -79,7 +79,7 @@
             <div x-show="profileOpen" @click.away="profileOpen = false"
                  class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg py-2 z-50"
                  x-transition>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
+                <a href="{{ route('profile.show') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</a>
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit"
@@ -100,16 +100,21 @@
 
             <!-- Menu Navigasi -->
             <nav class="flex-1 px-4 py-6 space-y-2">
+
                 {{-- Menu selalu tampil untuk semua --}}
                 <a href="{{ Auth::user()->ROLE == 'admin' ? route('dashboard.admin') :
-                (Auth::user()->ROLE == 'gate' ? route('dashboard.gate') :
-                (Auth::user()->ROLE == 'sales' ? route('dashboard.sales') :
-                route('home'))) }}"
-                class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition
-                {{ request()->is('dashboard') ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' : '' }}">
+                                    (Auth::user()->ROLE == 'gate' ? route('dashboard.gate') :
+                                    (Auth::user()->ROLE == 'sales' ? route('dashboard.sales') :
+                                    route('home'))) }}"
+                    class="flex items-center px-4 py-2 rounded-lg transition
+                    {{ request()->routeIs('dashboard.*') 
+                        ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                        : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                    {{-- Home Icon --}}
                     <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                         viewBox="0 0 24 24">
-                        <path d="M3 12l2-2m0 0l7-7 7 7M13 5v6h6"/>
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
                     </svg>
                     Dashboard
                 </a>
@@ -117,18 +122,32 @@
                 {{-- Menu khusus Gate --}}
                 @if(Auth::user()->ROLE == 'gate')
                     <a href="{{ route('inputlead.gate') }}"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('inputlead.gate') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        {{-- Clipboard Add Icon --}}
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
-                            <path d="M4 6h16M4 12h8m-8 6h16"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 5h6m-6 0a2 2 0 01-2 2H5a2 2 0 00-2 2v10a2 
+                                2 0 002 2h14a2 2 0 002-2V9a2 2 0 
+                                00-2-2h-2a2 2 0 01-2-2m-6 0a2 2 0 
+                                012-2h2a2 2 0 012 2m-6 8h6m-3-3v6"/>
                         </svg>
                         Input Lead
                     </a>
+
                     <a href="{{ route('datalead.gate') }}"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('datalead.gate') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        {{-- Table Icon --}}
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
-                            <path d="M4 6h16M4 12h8m-8 6h16"/>
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 6h16M4 12h16M4 18h16"/>
                         </svg>
                         Data Lead
                     </a>
@@ -136,44 +155,129 @@
 
                 {{-- Menu khusus Sales --}}
                 @if(Auth::user()->ROLE == 'sales')
-                    <a href="#"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                    <a href="{{ route('inputlead.sales') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('inputlead.gate') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        {{-- Clipboard Add Icon --}}
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M9 5h6m-6 0a2 2 0 01-2 2H5a2 2 0 00-2 2v10a2 
+                                2 0 002 2h14a2 2 0 002-2V9a2 2 0 
+                                00-2-2h-2a2 2 0 01-2-2m-6 0a2 2 0 
+                                012-2h2a2 2 0 012 2m-6 8h6m-3-3v6"/>
+                        </svg>
+                        Input Lead
+                    </a>
+
+                    <a href="{{ route('datalead.sales') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('datalead.gate') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        {{-- Table Icon --}}
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                        Data Lead
+                    </a>
+
+                    <!-- <a href="{{ route('opportunity.sales') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('opportunity.sales') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path d="M9 17v-2h6v2a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2zM12 12V5m-7 0h14"/>
                         </svg>
-                        Laporan
+                        Data Opportunity
                     </a>
+
+                    <a href="{{ route('quotation.sales') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('quotation.sales') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M9 17v-2h6v2a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2zM12 12V5m-7 0h14"/>
+                        </svg>
+                        Data Quotation
+                    </a> -->
                 @endif
 
                 {{-- Menu hanya Admin --}}
                 @if(Auth::user()->ROLE == 'admin')
                     <a href="{{ route('datalead.admin') }}"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('datalead.admin') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path d="M12 4v16m8-8H4"/>
                         </svg>
                         Lead
                     </a>
+
+                    <a href="{{ route('dataopp.admin') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('dataopp.admin') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Opportunity
+                    </a>
+
+                    <a href="{{ route('dataquo.admin') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('dataquo.admin') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Quotation
+                    </a>
+
                     <a href="{{ route('kategori.index') }}"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('kategori.index') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path d="M12 4v16m8-8H4"/>
                         </svg>
                         Kategori
                     </a>
+
                     <a href="{{ route('subkategori.index') }}"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('subkategori.index') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path d="M4 6h16M4 12h8m-8 6h16"/>
                         </svg>
                         Sub Kategori
                     </a>
+
                     <a href="{{ route('produk.index') }}"
-                    class="flex items-center px-4 py-2 rounded-lg text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3] transition">
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('produk.index') 
+                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
+                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path d="M9 17v-2h6v2a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2zM12 12V5m-7 0h14"/>
@@ -181,7 +285,9 @@
                         Produk
                     </a>
                 @endif
+
             </nav>
+
 
             <!-- Footer Sidebar -->
             <div class="p-4 border-t">
@@ -200,5 +306,6 @@
             </div>
         </main>
     </div>
+    @yield('scripts')
 </body>
 </html>

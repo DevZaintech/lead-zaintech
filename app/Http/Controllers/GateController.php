@@ -4,20 +4,57 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lead;
+use App\Models\Opportunity;
+use App\Models\Quotation;
+use App\Models\ItemTable;
 use App\Models\SubKategori;
 use App\Models\User;
+use App\Models\Kota;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
 class GateController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('gate.dashboard');
+        $startDate = $request->get('start_date')
+            ? Carbon::parse($request->get('start_date'))->startOfDay()
+            : now()->startOfMonth();
+    
+        $endDate = $request->get('end_date')
+            ? Carbon::parse($request->get('end_date'))->endOfDay()
+            : now()->endOfDay();
+    
+        $salesId = $request->get('sales_id');
+    
+        // Ambil daftar sales yang ada di lead milik CREATOR_ID ini
+        $sales = User::where('ROLE', 'sales')
+                    ->get();
+    
+        $query = Lead::where('CREATOR_ID', Auth::id())
+                    ->whereBetween('CREATED_AT', [$startDate, $endDate]);
+    
+        if ($salesId) {
+            $query->where('ID_USER', $salesId);
+        }
+    
+        $total      = (clone $query)->count();
+        $opportunity= (clone $query)->where('STATUS', 'opportunity')->count();
+        $quotation  = (clone $query)->where('STATUS', 'quotation')->count();
+        $converted  = (clone $query)->where('STATUS', 'converted')->count();
+        $lost       = (clone $query)->where('STATUS', 'lost')->count();
+        $norespon   = (clone $query)->where('STATUS', 'norespon')->count(); // 👈 tambahan
+        
+        return view('gate.dashboard', compact(
+            'sales','salesId',
+            'startDate','endDate',
+            'total','opportunity','quotation','converted','lost','norespon'
+        ));
     }
-
+    
     public function inputLead()
     {
         $user = User::where('ROLE', 'sales')
@@ -30,12 +67,32 @@ class GateController extends Controller
         return view('gate.lead.inputlead', compact('user','subkategori'));
     }
 
+    public function getKota(Request $request)
+    {
+        $search = $request->get('q');
+    
+        $query = Kota::query();
+    
+        if (!empty($search)) {
+            $query->where('name', 'like', "%{$search}%"); // ✅ ganti ke name
+        }
+    
+        $kota = $query->orderBy('name')
+                      ->limit(50)
+                      ->get([
+                          'id as id',     // value yang disimpan (kode_kota)
+                          'name as text'  // label yang ditampilkan
+                      ]);
+    
+        return response()->json($kota);
+    }
+    
     public function storeLead(Request $request)
     {
         // Validasi sesuai kondisi
         $request->validate([
             'LEAD_SOURCE' => 'required',
-            'STATUS' => 'required|in:lead,lost',
+            'STATUS' => 'required|in:lead,norespon',
             'USER'   => $request->STATUS === 'lead' ? 'required' : 'nullable',
             'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
         ], [
@@ -83,7 +140,8 @@ class GateController extends Controller
             'ID_USER'       => $request->USER,
             'NAMA'          => $request->NAMA,
             'PERUSAHAAN'    => $request->PERUSAHAAN,
-            'KOTA'          => $request->KOTA,
+            'KATEGORI'      => $request->KATEGORI,
+            'kode_kota'     => $request->kode_kota,
             'NO_TELP'       => $request->NO_TELP,
             'EMAIL'         => $request->EMAIL,
             'STATUS'        => $request->STATUS,
@@ -119,11 +177,18 @@ class GateController extends Controller
         $search     = $request->get('search');
         $sales      = $request->get('sales');
         $source     = $request->get('source');
+        $status     = $request->get('status'); // ✅ tambahan
         $startDate  = $request->get('startDate');
         $endDate    = $request->get('endDate');
-        $myLead     = $request->get('myLead');
     
-        $lead = Lead::with(['sub_kategori', 'user'])
+        // ✅ kalau bukan ajax → default MyLead = true
+        if ($request->ajax()) {
+            $myLead = $request->get('myLead');
+        } else {
+            $myLead = 'true';
+        }
+    
+        $lead = Lead::with(['sub_kategori', 'user', 'kota'])
             ->whereNull('DELETED_AT')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
@@ -135,17 +200,25 @@ class GateController extends Controller
                           })
                           ->orWhereHas('user', function ($u) use ($search) {
                               $u->where('NAMA', 'like', "%{$search}%");
+                          })
+                          ->orWhereHas('kota', function ($k) use ($search) {
+                              $k->where('name', 'like', "%{$search}%");
                           });
                 });
-            })
+            })            
             ->when($sales, function ($q) use ($sales) {
                 $q->where('ID_USER', $sales);
             })
             ->when($source, function ($q) use ($source) {
                 $q->where('LEAD_SOURCE', $source);
             })
+            ->when($status, function ($q) use ($status) { // ✅ tambahan
+                $q->where('STATUS', $status);
+            })
             ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('CREATED_AT', [$startDate, $endDate]);
+                $start = $startDate . ' 00:00:00';
+                $end   = $endDate . ' 23:59:59';
+                $q->whereBetween('CREATED_AT', [$start, $end]);
             })
             ->when($myLead == 'true', function ($q) {
                 $q->where('CREATOR_ID', Auth::user()->ID_USER);
@@ -153,15 +226,85 @@ class GateController extends Controller
             ->orderBy('LEAD_ID', 'desc')
             ->paginate(15);
     
+        // ✅ kalau ajax → hanya balikin tabel
         if ($request->ajax()) {
             return view('gate.lead._table', compact('lead'))->render();
         }
     
+        // ✅ kalau load awal → MyLead saja yang ditampilkan
         $user = User::where('ROLE', 'sales')
             ->whereNull('DELETED_AT')
             ->get(['ID_USER', 'NAMA']);
     
         return view('gate.lead.datalead', compact('lead', 'user'));
+    }
+    
+
+    public function detailLead($lead_id)
+    {
+        $lead = Lead::where('LEAD_ID', $lead_id)->firstOrFail();
+        $user = User::all();
+
+        if (in_array($lead->STATUS, ['opportunity', 'lost', 'converted'])){
+            $opp = Opportunity::where('LEAD_ID', $lead->LEAD_ID)->firstOrFail();
+            $item = ItemTable::where('OPPORTUNITY_ID', $opp->OPPORTUNITY_ID)->get();
+            return view('gate.lead.detail', compact('lead','user','opp','item'));
+        }
+
+        return view('gate.lead.detail', compact('lead','user'));
+    }
+
+    public function editLead($lead_id)
+    {
+        $lead = Lead::with(['sub_kategori', 'kota', 'user'])
+            ->where('LEAD_ID', $lead_id)
+            ->firstOrFail();
+        $user = User::where('ROLE', 'sales')
+        ->whereNull('DELETED_AT')
+        ->get();
+
+        $subkategori = SubKategori::whereNull('DELETED_AT')
+        ->get();
+
+        return view('gate.lead.editlead', compact('lead','user','subkategori'));
+    }
+
+    public function updateLead(Request $request)
+    {
+        // Validasi sesuai kondisi
+        $request->validate([
+            'LEAD_SOURCE' => 'required',
+            'STATUS' => 'required|in:lead,norespon',
+            'USER'   => $request->STATUS === 'lead' ? 'required' : 'nullable',
+            'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
+        ], [
+            'LEAD_SOURCE.required' => 'Sumber Lead wajib dipilih',
+            'USER.required' => 'Sales wajib dipilih jika status Lead',
+            'STATUS.required' => 'Status wajib diisi',
+            'NO_TELP.required'     => 'No. Telepon wajib diisi',
+            'NO_TELP.numeric'      => 'No. Telepon hanya boleh angka',
+            'NO_TELP.min'          => 'No. Telepon minimal 8 digit',
+        ]);
+        
+        // Simpan data ke tabel lead
+        Lead::where('LEAD_ID', $request->LEAD_ID)->update([
+            'ID_SUB'        => $request->KEBUTUHAN,
+            'ID_USER'       => $request->USER,
+            'NAMA'          => $request->NAMA,
+            'PERUSAHAAN'    => $request->PERUSAHAAN,
+            'KATEGORI'       => $request->KATEGORI,
+            'kode_kota'     => $request->kode_kota,
+            'NO_TELP'       => $request->NO_TELP,
+            'EMAIL'         => $request->EMAIL,
+            'STATUS'        => $request->STATUS,
+            'LEAD_SOURCE'   => $request->LEAD_SOURCE,
+            'NOTE'          => $request->NOTE,
+            'UPDATED_AT'    => now(),
+            // kolom tambahan sesuai kebutuhan
+        ]);
+        return redirect()
+        ->route('lead.gate.detail', ['lead_id' => $request->LEAD_ID])
+        ->with('success', 'Data berhasil diperbarui.');
     }
     
     

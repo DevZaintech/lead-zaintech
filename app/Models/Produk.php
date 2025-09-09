@@ -28,4 +28,21 @@ class Produk extends Model
     {
         return $this->belongsTo(SubKategori::class, 'ID_SUB', 'ID_SUB');
     }
+
+    /**
+     * Relasi ke Opportunity lewat item_table
+     */
+    public function opportunities()
+    {
+        return $this->belongsToMany(Opportunity::class, 'item_table', 'ID_PRODUK', 'OPPORTUNITY_ID')
+                    ->withPivot(['ID_ITEM', 'QTY', 'PRICE', 'TOTAL', 'CREATED_AT', 'UPDATED_AT', 'DELETED_AT']);
+    }
+
+    /**
+     * Relasi langsung ke item_table
+     */
+    public function itemTables()
+    {
+        return $this->hasMany(ItemTable::class, 'ID_PRODUK', 'ID_PRODUK');
+    }
 }

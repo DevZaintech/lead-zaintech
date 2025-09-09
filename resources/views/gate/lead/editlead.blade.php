@@ -51,10 +51,11 @@
 @endif
 
 <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow">
-    <h2 class="text-2xl font-semibold mb-6">Tambah Lead Baru</h2>
+    <h2 class="text-2xl font-semibold mb-6">Follow Up Lead</h2>
 
-    <form action="{{ route('storelead.gate') }}" method="POST" class="space-y-6">
+    <form action="{{ route('updatelead.gate') }}" method="POST" class="space-y-6">
         @csrf
+        <input type="hidden" name="ID_LEAD" value="{{ $lead->ID_LEAD }}">
 
         {{-- Baris 1: Nama & Telp --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -63,20 +64,26 @@
                     NAMA <span class="text-red-500">*</span>
                 </label>
                 <input type="text" name="NAMA" id="NAMA"
+                    value="{{ $lead->NAMA }}"
                     class="uppercase-input w-full border border-gray-300 rounded px-3 py-2 
                            focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                <input type="hidden" name="LEAD_ID" id="LEAD_ID"
+                    value="{{ $lead->LEAD_ID }}"
+                    class="uppercase-input w-full border border-gray-300 rounded px-3 py-2 
+                           focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200" required>
             </div>
             <div>
                 <label for="NO_TELP" class="block text-gray-700 font-medium mb-1">
                     TELEPON <span class="text-red-500">*</span>
                 </label>
                 <input type="text" name="NO_TELP" id="NO_TELP"
+                    value="{{ $lead->NO_TELP }}"
                     class="w-full border border-gray-300 rounded px-3 py-2"
                     inputmode="numeric" pattern="[0-9]*" minlength="8">
             </div>
         </div>
 
-        {{-- Baris 1: company & Perusahaan --}}
+        {{-- Baris 1: Kategori & Perusahaan --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="KATEGORI" class="block text-gray-700 font-medium mb-1">
@@ -85,13 +92,14 @@
                 <select name="KATEGORI" id="KATEGORI"
                     class="w-full border border-gray-300 rounded px-3 py-2 
                         focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200" required>
-                    <option value="INDIVIDU">INDIVIDU</option>
-                    <option value="COMPANY">COMPANY</option>
+                    <option value="INDIVIDU" {{ $lead->KATEGORI == 'INDIVIDU' ? 'selected' : '' }}>INDIVIDU</option>
+                    <option value="COMPANY" {{ $lead->KATEGORI == 'COMPANY' ? 'selected' : '' }}>COMPANY</option>
                 </select>
             </div>
             <div>
                 <label for="PERUSAHAAN" class="block text-gray-700 font-medium mb-1">PERUSAHAAN</label>
                 <input type="text" name="PERUSAHAAN" id="PERUSAHAAN"
+                    value="{{ $lead->PERUSAHAAN }}"
                     class="uppercase-input w-full border border-gray-300 rounded px-3 py-2 
                            focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
             </div>
@@ -104,7 +112,11 @@
                     KOTA <span class="text-red-500">*</span>
                 </label>
                 <select name="kode_kota" id="KOTA" class="w-full border border-gray-300 rounded px-3 py-2">
-                    <option value="">-- Pilih Kota --</option>
+                    @if(!empty($lead->kode_kota))
+                        <option value="{{ $lead->kode_kota }}" selected>
+                            {{ $lead->kota->name ?? '-' }}
+                        </option>
+                    @endif
                 </select>
             </div>
             <div>
@@ -114,9 +126,11 @@
                 <select name="USER" id="USER"
                     class="w-full border border-gray-300 rounded px-3 py-2 
                         focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                    <option value="">-- Pilih Sales --</option>
+                    <option value="" {{ $lead->ID_USER == null ? 'selected' : '' }}>-- Pilih Sales --</option>
                     @foreach($user as $s)
-                        <option value="{{ $s->ID_USER }}">{{ $s->NAMA }}</option>
+                        <option value="{{ $s->ID_USER }}" {{ $lead->ID_USER == $s->ID_USER ? 'selected' : '' }}>
+                            {{ $s->NAMA }}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -129,7 +143,11 @@
                     KEBUTUHAN <span class="text-red-500">*</span>
                 </label>
                 <select name="KEBUTUHAN" id="KEBUTUHAN" class="w-full border border-gray-300 rounded px-3 py-2">
-                    <option value="">-- Pilih Kebutuhan --</option>
+                    @if(!empty($lead->ID_SUB))
+                        <option value="{{ $lead->ID_SUB }}" selected>
+                            {{ $lead->sub_kategori->NAMA ?? '-' }}
+                        </option>
+                    @endif
                 </select>
             </div> 
             <div>
@@ -137,8 +155,8 @@
                 <select name="STATUS" id="STATUS"
                     class="w-full border border-gray-300 rounded px-3 py-2 
                         focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                    <option value="lead" selected>LEAD</option>
-                    <option value="norespon">NO RESPON</option>
+                    <option value="lead" {{ $lead->STATUS == 'lead' ? 'selected' : '' }}>LEAD</option>
+                    <option value="norespon" {{ $lead->STATUS == 'norespon' ? 'selected' : '' }}>NO RESPON</option>
                 </select>
             </div>
         </div>        
@@ -152,14 +170,11 @@
                 class="w-full border border-gray-300 rounded px-3 py-2 
                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
                 <option value="">Pilih Sumber Lead</option>
-                <option value="Meta Ads">Meta Ads</option>
-                <option value="Google Ads">Google Ads</option>
-                <option value="Youtube">Youtube</option>
-                <option value="Tiktok">Tiktok</option>
-                <option value="Instagram">Instagram</option>
-                <option value="Facebook">Facebook</option>
-                <option value="Marketplace">Marketplace</option>
-                <option value="Web">Web</option>
+                @foreach(['Meta Ads','Google Ads','Youtube','Tiktok','Instagram','Facebook','Marketplace','Web'] as $src)
+                    <option value="{{ $src }}" {{ $lead->LEAD_SOURCE == $src ? 'selected' : '' }}>
+                        {{ $src }}
+                    </option>
+                @endforeach
             </select>
         </div>
 
@@ -167,6 +182,7 @@
         <div>
             <label for="EMAIL" class="block text-gray-700 font-medium mb-1">EMAIL</label>
             <input type="email" name="EMAIL" id="EMAIL"
+                value="{{ $lead->EMAIL }}"
                 class="w-full border border-gray-300 rounded px-3 py-2 
                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
         </div>
@@ -176,7 +192,7 @@
             <label for="NOTE" class="block text-gray-700 font-medium mb-1">CATATAN</label>
             <textarea name="NOTE" id="NOTE" rows="3"
                 class="w-full border border-gray-300 rounded px-3 py-2 
-                       focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"></textarea>
+                       focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">{{ $lead->NOTE }}</textarea>
         </div>
 
         <div class="flex justify-end">
@@ -194,16 +210,15 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
-// Uppercase input & numeric telepon
+// Uppercase & numeric
 document.getElementById('NO_TELP').addEventListener('input', function () {
     this.value = this.value.replace(/\D/g,'');
 });
-
 document.querySelectorAll('.uppercase-input').forEach(el => {
     el.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
 });
 
-// Required fields sesuai STATUS
+// Required fields dinamis
 document.addEventListener('DOMContentLoaded', function() {
     const statusField = document.getElementById('STATUS');
     const kategoriField = document.getElementById('KATEGORI');
@@ -226,21 +241,19 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     function updateRequired() {
-        const status = statusField.value;
-        // Reset semua required
         Object.values(fields).forEach(f => f.required = false);
         Object.values(asterisks).forEach(a => { if(a) a.style.display = 'none'; });
 
-        if(status === 'lead') {
+        if(statusField.value === 'lead') {
             ['NAMA','KOTA','NO_TELP','USER','KEBUTUHAN','LEAD_SOURCE'].forEach(id => { fields[id].required = true; });
             asterisks.USER.style.display = 'inline';
             if(asterisks.NAMA) asterisks.NAMA.style.display = 'inline';
             if(asterisks.KOTA) asterisks.KOTA.style.display = 'inline';
             if(asterisks.KEBUTUHAN) asterisks.KEBUTUHAN.style.display = 'inline';
-        } else if(status === 'norespon') {
+        } else if(statusField.value === 'norespon') {
             ['NO_TELP','LEAD_SOURCE'].forEach(id => { fields[id].required = true; });
         }
-        updatePerusahaanRequired(); // cek ulang perusahaan setiap kali status berubah
+        updatePerusahaanRequired();
     }
 
     function updatePerusahaanRequired() {
@@ -263,11 +276,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updatePerusahaanRequired();
 });
 
-// Select2 AJAX
+// Select2 AJAX + preselect
 $(document).ready(function() {
     $('#KEBUTUHAN').select2({
         placeholder: '-- Pilih Kebutuhan --',
-        minimumInputLength: 0,
         ajax: {
             url: '{{ route('get.subkategori.gate') }}',
             dataType: 'json',
@@ -275,11 +287,10 @@ $(document).ready(function() {
             data: params => ({ q: params.term || '' }),
             processResults: data => ({ results: data })
         }
-    }).on('select2:open', () => { $(".select2-search__field").trigger('input'); });
+    });
 
     $('#KOTA').select2({
         placeholder: '-- Pilih Kota --',
-        minimumInputLength: 0,
         ajax: {
             url: '{{ route('get.kota.gate') }}',
             dataType: 'json',
@@ -287,8 +298,18 @@ $(document).ready(function() {
             data: params => ({ q: params.term || '' }),
             processResults: data => ({ results: data })
         }
-    }).on('select2:open', () => { $(".select2-search__field").trigger('input'); });
+    });
+
+    // inject data lama kalau ada
+    @if(!empty($lead->ID_SUB) && !empty($lead->sub_kategori->NAMA))
+        let kebutuhanOption = new Option("{{ $lead->sub_kategori->NAMA }}", "{{ $lead->ID_SUB }}", true, true);
+        $('#KEBUTUHAN').append(kebutuhanOption).trigger('change');
+    @endif
+
+    @if(!empty($lead->kode_kota) && !empty($lead->kota->NAMA_KOTA))
+        let kotaOption = new Option("{{ $lead->kota->NAMA_KOTA }}", "{{ $lead->kode_kota }}", true, true);
+        $('#KOTA').append(kotaOption).trigger('change');
+    @endif
 });
 </script>
-
 @endsection

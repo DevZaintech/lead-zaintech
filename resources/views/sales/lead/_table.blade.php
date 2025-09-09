@@ -16,7 +16,7 @@
     <tbody>
         @forelse ($lead as $index => $item)
             <tr>
-                <td class="border p-2">{{ $lead->firstItem() + $index }}</td>
+            <td class="border p-2 text-center">{{ $lead->firstItem() + $index }}</td>
                 @php
                     $bulanIndo = [
                         1 => 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun',
@@ -24,14 +24,14 @@
                     ];
                     $tanggal = \Carbon\Carbon::parse($item->CREATED_AT);
                 @endphp
-                <td class="border p-2">{{ $tanggal->format('d') }} {{ $bulanIndo[$tanggal->format('n')] }} {{ $tanggal->format('Y') }}</td>
-                <td class="border p-2">{{ $item->NAMA ?? '-' }} - {{ $item->kota->name ?? '-' }}</td>
-                <!-- <td class="border p-2">{{ $item->kota->name ?? '-' }}</td> -->
-                <td class="border p-2">{{ $item->NO_TELP }}</td>
-                <td class="border p-2">{{ $item->sub_kategori->NAMA ?? '-' }}</td>
-                <td class="border p-2">{{ $item->user->NAMA ?? '-' }}</td>
-                <td class="border p-2">{{ $item->LEAD_SOURCE ?? '-' }}</td>
-                <td class="border p-2 space-x-2">
+                <td class="border p-2 text-center">{{ $tanggal->format('d') }} {{ $bulanIndo[$tanggal->format('n')] }} {{ $tanggal->format('Y') }}</td>
+                <td class="border p-2 text-center">{{ $item->NAMA ?? '-' }} - {{ $item->kota->name ?? '-' }}</td>
+                <!-- <td class="border p-2 text-center">{{ $item->kota->name ?? '-' }}</td> -->
+                <td class="border p-2 text-center">{{ $item->NO_TELP }}</td>
+                <td class="border p-2 text-center">{{ $item->sub_kategori->NAMA ?? '-' }}</td>
+                <td class="border p-2 text-center">{{ $item->user->NAMA ?? '-' }}</td>
+                <td class="border p-2 text-center">{{ $item->LEAD_SOURCE ?? '-' }}</td>
+                <td class="border p-2 text-center">
                     @php
                         $statusClasses = [
                             'lead'        => 'bg-blue-400 text-white',      // Cold
@@ -60,11 +60,34 @@
                         {{ $label }}
                     </span>
                 </td>
-                <td class="border p-2 space-x-2">
-                    <a href="{{ route('lead.admin.detail', ['lead_id' => $item->LEAD_ID]) }}"
-                        class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
+
+                <td class="border p-2 text-center">
+                    @if($item->STATUS === 'lead' && $item->ID_USER === Auth::id())
+                        <a href="{{ route('opportunity.create', ['lead_id' => $item->LEAD_ID]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded">
                             Detail
-                    </a>
+                        </a>
+                    @elseif($item->STATUS === 'opportunity' && $item->ID_USER === Auth::id())
+                        <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
+                            Detail
+                        </a>
+                    @elseif($item->STATUS === 'lost' && $item->ID_USER === Auth::id())
+                        <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
+                            Detail
+                        </a>
+                    @elseif($item->STATUS === 'quotation' && $item->ID_USER === Auth::id())
+                        <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
+                            Detail
+                        </a>
+                    @elseif($item->STATUS === 'converted' && $item->ID_USER === Auth::id())
+                        <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
+                            Detail
+                        </a>
+                    @endif
                 </td>
             </tr>
         @empty

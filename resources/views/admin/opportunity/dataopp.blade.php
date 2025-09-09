@@ -20,10 +20,10 @@
     {{-- Filter --}}
     <div class="flex flex-wrap gap-2 mb-4 items-center">
 
-        <a href="#" id="btnExport"
+        <!-- <a href="#" id="btnExport"
             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
             Export Excel
-        </a>
+        </a> -->
 
         {{-- Search (paling panjang) --}}
         <input type="text" id="searchInput"
@@ -62,8 +62,8 @@
 
 
     {{-- Table Container --}}
-    <div class="bg-white p-6 rounded shadow overflow-x-auto" id="lead_table">
-        @include('admin.lead._table')
+    <div class="bg-white p-6 rounded shadow overflow-x-auto" id="opp_table">
+        @include('admin.opportunity._table')
     </div>
 </div>
 
@@ -81,7 +81,7 @@
         let endDate   = $('#endDate').val();
 
         $.ajax({
-            url: "{{ route('datalead.admin') }}",
+            url: "{{ route('dataopp.admin') }}",
             data: {
                 page: page,
                 search: search,
@@ -91,7 +91,7 @@
                 endDate: endDate,
             },
             success: function(data) {
-                $('#lead_table').html(data);
+                $('#opp_table').html(data);
             }
         });
     }
@@ -123,9 +123,5 @@
             "&endDate=" + endDate;
     });
 </script>
-
-
-
-
 
 @endsection

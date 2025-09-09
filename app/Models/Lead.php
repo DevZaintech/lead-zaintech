@@ -17,10 +17,14 @@ class Lead extends Model
         'ID_SUB',
         'ID_USER',
         'NAMA',
+        'KATEGORI',
         'PERUSAHAAN',
+        'KOTA',
+        'kode_kota',
         'NO_TELP',
         'EMAIL',
         'STATUS',
+        'REASON',
         'LEAD_SOURCE',
         'NOTE',
         'CREATED_AT',
@@ -40,4 +44,10 @@ class Lead extends Model
     {
         return $this->belongsTo(SubKategori::class, 'ID_SUB', 'ID_SUB');
     }
+
+    public function kota()
+    {
+        return $this->belongsTo(Kota::class, 'kode_kota', 'id');
+    }
+
 }

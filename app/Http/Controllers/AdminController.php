@@ -7,7 +7,11 @@ use App\Models\Kategori;
 use App\Models\SubKategori;
 use App\Models\Produk;
 use App\Models\Lead;
+use App\Models\Opportunity;
+use App\Models\Quotation;
 use App\Models\User;
+use App\Models\Kota;
+use App\Models\ItemTable;
 use App\Imports\ProdukImport;
 use App\Exports\ProdukExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -19,10 +23,47 @@ use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('admin.dashboard');
+        $startDate = $request->get('start_date')
+            ? Carbon::parse($request->get('start_date'))->startOfDay()
+            : now()->startOfMonth();
+    
+        $endDate = $request->get('end_date')
+            ? Carbon::parse($request->get('end_date'))->endOfDay()
+            : now()->endOfDay();
+    
+        $salesId = $request->get('sales_id');
+        $source  = $request->get('source', 'Web'); // default Web
+    
+        // Ambil daftar sales dari seluruh lead
+        $sales = User::where('ROLE', 'sales')
+                    ->whereIn('ID_USER', Lead::pluck('ID_USER'))
+                    ->get();
+    
+        $query = Lead::whereBetween('CREATED_AT', [$startDate, $endDate]);
+    
+        if ($salesId) {
+            $query->where('ID_USER', $salesId);
+        }
+    
+        if ($source) {
+            $query->where('LEAD_SOURCE', $source);
+        }
+    
+        $total      = (clone $query)->count();
+        $opportunity= (clone $query)->where('STATUS', 'opportunity')->count();
+        $quotation  = (clone $query)->where('STATUS', 'quotation')->count();
+        $converted  = (clone $query)->where('STATUS', 'converted')->count();
+        $lost        = (clone $query)->where('STATUS', 'lost')->count();
+    
+        return view('admin.dashboard', compact(
+            'sales','salesId','source',
+            'startDate','endDate',
+            'total','opportunity','quotation','converted','lost'
+        ));
     }
+    
 
     // ==== Kategori ====
     public function kategoriIndex()
@@ -285,9 +326,12 @@ class AdminController extends Controller
                           })
                           ->orWhereHas('user', function ($u) use ($search) {
                               $u->where('NAMA', 'like', "%{$search}%");
+                          })
+                          ->orWhereHas('kota', function ($k) use ($search) {
+                              $k->where('name', 'like', "%{$search}%"); // ✅ cari by kota.name
                           });
                 });
-            })
+            })            
             ->when($sales, function ($q) use ($sales) {
                 $q->where('ID_USER', $sales);
             })
@@ -295,10 +339,9 @@ class AdminController extends Controller
                 $q->where('LEAD_SOURCE', $source);
             })
             ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
-                $q->whereBetween('CREATED_AT', [$startDate, $endDate]);
-            })
-            ->when($myLead == 'true', function ($q) {
-                $q->where('CREATOR_ID', Auth::user()->ID_USER);
+                $start = $startDate . ' 00:00:00';
+                $end   = $endDate . ' 23:59:59';
+                $q->whereBetween('CREATED_AT', [$start, $end]);
             })
             ->orderBy('LEAD_ID', 'desc')
             ->paginate(15);
@@ -312,6 +355,218 @@ class AdminController extends Controller
             ->get(['ID_USER', 'NAMA']);
     
         return view('admin.lead.datalead', compact('lead', 'user'));
+    }
+
+    public function dataOpp(Request $request)
+    {
+        $search     = $request->get('search');
+        $sales      = $request->get('sales');
+        $source     = $request->get('source');
+        $startDate  = $request->get('startDate');
+        $endDate    = $request->get('endDate');
+        $myLead     = $request->get('myLead');
+        
+        $opp = Opportunity::with([
+                'lead.sub_kategori',
+                'lead.user',
+                'lead.kota' // jangan lupa eager load juga biar ga N+1
+            ])
+            ->whereNull('DELETED_AT')
+
+            // Pencarian
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($query) use ($search) {
+                    $query->where('OPPORTUNITY_ID', 'like', "%{$search}%")
+                        ->orWhere('LEAD_ID', 'like', "%{$search}%")
+                        ->orWhereHas('lead', function ($lead) use ($search) {
+                            $lead->where('NAMA', 'like', "%{$search}%")
+                                ->orWhere('PERUSAHAAN', 'like', "%{$search}%")
+                                ->orWhere('KOTA', 'like', "%{$search}%")
+                                ->orWhere('NO_TELP', 'like', "%{$search}%")
+                                // Cari di sub_kategori
+                                ->orWhereHas('sub_kategori', function ($sub) use ($search) {
+                                    $sub->where('NAMA', 'like', "%{$search}%");
+                                })
+                                // Cari di user
+                                ->orWhereHas('user', function ($u) use ($search) {
+                                    $u->where('NAMA', 'like', "%{$search}%");
+                                })
+                                // ✅ Cari di kota (relasi lead->kota)
+                                ->orWhereHas('kota', function ($k) use ($search) {
+                                    $k->where('name', 'like', "%{$search}%");
+                                });
+                        });
+                });
+            })
+        
+            // Filter Sales
+            ->when($sales, function ($q) use ($sales) {
+                $q->whereHas('lead', function ($lead) use ($sales) {
+                    $lead->where('ID_USER', $sales);
+                });
+            })
+        
+            // Filter Source
+            ->when($source, function ($q) use ($source) {
+                $q->whereHas('lead', function ($lead) use ($source) {
+                    $lead->where('LEAD_SOURCE', $source);
+                });
+            })
+        
+            // Filter Tanggal
+            ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
+                $start = $startDate . ' 00:00:00';
+                $end   = $endDate . ' 23:59:59';
+                $q->whereBetween('CREATED_AT', [$start, $end]);
+            })
+        
+            // Filter MyLead (kalau perlu)
+            ->when($myLead, function ($q) {
+                $q->whereHas('lead', function ($lead) {
+                    $lead->where('ID_USER', auth()->id());
+                });
+            })
+        
+            ->orderBy('OPPORTUNITY_ID', 'desc')
+            ->paginate(15);
+        
+        if ($request->ajax()) {
+            return view('admin.opportunity._table', compact('opp'))->render();
+        }
+        
+        $user = User::where('ROLE', 'sales')
+            ->whereNull('DELETED_AT')
+            ->get(['ID_USER', 'NAMA']);
+        
+        return view('admin.opportunity.dataopp', compact('opp', 'user'));
+        
+    }
+
+    public function dataQuo(Request $request)
+    {
+        $search     = $request->get('search');
+        $sales      = $request->get('sales');
+        $source     = $request->get('source');
+        $startDate  = $request->get('startDate');
+        $endDate    = $request->get('endDate');
+        $myLead     = $request->get('myLead');
+        
+        $quo = Quotation::with([
+                'opportunity.lead.sub_kategori',
+                'opportunity.lead.user',
+                'opportunity.lead.kota', // ✅ eager load kota
+            ])
+            ->whereNull('DELETED_AT')
+
+            // Pencarian
+            ->when($search, function ($q) use ($search) {
+                $q->where(function ($query) use ($search) {
+                    $query->where('QUO_ID', 'like', "%{$search}%")
+                        ->orWhereHas('opportunity.lead', function ($lead) use ($search) {
+                            $lead->where('NAMA', 'like', "%{$search}%")
+                                ->orWhere('PERUSAHAAN', 'like', "%{$search}%")
+                                ->orWhere('KOTA', 'like', "%{$search}%")
+                                ->orWhere('NO_TELP', 'like', "%{$search}%")
+                                // Cari di sub_kategori
+                                ->orWhereHas('sub_kategori', function ($sub) use ($search) {
+                                    $sub->where('NAMA', 'like', "%{$search}%");
+                                })
+                                // Cari di user
+                                ->orWhereHas('user', function ($u) use ($search) {
+                                    $u->where('NAMA', 'like', "%{$search}%");
+                                })
+                                // ✅ Cari di kota (relasi lead->kota)
+                                ->orWhereHas('kota', function ($k) use ($search) {
+                                    $k->where('name', 'like', "%{$search}%");
+                                });
+                        });
+                });
+            })
+        
+            // Filter Sales
+            ->when($sales, function ($q) use ($sales) {
+                $q->whereHas('opportunity.lead', function ($lead) use ($sales) {
+                    $lead->where('ID_USER', $sales);
+                });
+            })
+        
+            // Filter Source
+            ->when($source, function ($q) use ($source) {
+                $q->whereHas('opportunity.lead', function ($lead) use ($source) {
+                    $lead->where('LEAD_SOURCE', $source);
+                });
+            })
+        
+            // Filter Tanggal
+            ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
+                $start = $startDate . ' 00:00:00';
+                $end   = $endDate . ' 23:59:59';
+                $q->whereBetween('CREATED_AT', [$start, $end]);
+            })
+        
+            // Filter MyLead
+            ->when($myLead, function ($q) {
+                $q->whereHas('opportunity.lead', function ($lead) {
+                    $lead->where('ID_USER', auth()->id());
+                });
+            })
+        
+            ->orderBy('QUO_ID', 'desc')
+            ->paginate(15);
+        
+        if ($request->ajax()) {
+            return view('admin.quotation._table', compact('quo'))->render();
+        }
+        
+        $user = User::where('ROLE', 'sales')
+            ->whereNull('DELETED_AT')
+            ->get(['ID_USER', 'NAMA']);
+        
+        return view('admin.quotation.dataquo', compact('quo', 'user'));
+        
+    }
+
+    public function detailLead($lead_id)
+    {
+        $lead = Lead::where('LEAD_ID', $lead_id)->firstOrFail();
+        $user = User::all();
+
+        if (in_array($lead->STATUS, ['opportunity', 'lost', 'converted'])){
+            $opp = Opportunity::where('LEAD_ID', $lead->LEAD_ID)->firstOrFail();
+            $item = ItemTable::where('OPPORTUNITY_ID', $opp->OPPORTUNITY_ID)->get();
+            return view('admin.lead.detail', compact('lead','user','opp','item'));
+        }
+
+        return view('admin.lead.detail', compact('lead','user'));
+    }
+
+    public function detailOpp($opp_id)
+    {
+        $opp = Opportunity::where('OPPORTUNITY_ID', $opp_id)->firstOrFail();
+        $item = ItemTable::where('OPPORTUNITY_ID', $opp_id)->get();
+
+        return view('admin.opportunity.detail', compact('opp','item'));
+    }
+
+    public function detailQuo($quo_id)
+    {
+        $quo = Quotation::where('QUO_ID', $quo_id)->firstOrFail();
+    
+        // Ambil hanya tanggal (abaikan jam)
+        $validDate = Carbon::parse($quo->VALID_DATE)->toDateString();
+        $today     = now()->toDateString();
+    
+        if ($validDate < $today) {
+            $quo->update(['STATUS' => 'EXPIRED']);
+        } else {
+            $quo->update(['STATUS' => 'OPEN']);
+        }
+    
+        $opp  = Opportunity::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->firstOrFail();
+        $lead = Lead::where('LEAD_ID', $opp->LEAD_ID)->firstOrFail();
+        $item = ItemTable::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->get();
+    
+        return view('admin.quotation.detail', compact('quo','opp','lead','item'));
     }
 
     public function exportLead(Request $request)
