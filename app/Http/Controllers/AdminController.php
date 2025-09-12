@@ -56,11 +56,12 @@ class AdminController extends Controller
         $quotation  = (clone $query)->where('STATUS', 'quotation')->count();
         $converted  = (clone $query)->where('STATUS', 'converted')->count();
         $lost        = (clone $query)->where('STATUS', 'lost')->count();
+        $norespon        = (clone $query)->where('STATUS', 'norespon')->count();
     
         return view('admin.dashboard', compact(
             'sales','salesId','source',
             'startDate','endDate',
-            'total','opportunity','quotation','converted','lost'
+            'total','opportunity','quotation','converted','lost','norespon'
         ));
     }
     
@@ -312,31 +313,35 @@ class AdminController extends Controller
         $source     = $request->get('source');
         $startDate  = $request->get('startDate');
         $endDate    = $request->get('endDate');
+        $status     = $request->get('status'); // ✅ filter STATUS baru
         $myLead     = $request->get('myLead');
-    
+
         $lead = Lead::with(['sub_kategori', 'user'])
             ->whereNull('DELETED_AT')
             ->when($search, function ($q) use ($search) {
                 $q->where(function ($query) use ($search) {
                     $query->where('LEAD_ID', 'like', "%{$search}%")
-                          ->orWhere('NAMA', 'like', "%{$search}%")
-                          ->orWhere('NO_TELP', 'like', "%{$search}%")
-                          ->orWhereHas('sub_kategori', function ($sub) use ($search) {
-                              $sub->where('NAMA', 'like', "%{$search}%");
-                          })
-                          ->orWhereHas('user', function ($u) use ($search) {
-                              $u->where('NAMA', 'like', "%{$search}%");
-                          })
-                          ->orWhereHas('kota', function ($k) use ($search) {
-                              $k->where('name', 'like', "%{$search}%"); // ✅ cari by kota.name
-                          });
+                        ->orWhere('NAMA', 'like', "%{$search}%")
+                        ->orWhere('NO_TELP', 'like', "%{$search}%")
+                        ->orWhereHas('sub_kategori', function ($sub) use ($search) {
+                            $sub->where('NAMA', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('user', function ($u) use ($search) {
+                            $u->where('NAMA', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('kota', function ($k) use ($search) {
+                            $k->where('name', 'like', "%{$search}%");
+                        });
                 });
-            })            
+            })
             ->when($sales, function ($q) use ($sales) {
                 $q->where('ID_USER', $sales);
             })
             ->when($source, function ($q) use ($source) {
                 $q->where('LEAD_SOURCE', $source);
+            })
+            ->when($status, function ($q) use ($status) {
+                $q->where('STATUS', $status); // ✅ filter STATUS
             })
             ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
                 $start = $startDate . ' 00:00:00';
@@ -345,17 +350,18 @@ class AdminController extends Controller
             })
             ->orderBy('LEAD_ID', 'desc')
             ->paginate(15);
-    
+
         if ($request->ajax()) {
             return view('admin.lead._table', compact('lead'))->render();
         }
-    
+
         $user = User::where('ROLE', 'sales')
             ->whereNull('DELETED_AT')
             ->get(['ID_USER', 'NAMA']);
-    
+
         return view('admin.lead.datalead', compact('lead', 'user'));
     }
+
 
     public function dataOpp(Request $request)
     {
@@ -575,6 +581,71 @@ class AdminController extends Controller
         return Excel::download(new LeadExport($filters), 'lead_export.xlsx');
     }
 
+
+    public function getUser()
+    {
+        $users = User::all(); // Ambil semua user
+        return view('admin.users.getuser', compact('users'));
+    }
+
+    public function storeUser(Request $request)
+    {
+        $request->validate([
+            'NAMA' => 'required|string|max:255',
+            'EMAIL' => 'required|email|unique:user,EMAIL',
+            'PASSWORD' => 'required|string',
+            'ROLE' => 'required|string',
+        ]);
+
+        User::create([
+            'NAMA'       => $request->NAMA,
+            'EMAIL'      => $request->EMAIL,
+            'PASSWORD'   => $request->PASSWORD, // kalau mau hash => bcrypt($request->PASSWORD)
+            'ROLE'       => $request->ROLE,
+            'CREATED_AT' => Carbon::now(),
+            'UPDATED_AT' => Carbon::now(),
+        ]);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan');
+    }
+
+    public function updateUser(Request $request)
+    {
+        $request->validate([
+            'ID_USER'   => 'required',
+            'NAMA'      => 'required|string|max:255',
+            'EMAIL'     => 'required|email|max:255',
+            'PASSWORD'  => 'required|string|max:255',
+            'ROLE'      => 'required|in:admin,gate,sales',
+        ]);
     
+        $user = User::find($request->ID_USER);
+    
+        if ($user) {
+            $user->NAMA       = $request->NAMA;
+            $user->EMAIL      = $request->EMAIL;
+            $user->PASSWORD   = $request->PASSWORD; // tidak di-hash
+            $user->ROLE       = $request->ROLE;
+            $user->UPDATED_AT = now();
+            $user->save();
+    
+            return back()->with('success', 'User berhasil diupdate!');
+        }
+    
+        return back()->with('error', 'User tidak ditemukan.');
+    }
+
+    public function nonaktifUser(Request $request)
+    {
+        $user = User::findOrFail($request->ID_USER);
+
+        // Tandai user sebagai nonaktif
+        $user->update([
+            'DELETED_AT' => now(),
+        ]);
+
+        return redirect()->route('getuser.admin')->with('success', 'User berhasil dinonaktifkan');
+    }
+
 
 }

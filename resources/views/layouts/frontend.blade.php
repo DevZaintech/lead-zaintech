@@ -213,79 +213,76 @@
 
                 {{-- Menu hanya Admin --}}
                 @if(Auth::user()->ROLE == 'admin')
+                    {{-- Lead --}}
                     <a href="{{ route('datalead.admin') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
                         {{ request()->routeIs('datalead.admin') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                            ? 'bg-blue-100 text-blue-600 border-l-4 border-blue-600' 
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
-                            <path d="M12 4v16m8-8H4"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v12a2 2 0 01-2 2z"/>
                         </svg>
                         Lead
                     </a>
 
-                    <a href="{{ route('dataopp.admin') }}"
-                        class="flex items-center px-4 py-2 rounded-lg transition
-                        {{ request()->routeIs('dataopp.admin') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Opportunity
-                    </a>
-
-                    <a href="{{ route('dataquo.admin') }}"
-                        class="flex items-center px-4 py-2 rounded-lg transition
-                        {{ request()->routeIs('dataquo.admin') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M12 4v16m8-8H4"/>
-                        </svg>
-                        Quotation
-                    </a>
-
+                    {{-- Kategori --}}
                     <a href="{{ route('kategori.index') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
                         {{ request()->routeIs('kategori.index') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                            ? 'bg-blue-100 text-blue-600 border-l-4 border-blue-600' 
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
-                            <path d="M12 4v16m8-8H4"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M3 7a2 2 0 012-2h6l2 2h8a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
                         </svg>
                         Kategori
                     </a>
 
+                    {{-- Sub Kategori --}}
                     <a href="{{ route('subkategori.index') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
                         {{ request()->routeIs('subkategori.index') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                            ? 'bg-blue-100 text-blue-600 border-l-4 border-blue-600' 
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
-                            <path d="M4 6h16M4 12h8m-8 6h16"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M3 7a2 2 0 012-2h6l2 2h8a2 2 0 012 2v5H3V7z"/>
                         </svg>
                         Sub Kategori
                     </a>
 
+                    {{-- Produk --}}
                     <a href="{{ route('produk.index') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
                         {{ request()->routeIs('produk.index') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+                            ? 'bg-blue-100 text-blue-600 border-l-4 border-blue-600' 
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
-                            <path d="M9 17v-2h6v2a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2zM12 12V5m-7 0h14"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M20 7l-8-4-8 4v10l8 4 8-4V7z"/>
                         </svg>
                         Produk
                     </a>
-                @endif
 
+                    {{-- Users --}}
+                    <a href="{{ route('getuser.admin') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('getuser.admin') 
+                            ? 'bg-blue-100 text-blue-600 border-l-4 border-blue-600' 
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M5.121 17.804A7 7 0 1118.879 6.196 7 7 0 015.121 17.804zM12 14v2m0 4h.01"/>
+                        </svg>
+                        Users
+                    </a>
+                @endif
             </nav>
 
 

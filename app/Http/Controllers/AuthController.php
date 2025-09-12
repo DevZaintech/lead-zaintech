@@ -32,25 +32,33 @@ class AuthController extends Controller
             'EMAIL' => 'required|email',
             'PASSWORD' => 'required',
         ]);
-    
+
         $user = User::where('EMAIL', $request->EMAIL)->first();
-    
-        // sementara: plain text (nanti ganti pakai Hash::check)
-        if ($user && $request->PASSWORD == $user->PASSWORD) {
-            Auth::login($user);
-    
-            switch ($user->ROLE) {
-                case 'admin':
-                    return redirect()->route('dashboard.admin');
-                case 'gate':
-                    return redirect()->route('dashboard.gate');
-                case 'sales':
-                    return redirect()->route('dashboard.sales');
-                default:
-                    return redirect()->route('home');
+
+        // cek apakah user ada
+        if ($user) {
+            // kalau user nonaktif
+            if ($user->DELETED_AT !== null) {
+                return back()->withErrors(['EMAIL' => 'Akun Anda sudah dinonaktifkan']);
+            }
+
+            // sementara: plain text (nanti ganti pakai Hash::check)
+            if ($request->PASSWORD == $user->PASSWORD) {
+                Auth::login($user);
+
+                switch ($user->ROLE) {
+                    case 'admin':
+                        return redirect()->route('dashboard.admin');
+                    case 'gate':
+                        return redirect()->route('dashboard.gate');
+                    case 'sales':
+                        return redirect()->route('dashboard.sales');
+                    default:
+                        return redirect()->route('home');
+                }
             }
         }
-    
+
         return back()->withErrors(['EMAIL' => 'Email atau password salah']);
     }
 

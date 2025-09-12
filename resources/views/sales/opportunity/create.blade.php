@@ -7,19 +7,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Kiri -->
-            <table class="w-full border border-gray-300 border-collapse">
+            <table class="w-full border border-gray-400 border-collapse">
                 <tbody>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>LEAD ID</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $lead->LEAD_ID }}</td>
+                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>LEAD ID</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $lead->LEAD_ID }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>NAMA CUSTOMER</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $lead->NAMA }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>NAMA CUSTOMER</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $lead->NAMA }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KATEGORI CUSTOMER</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KATEGORI CUSTOMER</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
                             @if($lead->KATEGORI === 'INDIVIDU')
                                 {{ $lead->KATEGORI }}
                             @elseif($lead->KATEGORI === 'COMPANY')
@@ -30,40 +30,40 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>SALES HANDLE</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>SALES HANDLE</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
                             {{ $lead->user->NAMA }}
                         </td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KEBUTUHAN</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $lead->sub_kategori->NAMA }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KEBUTUHAN</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $lead->sub_kategori->NAMA }}</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- Kanan -->
-            <table class="w-full border border-gray-300 border-collapse">
+            <table class="w-full border border-gray-400 border-collapse">
                 <tbody>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>TANGGAL LEAD</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ \Carbon\Carbon::parse($lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
+                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>TANGGAL LEAD</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ \Carbon\Carbon::parse($lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>TELEPON</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $lead->NO_TELP }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>TELEPON</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $lead->NO_TELP }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KOTA</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $lead->kota->name ?? '-' }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KOTA</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $lead->kota->name ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>LEAD SOURCE</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $lead->LEAD_SOURCE }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>LEAD SOURCE</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $lead->LEAD_SOURCE }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>STATUS</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>STATUS</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
                             @php
                                 $statusClasses = [
                                     'lead'        => 'bg-blue-400 text-white',      // Cold
@@ -102,12 +102,12 @@
         </div>
         <!-- Catatan full width -->
         <div class="mt-6">
-            <table class="w-full border border-gray-300 border-collapse">
+            <table class="w-full border border-gray-400 border-collapse">
                 <tbody>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-300 align-top"><b>CATATAN</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
-                            <textarea class="w-full border-gray-300 rounded-md" rows="2" readonly>{{ $lead->NOTE }}</textarea>
+                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-400 align-top"><b>CATATAN</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
+                            <textarea class="w-full border-gray-400 rounded-md" rows="2" readonly>{{ $lead->NOTE }}</textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -126,7 +126,7 @@
                 <div>
                     
                     <input type="hidden" name="LEAD_ID" value="{{ $lead->LEAD_ID }}" readonly
-                        class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600">
+                        class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600">
                 </div>
 
                 
@@ -137,13 +137,13 @@
                 <div>
                     <label class="block text-sm font-medium mb-1">NILAI PROSPECT <span class="text-red-500">*</span></label>
                     <input type="text" name="NILAI_PROSPECT"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
                 </div>
 
                 <div>
                     <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT <span class="text-red-500">*</span></label>
                     <input type="text" name="PROSENTASE_PROSPECT"
-                        class="percent-input w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
+                        class="percent-input w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
                 </div>
             </div>
 
@@ -151,45 +151,45 @@
             <div class="mb-6">
                 <label class="block text-sm font-medium mb-1">CATATAN</label>
                 <textarea name="NOTE" rows="4"
-                        class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                        class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
             </div>
 
             {{-- TABEL PRODUK --}}
             <div class="mb-6">
                 <label class="block text-sm font-medium mb-2">ITEM PRODUK</label>
 
-                <table class="w-full border mt-4 text-sm">
+                <table class="w-full border border-gray-400 mt-4 text-sm">
                     <thead>
                         <tr>
-                            <th class="border p-2 w-[30%]">NAMA PRODUK</th>
-                            <th class="border p-2">SKU</th>
-                            <th class="border p-2">QTY</th>
-                            <th class="border p-2">PRICE</th>
-                            <th class="border p-2">TOTAL</th>
-                            <th class="border p-2 w-[5%]"></th>
+                            <th class="border border-gray-400 p-2 w-[30%]">NAMA PRODUK</th>
+                            <th class="border border-gray-400 p-2">SKU</th>
+                            <th class="border border-gray-400 p-2">QTY</th>
+                            <th class="border border-gray-400 p-2">PRICE</th>
+                            <th class="border border-gray-400 p-2">TOTAL</th>
+                            <th class="border border-gray-400 p-2 w-[5%]"></th>
                         </tr>
                     </thead>
                     <tbody id="produk-body">
                         <tr>
-                            <td class="border p-2">
+                            <td class="border border-gray-400 p-2">
                                 <select name="produk[0][ID_PRODUK]" class="produk-select w-full" required></select>
                             </td>
-                            <td class="border p-2">
-                                <input type="text" name="produk[0][SKU]" class="sku-input w-full border px-2 py-1" readonly>
+                            <td class="border border-gray-400 p-2">
+                                <input type="text" name="produk[0][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
                             </td>
-                            <td class="border p-2">
-                                <input type="number" name="produk[0][QTY]" class="qty-input w-full border px-2 py-1" value="1" min="1" required>
+                            <td class="border border-gray-400 p-2">
+                                <input type="number" name="produk[0][QTY]" class="qty-input w-full border border-gray-400 px-2 py-1" value="1" min="1" required>
                             </td>
-                            <td class="border p-2">
+                            <td class="border border-gray-400 p-2">
                                 <input type="text" name="produk[0][PRICE]" 
-                                    class="price-input w-full border px-2 py-1"
+                                    class="price-input w-full border border-gray-400 px-2 py-1"
                                     inputmode="numeric" autocomplete="off">
                             </td>
-                            <td class="border p-2">
-                                <input type="text" class="total-input w-full border px-2 py-1" readonly>
+                            <td class="border border-gray-400 p-2">
+                                <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
                                 <input type="hidden" name="produk[0][TOTAL]" class="total-hidden">
                             </td>
-                            <td class="border p-2 text-center">
+                            <td class="border border-gray-400 p-2 text-center">
                                 <button type="button" class="remove-row text-red-500">✖</button>
                             </td>
                         </tr>
@@ -316,23 +316,23 @@ $(document).ready(function () {
         rowIdx++;
         let newRow = `
             <tr>
-                <td class="border p-2">
+                <td class="border border-gray-400 p-2">
                     <select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select>
                 </td>
-                <td class="border p-2">
-                    <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border px-2 py-1" readonly>
+                <td class="border border-gray-400 p-2">
+                    <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
                 </td>
-                <td class="border p-2">
-                    <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border px-2 py-1">
+                <td class="border border-gray-400 p-2">
+                    <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
                 </td>
-                <td class="border p-2">
-                    <input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border px-2 py-1">
+                <td class="border border-gray-400 p-2">
+                    <input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1">
                 </td>
-                <td class="border p-2">
-                    <input type="text" class="total-input w-full border px-2 py-1" readonly>
+                <td class="border border-gray-400 p-2">
+                    <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
                     <input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden">
                 </td>
-                <td class="border p-2 text-center">
+                <td class="border border-gray-400 p-2 text-center">
                     <button type="button" class="remove-row text-red-500">✖</button>
                 </td>
             </tr>

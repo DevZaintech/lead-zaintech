@@ -67,6 +67,16 @@
                         <td class="px-3 py-2 border border-gray-300">{{ \Carbon\Carbon::parse($opp->lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
                     </tr>
                     <tr>
+                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>
+                            @if($opp->lead->STATUS == 'converted')
+                                TANGGAL DEAL
+                            @else
+                                TANGGAL LOST
+                            @endif
+                        </b></td>
+                        <td class="px-3 py-2 border border-gray-300">{{ \Carbon\Carbon::parse($opp->lead->UPDATED_AT)->translatedFormat('d F Y') }}</td>
+                    </tr>
+                    <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>TELEPON</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->NO_TELP }}</td>
                     </tr>
@@ -74,10 +84,10 @@
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KOTA</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->kota->name ?? '-' }}</td>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>PROSENTASE</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $opp->PROSENTASE_PROSPECT }}%</td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>NILAI</b></td>
                         <td class="px-3 py-2 border border-gray-300">Rp {{ number_format($opp->NILAI_PROSPECT, 0, ',', '.') }}</td>

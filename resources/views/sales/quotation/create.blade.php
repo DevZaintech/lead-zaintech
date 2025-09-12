@@ -6,19 +6,19 @@
         <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Kiri -->
-            <table class="w-full border border-gray-300 border-collapse">
+            <table class="w-full border border-gray-400 border-collapse">
                 <tbody>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>LEAD ID</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->LEAD_ID }}</td>
+                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>LEAD ID</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->LEAD_ID }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>NAMA CUSTOMER</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->NAMA }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>NAMA CUSTOMER</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->NAMA }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KATEGORI CUSTOMER</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KATEGORI CUSTOMER</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
                             @if($opp->lead->KATEGORI === 'INDIVIDU')
                                 {{ $opp->lead->KATEGORI }}
                             @elseif($opp->lead->KATEGORI === 'COMPANY')
@@ -29,30 +29,30 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>LEAD SOURCE</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->LEAD_SOURCE }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>LEAD SOURCE</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->LEAD_SOURCE }}</td>
                     </tr>
                 </tbody>
             </table>
 
             <!-- Kanan -->
-            <table class="w-full border border-gray-300 border-collapse">
+            <table class="w-full border border-gray-400 border-collapse">
                 <tbody>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>TANGGAL LEAD</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ \Carbon\Carbon::parse($opp->lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
+                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>TANGGAL LEAD</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ \Carbon\Carbon::parse($opp->lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>TELEPON</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->NO_TELP }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>TELEPON</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->NO_TELP }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KOTA</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $opp->lead->kota->name ?? '-' }}</td>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KOTA</b></td>
+                        <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->kota->name ?? '-' }}</td>
                     </tr>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>STATUS</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>STATUS</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
                             @php
                                 $statusClasses = [
                                     'lead'        => 'bg-blue-400 text-white',
@@ -83,12 +83,12 @@
 
         <!-- Catatan -->
         <div class="mt-6">
-            <table class="w-full border border-gray-300 border-collapse">
+            <table class="w-full border border-gray-400 border-collapse">
                 <tbody>
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-300 align-top"><b>CATATAN</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
-                            <textarea class="w-full border-gray-300 rounded-md" rows="2" readonly>{{ $opp->NOTE }}</textarea>
+                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-400 align-top"><b>CATATAN</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
+                            <textarea class="w-full border-gray-400 rounded-md" rows="2" readonly>{{ $opp->NOTE }}</textarea>
                         </td>
                     </tr>
                 </tbody>
@@ -109,31 +109,31 @@
             <h2 class="text-2xl font-semibold mb-6">Edit Opportunity</h2>
             <form action="{{ route('opportunity.update', $opp->OPPORTUNITY_ID) }}" method="POST">
                 @csrf
-                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}" readonly class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600" required>
-                <input type="hidden" name="LEAD_ID" value="{{ $opp->lead->LEAD_ID }}" readonly class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600" required>
+                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600" required>
+                <input type="hidden" name="LEAD_ID" value="{{ $opp->lead->LEAD_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600" required>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-medium mb-1">NILAI PROSPECT</label>
-                        <input type="text" id="NILAI_PROSPECT_OPP" name="NILAI_PROSPECT" value="{{ $opp->NILAI_PROSPECT }}" class="w-full border rounded px-3 py-2 text-gray-600" required>
+                        <input type="text" id="NILAI_PROSPECT_OPP" name="NILAI_PROSPECT" value="{{ $opp->NILAI_PROSPECT }}" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT</label>
-                        <input type="text" id="PROSENTASE_OPP" name="PROSENTASE_PROSPECT" value="{{ $opp->PROSENTASE_PROSPECT }}%" class="w-full border rounded px-3 py-2 text-gray-600">
+                        <input type="text" id="PROSENTASE_OPP" name="PROSENTASE_PROSPECT" value="{{ $opp->PROSENTASE_PROSPECT }}%" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600">
                     </div>
                 </div>
 
                 <!-- Produk Table -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
-                    <table class="w-full border mt-4 text-sm">
+                    <table class="w-full border border-gray-400 mt-4 text-sm">
                         <thead>
                             <tr>
-                                <th class="border p-2 w-[30%]">Nama Produk</th>
-                                <th class="border p-2">SKU</th>
-                                <th class="border p-2">Qty</th>
-                                <th class="border p-2">Price</th>
-                                <th class="border p-2">Total</th>
-                                <th class="border p-2 w-[5%]"></th>
+                                <th class="border border-gray-400 p-2 w-[30%]">Nama Produk</th>
+                                <th class="border border-gray-400 p-2">SKU</th>
+                                <th class="border border-gray-400 p-2">Qty</th>
+                                <th class="border border-gray-400 p-2">Price</th>
+                                <th class="border border-gray-400 p-2">Total</th>
+                                <th class="border border-gray-400 p-2 w-[5%]"></th>
                             </tr>
                         </thead>
                         <tbody id="produk-body-opp">
@@ -141,25 +141,25 @@
                             @foreach($item as $i)
                                 <tr>
                                     <input type="hidden" name="produk[{{ $rowIdxOpp }}][ID_ITEM]" value="{{ $i->ID_ITEM }}">
-                                    <td class="border p-2">
+                                    <td class="border border-gray-400 p-2">
                                         <select name="produk[{{ $rowIdxOpp }}][ID_PRODUK]" class="produk-select w-full">
                                             <option value="{{ $i->produk->ID_PRODUK }}" selected>{{ $i->produk->NAMA }}</option>
                                         </select>
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="text" name="produk[{{ $rowIdxOpp }}][SKU]" value="{{ $i->produk->SKU }}" class="sku-input w-full border px-2 py-1" readonly>
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="text" name="produk[{{ $rowIdxOpp }}][SKU]" value="{{ $i->produk->SKU }}" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="number" name="produk[{{ $rowIdxOpp }}][QTY]" value="{{ $i->QTY }}" min="1" class="qty-input w-full border px-2 py-1">
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="number" name="produk[{{ $rowIdxOpp }}][QTY]" value="{{ $i->QTY }}" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="text" name="produk[{{ $rowIdxOpp }}][PRICE]" value="{{ number_format($i->PRICE,0,',','.') }}" data-raw="{{ $i->PRICE }}" class="price-input w-full border px-2 py-1">
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="text" name="produk[{{ $rowIdxOpp }}][PRICE]" value="{{ number_format($i->PRICE,0,',','.') }}" data-raw="{{ $i->PRICE }}" class="price-input w-full border border-gray-400 px-2 py-1">
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="text" class="total-input w-full border px-2 py-1" value="{{ number_format($i->TOTAL,0,',','.') }}" readonly>
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" value="{{ number_format($i->TOTAL,0,',','.') }}" readonly>
                                         <input type="hidden" name="produk[{{ $rowIdxOpp }}][TOTAL]" value="{{ $i->TOTAL }}" class="total-hidden">
                                     </td>
-                                    <td class="border p-2 text-center">
+                                    <td class="border border-gray-400 p-2 text-center">
                                         <button type="button" class="remove-row text-red-500">✖</button>
                                     </td>
                                 </tr>
@@ -174,7 +174,7 @@
                     <!-- STATUS (lebih kecil) -->
                     <div class="md:col-span-1">
                         <label class="block text-sm font-medium mb-1">STATUS</label>
-                        <select id="statusSelect" name="STATUS" class="w-full border rounded px-3 py-2">
+                        <select id="statusSelect" name="STATUS" class="w-full border border-gray-400 rounded px-3 py-2">
                             @php
                                 $statusOptions = [
                                     'opportunity' => 'Warm',
@@ -193,7 +193,7 @@
                     
                     <div id="reasonField" class="md:col-span-2 @if($currentStatus != 'lost') hidden @endif">
                         <label class="block text-sm font-medium mb-1">REASON <span class="text-red-500">*</span></label>
-                        <select name="REASON" id="REASON" class="w-full border rounded px-3 py-2 text-gray-600"
+                        <select name="REASON" id="REASON" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600"
                             @if($currentStatus == 'lost') required @endif>
                             <option value="">-- Pilih Reason --</option>
                             <option value="INDEN" @if(old('REASON', $opp->REASON ?? '') == 'INDEN') selected @endif>INDEN</option>
@@ -218,30 +218,30 @@
             <h2 class="text-2xl font-semibold mb-6">Create Quotation</h2>
             <form action="{{ route('quotation.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}" readonly class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600" required>
+                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600" required>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-medium mb-1">NILAI PROSPECT <span class="text-red-500">*</span></label>
-                        <input type="text" id="NILAI_PROSPECT_QUO" name="NILAI_PROSPECT" value="{{ $opp->NILAI_PROSPECT }}" class="w-full border rounded px-3 py-2 text-gray-600" required>
+                        <input type="text" id="NILAI_PROSPECT_QUO" name="NILAI_PROSPECT" value="{{ $opp->NILAI_PROSPECT }}" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" required>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT <span class="text-red-500">*</span></label>
-                        <input type="text" id="PROSENTASE_QUO" name="PROSENTASE_PROSPECT" value="{{ $opp->PROSENTASE_PROSPECT }}%" class="w-full border rounded px-3 py-2 text-gray-600" required>
+                        <input type="text" id="PROSENTASE_QUO" name="PROSENTASE_PROSPECT" value="{{ $opp->PROSENTASE_PROSPECT }}%" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" required>
                     </div>
                 </div>
 
                 <div class="mb-6">
                     <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
-                    <table class="w-full border mt-4 text-sm">
+                    <table class="w-full border border-gray-400 mt-4 text-sm">
                         <thead>
                             <tr>
-                                <th class="border p-2 w-[30%]">Nama Produk</th>
-                                <th class="border p-2">SKU</th>
-                                <th class="border p-2">Qty</th>
-                                <th class="border p-2">Price</th>
-                                <th class="border p-2">Total</th>
-                                <th class="border p-2 w-[5%]"></th>
+                                <th class="border border-gray-400 p-2 w-[30%]">Nama Produk</th>
+                                <th class="border border-gray-400 p-2">SKU</th>
+                                <th class="border border-gray-400 p-2">Qty</th>
+                                <th class="border border-gray-400 p-2">Price</th>
+                                <th class="border border-gray-400 p-2">Total</th>
+                                <th class="border border-gray-400 p-2 w-[5%]"></th>
                             </tr>
                         </thead>
                         <tbody id="produk-body-quo">
@@ -249,25 +249,25 @@
                             @foreach($item as $i)
                                 <tr>
                                     <input type="hidden" name="produk[{{ $rowIdxQuo }}][ID_ITEM]" value="{{ $i->ID_ITEM }}">
-                                    <td class="border p-2">
+                                    <td class="border border-gray-400 p-2">
                                         <select name="produk[{{ $rowIdxQuo }}][ID_PRODUK]" class="produk-select w-full">
                                             <option value="{{ $i->produk->ID_PRODUK }}" selected>{{ $i->produk->NAMA }}</option>
                                         </select>
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="text" name="produk[{{ $rowIdxQuo }}][SKU]" value="{{ $i->produk->SKU }}" class="sku-input w-full border px-2 py-1" readonly>
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="text" name="produk[{{ $rowIdxQuo }}][SKU]" value="{{ $i->produk->SKU }}" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="number" name="produk[{{ $rowIdxQuo }}][QTY]" value="{{ $i->QTY }}" min="1" class="qty-input w-full border px-2 py-1">
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="number" name="produk[{{ $rowIdxQuo }}][QTY]" value="{{ $i->QTY }}" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="text" name="produk[{{ $rowIdxQuo }}][PRICE]" value="{{ number_format($i->PRICE,0,',','.') }}" data-raw="{{ $i->PRICE }}" class="price-input w-full border px-2 py-1">
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="text" name="produk[{{ $rowIdxQuo }}][PRICE]" value="{{ number_format($i->PRICE,0,',','.') }}" data-raw="{{ $i->PRICE }}" class="price-input w-full border border-gray-400 px-2 py-1">
                                     </td>
-                                    <td class="border p-2">
-                                        <input type="text" class="total-input w-full border px-2 py-1" value="{{ number_format($i->TOTAL,0,',','.') }}" readonly>
+                                    <td class="border border-gray-400 p-2">
+                                        <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" value="{{ number_format($i->TOTAL,0,',','.') }}" readonly>
                                         <input type="hidden" name="produk[{{ $rowIdxQuo }}][TOTAL]" value="{{ $i->TOTAL }}" class="total-hidden">
                                     </td>
-                                    <td class="border p-2 text-center">
+                                    <td class="border border-gray-400 p-2 text-center">
                                         <button type="button" class="remove-row text-red-500">✖</button>
                                     </td>
                                 </tr>
@@ -280,13 +280,13 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-medium mb-1">SYARAT & KETENTUAN</label>
-                    <textarea name="SNK" rows="4" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                    <textarea name="SNK" rows="4" class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
                         <label class="block text-sm font-medium mb-1">STATUS <span class="text-red-500">*</span></label>
-                        <input type="text" id="STATUS" name="STATUS" value="OPEN" class="w-full border rounded px-3 py-2 text-gray-600" readonly required>
+                        <input type="text" id="STATUS" name="STATUS" value="OPEN" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" readonly required>
                     </div>
                     @php
                         $validDate = \Carbon\Carbon::now()->addDays(3);
@@ -294,7 +294,7 @@
                     <div>
                         <label class="block text-sm font-medium mb-1">VALID DATE <span class="text-red-500">*</span></label>
                         {{-- Tampilan ke user (hanya tanggal Indo) --}}
-                        <input type="text" value="{{ $validDate->translatedFormat('d F Y') }}" class="w-full border rounded px-3 py-2 text-gray-600" readonly>
+                        <input type="text" value="{{ $validDate->translatedFormat('d F Y') }}" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" readonly>
 
                         {{-- Hidden input untuk disimpan ke DB (datetime lengkap) --}}
                         <input type="hidden" name="VALID_DATE" value="{{ $validDate->format('Y-m-d H:i:s') }}">
@@ -311,49 +311,53 @@
         <div id="followupTab" class="tab-content hidden bg-white p-8 rounded shadow">
             <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
 
-            <form action="" method="POST">
+            <form action="{{ route('follow.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}">
 
-                <table class="w-full border text-sm mb-4">
-                    <thead>
+            <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
+                <thead class="bg-gray-100 text-gray-700 uppercase">
+                    <tr>
+                        <th class="border border-gray-500 px-3 py-2 text-left w-1/6">TANGGAL FU</th>
+                        <th class="border border-gray-500 px-3 py-2 text-left w-2/6">RESPON</th>
+                        <th class="border border-gray-500 px-3 py-2 text-left w-3/6">KETERANGAN</th>
+                    </tr>
+                </thead>
+                <tbody id="followup-body">
+                    @forelse($followups as $fu)
+                        <tr class="odd:bg-white even:bg-gray-50">
+                            <td class="border border-gray-400 px-3 py-2 text-gray-700">
+                                {{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}
+                            </td>
+                            <td class="border border-gray-400 px-3 py-2 text-gray-700 whitespace-normal break-words">
+                                {{ $fu->RESPON }}
+                            </td>
+                            <td class="border border-gray-400 px-3 py-2 text-gray-700 whitespace-normal break-words">
+                                {{ $fu->KETERANGAN }}
+                            </td>
+                        </tr>
+                    @empty
                         <tr>
-                            <th class="border p-2 w-[20%]">Tanggal Follow Up</th>
-                            <th class="border p-2 w-[30%]">Respon</th>
-                            <th class="border p-2 w-[30%]">Progress</th>
-                            <th class="border p-2 w-[5%]"></th>
-                        </tr>
-                    </thead>
-                    <tbody id="followup-body">
-                        @php $rowIdxFU = 0; @endphp
-                        @foreach($followups as $fu)
-                        <tr data-id="{{ $fu->ID_FOLLOW }}">
-                            <td class="border p-2">
-                                <input type="datetime-local" name="followup[{{ $rowIdxFU }}][TANGGAL_FOLLOW]" value="{{ \Carbon\Carbon::parse($fu->TANGGAL_FOLLOW)->format('Y-m-d\TH:i') }}" class="w-full border px-2 py-1">
-                            </td>
-                            <td class="border p-2">
-                                <input type="text" name="followup[{{ $rowIdxFU }}][RESPON]" value="{{ $fu->RESPON }}" class="w-full border px-2 py-1">
-                            </td>
-                            <td class="border p-2">
-                                <input type="text" name="followup[{{ $rowIdxFU }}][PROGRESS]" value="{{ $fu->PROGRESS }}" class="w-full border px-2 py-1">
-                            </td>
-                            <td class="border p-2 text-center">
-                                <button type="button" class="remove-row text-red-500" data-id="{{ $fu->ID_FOLLOW }}">✖</button>
+                            <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">
+                                BELUM ADA FOLLOW UP
                             </td>
                         </tr>
-                            @php $rowIdxFU++; @endphp
-                        @endforeach
-                    </tbody>
-                </table>
+                    @endforelse
+                </tbody>
+            </table>
 
-                <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Follow Up</button>
+                <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">
+                    + Tambah Follow Up
+                </button>
 
                 <div class="flex justify-end space-x-3 mt-4">
-                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan Follow Up</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                        Simpan Follow Up
+                    </button>
                 </div>
             </form>
         </div>
-        
+
     </div>
 </div>
 @endsection
@@ -389,48 +393,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Tombol tambah baris Follow Up
     document.getElementById('add-row-fu').addEventListener('click', function () {
         let tbody = document.getElementById('followup-body');
         let rowCount = tbody.querySelectorAll('tr').length;
         let row = document.createElement('tr');
 
         row.innerHTML = `
-            <td class="border p-2">
-                <input type="datetime-local" name="followup[${rowCount}][TANGGAL_FOLLOW]" class="w-full border px-2 py-1">
+            <td class="border border-gray-400 p-2">
+                <input type="date" name="followup[${rowCount}][TANGGAL_FOLLOW]" class="w-full border border-gray-500 px-2 py-1 rounded" required>
             </td>
-            <td class="border p-2">
-                <input type="text" name="followup[${rowCount}][RESPON]" class="w-full border px-2 py-1">
+            <td class="border border-gray-400 p-2">
+                <textarea name="followup[${rowCount}][RESPON]" rows="2" class="w-full border border-gray-400 px-2 py-1" required></textarea>
             </td>
-            <td class="border p-2">
-                <input type="text" name="followup[${rowCount}][PROGRESS]" class="w-full border px-2 py-1">
-            </td>
-            <td class="border p-2 text-center">
-                <button type="button" class="remove-row text-red-500">✖</button>
+            <td class="border border-gray-400 p-2">
+                <textarea name="followup[${rowCount}][PROGRESS]" rows="2" class="w-full border border-gray-400 px-2 py-1" required></textarea>
             </td>
         `;
         tbody.appendChild(row);
-    });
-
-    // Hapus baris (lama & baru)
-    document.addEventListener('click', function (e) {
-        if (e.target && e.target.classList.contains('remove-row')) {
-            let tr = e.target.closest('tr');
-            let followupId = e.target.getAttribute('data-id'); // kalau baris lama ada data-id
-
-            if (followupId) {
-                // Buat hidden input untuk menandai delete
-                let form = document.querySelector('#followupTab form');
-                let hidden = document.createElement('input');
-                hidden.type = 'hidden';
-                hidden.name = 'delete_ids[]';
-                hidden.value = followupId;
-                form.appendChild(hidden);
-            }
-
-            // Hapus baris dari tampilan
-            tr.remove();
-        }
     });
 });
 </script>
@@ -500,12 +479,12 @@ function initProdukTable($tbody, rowIdxStart) {
         $(addBtnSelector).on('click', function(){
             rowIdx++;
             let newRow = `<tr>
-                <td class="border p-2"><select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select></td>
-                <td class="border p-2"><input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border px-2 py-1" readonly></td>
-                <td class="border p-2"><input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border px-2 py-1"></td>
-                <td class="border p-2"><input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border px-2 py-1"></td>
-                <td class="border p-2"><input type="text" class="total-input w-full border px-2 py-1" readonly><input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden"></td>
-                <td class="border p-2 text-center"><button type="button" class="remove-row text-red-500">✖</button></td>
+                <td class="border border-gray-400 p-2"><select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select></td>
+                <td class="border border-gray-400 p-2"><input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly></td>
+                <td class="border border-gray-400 p-2"><input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1"></td>
+                <td class="border border-gray-400 p-2"><input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1"></td>
+                <td class="border border-gray-400 p-2"><input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly><input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden"></td>
+                <td class="border border-gray-400 p-2 text-center"><button type="button" class="remove-row text-red-500">✖</button></td>
             </tr>`;
             $tbody.append(newRow);
             initSelect2ForRow($tbody.find('tr:last-child .produk-select'));

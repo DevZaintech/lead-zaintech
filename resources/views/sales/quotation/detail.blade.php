@@ -124,144 +124,186 @@
         </div>
     </div>
 
-    <div class="w-full max-w-[90%] mx-auto bg-white p-8 rounded shadow space-y-8">
-        <!-- Tab: Create Quotation -->
-        <div id="quotationTab" class="tab-content bg-white p-8 rounded shadow">
-            <h2 class="text-2xl font-semibold mb-6">Edit Quotation</h2>
-            <form action="{{ route('quotation.update') }}" method="POST">
-                @csrf
-                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}" readonly class="w-full border rounded px-3 py-2 bg-gray-100 text-gray-600" required>
+    <div class="space-y-6">
+        <div class="w-full max-w-[90%] mx-auto bg-white p-8 rounded shadow space-y-8">
+            <!-- Tabs -->
+            <div class="flex border-b mb-6">
+                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('quotationTab', this)">Edit Quotation</button>
+                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('followupTab', this)">Follow Up</button>
+            </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">NILAI PROSPECT <span class="text-red-500">*</span></label>
-                        <input type="text" id="NILAI_PROSPECT_QUO" name="NILAI_PROSPECT" value="{{ $opp->NILAI_PROSPECT }}" class="w-full border rounded px-3 py-2 text-gray-600" required>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT <span class="text-red-500">*</span></label>
-                        <input type="text" id="PROSENTASE_QUO" name="PROSENTASE_PROSPECT" value="{{ $opp->PROSENTASE_PROSPECT }}%" class="w-full border rounded px-3 py-2 text-gray-600" required>
-                    </div>
-                </div>
+            <!-- Tab Contents -->
+            <div>
+                <!-- Edit Quotation Tab -->
+                <div id="quotationTab" class="tab-content block">
+                    <h2 class="text-2xl font-semibold mb-6">Edit Quotation</h2>
+                    <form action="{{ route('quotation.update') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600" required>
 
-                <div class="mb-6">
-                    <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
-                    <table class="w-full border mt-4 text-sm">
-                        <thead>
-                            <tr>
-                                <th class="border p-2 w-[30%]">Nama Produk</th>
-                                <th class="border p-2">SKU</th>
-                                <th class="border p-2">Qty</th>
-                                <th class="border p-2">Price</th>
-                                <th class="border p-2">Total</th>
-                                <th class="border p-2 w-[5%]"></th>
-                            </tr>
-                        </thead>
-                        <tbody id="produk-body-quo">
-                            @php $rowIdxQuo = 0; @endphp
-                            @foreach($item as $i)
-                                <tr>
-                                    <input type="hidden" name="produk[{{ $rowIdxQuo }}][ID_ITEM]" value="{{ $i->ID_ITEM }}">
-                                    <td class="border p-2">
-                                        <select name="produk[{{ $rowIdxQuo }}][ID_PRODUK]" class="produk-select w-full">
-                                            <option value="{{ $i->produk->ID_PRODUK }}" selected>{{ $i->produk->NAMA }}</option>
-                                        </select>
-                                    </td>
-                                    <td class="border p-2">
-                                        <input type="text" name="produk[{{ $rowIdxQuo }}][SKU]" value="{{ $i->produk->SKU }}" class="sku-input w-full border px-2 py-1" readonly>
-                                    </td>
-                                    <td class="border p-2">
-                                        <input type="number" name="produk[{{ $rowIdxQuo }}][QTY]" value="{{ $i->QTY }}" min="1" class="qty-input w-full border px-2 py-1">
-                                    </td>
-                                    <td class="border p-2">
-                                        <input type="text" name="produk[{{ $rowIdxQuo }}][PRICE]" value="{{ number_format($i->PRICE,0,',','.') }}" data-raw="{{ $i->PRICE }}" class="price-input w-full border px-2 py-1">
-                                    </td>
-                                    <td class="border p-2">
-                                        <input type="text" class="total-input w-full border px-2 py-1" value="{{ number_format($i->TOTAL,0,',','.') }}" readonly>
-                                        <input type="hidden" name="produk[{{ $rowIdxQuo }}][TOTAL]" value="{{ $i->TOTAL }}" class="total-hidden">
-                                    </td>
-                                    <td class="border p-2 text-center">
-                                        <button type="button" class="remove-row text-red-500">✖</button>
-                                    </td>
-                                </tr>
-                                @php $rowIdxQuo++; @endphp
-                            @endforeach
-                        </tbody>
-                    </table>
-                    <button type="button" id="add-row-quo" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
-                </div>
-
-                <div class="mb-6">
-                    <label class="block text-sm font-medium mb-1">SYARAT & KETENTUAN</label>
-                    <textarea name="SNK" rows="4" class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">{{ $quo->SNK }}</textarea>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            STATUS <span class="text-red-500">*</span>
-                        </label>
-                        <select id="STATUS" name="STATUS" 
-                            class="w-full border rounded px-3 py-2 text-gray-600" required>
-                            
-                            <option value="quotation" {{ $quo->opportunity->lead->STATUS === 'quotation' ? 'selected' : '' }}>
-                                Hot
-                            </option>
-                            <option value="converted" {{ $quo->opportunity->lead->STATUS === 'converted' ? 'selected' : '' }}>
-                                Deal
-                            </option>
-                            <option value="lost" {{ $quo->opportunity->lead->STATUS === 'lost' ? 'selected' : '' }}>
-                                Lost
-                            </option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            VALID DATE <span class="text-red-500">*</span>
-                        </label>
-                        <div class="flex items-center">
-                            @if($quo->STATUS === 'OPEN')
-                                <span class="px-3 py-2 text-xs font-semibold bg-green-500 text-white rounded-l">
-                                    OPEN
-                                </span>
-                            @elseif($quo->STATUS === 'EXPIRED')
-                                <span class="px-3 py-2 text-xs font-semibold bg-red-500 text-white rounded-l">
-                                    EXPIRED
-                                </span>
-                            @else
-                                <span class="px-3 py-2 text-xs font-semibold bg-gray-400 text-white rounded-l">
-                                    {{ $quo->STATUS }}
-                                </span>
-                            @endif
-
-                            <input 
-                                type="text" 
-                                name="VALID_DATE" value="{{ $quo->VALID_DATE ? \Carbon\Carbon::parse($quo->VALID_DATE)->translatedFormat('d F Y') : '-' }}" 
-                                class="w-full border border-l-0 rounded-r px-3 py-2 text-gray-600" 
-                                readonly
-                            >
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">NILAI PROSPECT <span class="text-red-500">*</span></label>
+                                <input type="text" id="NILAI_PROSPECT_QUO" name="NILAI_PROSPECT" value="{{ $opp->NILAI_PROSPECT }}" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT <span class="text-red-500">*</span></label>
+                                <input type="text" id="PROSENTASE_QUO" name="PROSENTASE_PROSPECT" value="{{ $opp->PROSENTASE_PROSPECT }}%" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" required>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div id="reasonField" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 hidden">
-                    <div>
-                        <label class="block text-sm font-medium mb-1">REASON <span class="text-red-500">*</span></label>
-                        <select id="REASON" name="REASON" class="w-full border rounded px-3 py-2 text-gray-600">
-                            <option value="">-- Pilih Reason --</option>
-                            <option value="INDEN">INDEN</option>
-                            <option value="SUDAH BELI DI VENDOR LAIN">SUDAH BELI DI VENDOR LAIN</option>
-                            <option value="HARGA TINGGI">HARGA TINGGI</option>
-                            <option value="LOKASI TERLALU JAUH">LOKASI TERLALU JAUH</option>
-                            <option value="PEMBAYARAN">PEMBAYARAN</option>
-                            <option value="STOCK KOSONG">STOCK KOSONG</option>
-                            <option value="NO RESPON">NO RESPON</option>
-                        </select>
-                    </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
+                            <table class="w-full border border-gray-400 mt-4 text-sm">
+                                <thead>
+                                    <tr>
+                                        <th class="border border-gray-400 p-2 w-[30%]">Nama Produk</th>
+                                        <th class="border border-gray-400 p-2">SKU</th>
+                                        <th class="border border-gray-400 p-2">Qty</th>
+                                        <th class="border border-gray-400 p-2">Price</th>
+                                        <th class="border border-gray-400 p-2">Total</th>
+                                        <th class="border border-gray-400 p-2 w-[5%]"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="produk-body-quo">
+                                    @php $rowIdxQuo = 0; @endphp
+                                    @foreach($item as $i)
+                                        <tr>
+                                            <input type="hidden" name="produk[{{ $rowIdxQuo }}][ID_ITEM]" value="{{ $i->ID_ITEM }}">
+                                            <td class="border border-gray-400 p-2">
+                                                <select name="produk[{{ $rowIdxQuo }}][ID_PRODUK]" class="produk-select w-full">
+                                                    <option value="{{ $i->produk->ID_PRODUK }}" selected>{{ $i->produk->NAMA }}</option>
+                                                </select>
+                                            </td>
+                                            <td class="border border-gray-400 p-2">
+                                                <input type="text" name="produk[{{ $rowIdxQuo }}][SKU]" value="{{ $i->produk->SKU }}" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
+                                            </td>
+                                            <td class="border border-gray-400 p-2">
+                                                <input type="number" name="produk[{{ $rowIdxQuo }}][QTY]" value="{{ $i->QTY }}" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
+                                            </td>
+                                            <td class="border border-gray-400 p-2">
+                                                <input type="text" name="produk[{{ $rowIdxQuo }}][PRICE]" value="{{ number_format($i->PRICE,0,',','.') }}" data-raw="{{ $i->PRICE }}" class="price-input w-full border border-gray-400 px-2 py-1">
+                                            </td>
+                                            <td class="border border-gray-400 p-2">
+                                                <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" value="{{ number_format($i->TOTAL,0,',','.') }}" readonly>
+                                                <input type="hidden" name="produk[{{ $rowIdxQuo }}][TOTAL]" value="{{ $i->TOTAL }}" class="total-hidden">
+                                            </td>
+                                            <td class="border border-gray-400 p-2 text-center">
+                                                <button type="button" class="remove-row text-red-500">✖</button>
+                                            </td>
+                                        </tr>
+                                        @php $rowIdxQuo++; @endphp
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            <button type="button" id="add-row-quo" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium mb-1">SYARAT & KETENTUAN</label>
+                            <textarea name="SNK" rows="4" class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">{{ $quo->SNK }}</textarea>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">
+                                    STATUS <span class="text-red-500">*</span>
+                                </label>
+                                <select id="STATUS" name="STATUS" 
+                                    class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600" required>
+                                    
+                                    <option value="quotation" {{ $quo->opportunity->lead->STATUS === 'quotation' ? 'selected' : '' }}>Hot</option>
+                                    <option value="converted" {{ $quo->opportunity->lead->STATUS === 'converted' ? 'selected' : '' }}>Deal</option>
+                                    <option value="lost" {{ $quo->opportunity->lead->STATUS === 'lost' ? 'selected' : '' }}>Lost</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-1">
+                                    VALID DATE <span class="text-red-500">*</span>
+                                </label>
+                                <div class="flex items-center">
+                                    @if($quo->STATUS === 'OPEN')
+                                        <span class="px-3 py-2 text-xs font-semibold bg-green-500 text-white rounded-l">OPEN</span>
+                                    @elseif($quo->STATUS === 'EXPIRED')
+                                        <span class="px-3 py-2 text-xs font-semibold bg-red-500 text-white rounded-l">EXPIRED</span>
+                                    @else
+                                        <span class="px-3 py-2 text-xs font-semibold bg-gray-400 text-white rounded-l">{{ $quo->STATUS }}</span>
+                                    @endif
+                                    <input type="text" name="VALID_DATE" value="{{ $quo->VALID_DATE ? \Carbon\Carbon::parse($quo->VALID_DATE)->translatedFormat('d F Y') : '-' }}" class="w-full border border-gray-400 border-l-0 rounded-r px-3 py-2 text-gray-600" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="reasonField" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 hidden">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">REASON <span class="text-red-500">*</span></label>
+                                <select id="REASON" name="REASON" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600">
+                                    <option value="">-- Pilih Reason --</option>
+                                    <option value="INDEN">INDEN</option>
+                                    <option value="SUDAH BELI DI VENDOR LAIN">SUDAH BELI DI VENDOR LAIN</option>
+                                    <option value="HARGA TINGGI">HARGA TINGGI</option>
+                                    <option value="LOKASI TERLALU JAUH">LOKASI TERLALU JAUH</option>
+                                    <option value="PEMBAYARAN">PEMBAYARAN</option>
+                                    <option value="STOCK KOSONG">STOCK KOSONG</option>
+                                    <option value="NO RESPON">NO RESPON</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3">
+                            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                        </div>
+                    </form>
                 </div>
 
-                <div class="flex justify-end space-x-3">
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                <!-- Tab Contents -->
+                <div id="followupTab" class="tab-content hidden">
+                    <!-- Paste form Follow Up kamu di sini -->
+                    <form action="{{ route('follow.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="OPPORTUNITY_ID" value="{{ $quo->OPPORTUNITY_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600">
+
+                        <!-- Tab: Follow Up -->
+                        <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
+                            <thead class="bg-gray-100 text-gray-700 uppercase">
+                                <tr>
+                                    <th class="border border-gray-500 px-3 py-2 text-left w-1/6">TANGGAL FU</th>
+                                    <th class="border border-gray-500 px-3 py-2 text-left w-2/6">RESPON</th>
+                                    <th class="border border-gray-500 px-3 py-2 text-left w-3/6">KETERANGAN</th>
+                                </tr>
+                            </thead>
+                            <tbody id="followup-body">
+                                @forelse($followups as $fu)
+                                    <tr class="odd:bg-white even:bg-gray-50">
+                                        <td class="border border-gray-400 px-3 py-2 text-gray-700">
+                                            {{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}
+                                        </td>
+                                        <td class="border border-gray-400 px-3 py-2 text-gray-700 whitespace-normal break-words">
+                                            {{ $fu->RESPON }}
+                                        </td>
+                                        <td class="border border-gray-400 px-3 py-2 text-gray-700 whitespace-normal break-words">
+                                            {{ $fu->KETERANGAN }}
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">
+                                            BELUM ADA FOLLOW UP
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+
+                        <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">
+                            + Tambah Follow Up
+                        </button>
+                        <div class="flex justify-end space-x-3 mt-4">
+                            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                        </div>
+                    </form>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -273,6 +315,40 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+function openTab(tabId, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.flex > button').forEach(b => {
+        b.classList.remove('text-blue-600', 'border-blue-600');
+        b.classList.add('text-gray-600', 'border-transparent');
+    });
+    document.getElementById(tabId).classList.remove('hidden');
+    btn.classList.add('text-blue-600', 'border-blue-600');
+    btn.classList.remove('text-gray-600', 'border-transparent');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('add-row-fu').addEventListener('click', function () {
+        let tbody = document.getElementById('followup-body');
+        let rowCount = tbody.querySelectorAll('tr').length;
+        let row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td class="border border-gray-400 p-2">
+                <input type="date" name="followup[${rowCount}][TANGGAL_FOLLOW]" class="w-full border border-gray-500 px-2 py-1 rounded" required>
+            </td>
+            <td class="border border-gray-400 p-2">
+                <textarea name="followup[${rowCount}][RESPON]" rows="2" class="w-full border border-gray-400 px-2 py-1" required></textarea>
+            </td>
+            <td class="border border-gray-400 p-2">
+                <textarea name="followup[${rowCount}][PROGRESS]" rows="2" class="w-full border border-gray-400 px-2 py-1" required></textarea>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+});
+</script>
 
 <script>
 function formatRupiah(angka) { 
@@ -345,23 +421,23 @@ function initProdukTable($tbody, rowIdxStart, addBtnSelector){
         rowIdx++;
         let newRow = `
         <tr>
-            <td class="border p-2">
+            <td class="border border-gray-400 p-2">
                 <select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select>
             </td>
-            <td class="border p-2">
-                <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border px-2 py-1" readonly>
+            <td class="border border-gray-400 p-2">
+                <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
             </td>
-            <td class="border p-2">
-                <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border px-2 py-1">
+            <td class="border border-gray-400 p-2">
+                <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
             </td>
-            <td class="border p-2">
-                <input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border px-2 py-1">
+            <td class="border border-gray-400 p-2">
+                <input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1">
             </td>
-            <td class="border p-2">
-                <input type="text" class="total-input w-full border px-2 py-1" readonly>
+            <td class="border border-gray-400 p-2">
+                <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
                 <input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden">
             </td>
-            <td class="border p-2 text-center">
+            <td class="border border-gray-400 p-2 text-center">
                 <button type="button" class="remove-row text-red-500">✖</button>
             </td>
         </tr>`;

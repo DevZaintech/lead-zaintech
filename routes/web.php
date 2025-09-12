@@ -63,6 +63,12 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/dataopp/{opp_id}/detail', [AdminController::class, 'detailOpp'])->name('opp.admin.detail');
     Route::get('/dataquo/{quo_id}/detail', [AdminController::class, 'detailQuo'])->name('dataquo.admin.detail');
 
+    Route::get('/getuser/admin', [AdminController::class, 'getUser'])->name('getuser.admin');
+    Route::post('/storeuser/admin', [AdminController::class, 'storeUser'])->name('storeuser.admin');
+    Route::post('/updateuser/admin', [AdminController::class, 'updateUser'])->name('updateuser.admin');
+    Route::post('/nonaktifuser/admin', [AdminController::class, 'nonaktifUser'])->name('nonaktifuser.admin');
+
+
 });
 
 Route::middleware(['auth','role:gate'])->group(function () {

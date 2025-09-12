@@ -30,6 +30,18 @@
             placeholder="Cari NAMA, NO TELP..."
             class="flex-1 min-w-[200px] border p-2 rounded">
 
+        {{-- Filter Status --}}
+        <select id="filterStatus" class="w-40 border p-2 rounded">
+            <option value="">Semua Status</option>
+            <option value="lead">Cold</option>
+            <option value="opportunity">Warm</option>
+            <option value="quotation">Hot</option>
+            <option value="lost">Lost</option>
+            <option value="converted">Deal</option>
+            <option value="norespon">No Respon</option>
+        </select>
+
+
         {{-- Filter Sales --}}
         <select id="filterSales" class="w-40 border p-2 rounded">
             <option value="">Semua Sales</option>
@@ -72,13 +84,13 @@
 {{-- jQuery sudah dipanggil --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
     function fetch_data(page = 1) {
         let search    = $('#searchInput').val();
         let sales     = $('#filterSales').val();
         let source    = $('#filterSource').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
+        let status    = $('#filterStatus').val(); // ambil value filter STATUS
 
         $.ajax({
             url: "{{ route('datalead.admin') }}",
@@ -89,6 +101,7 @@
                 source: source,
                 startDate: startDate,
                 endDate: endDate,
+                status: status, // kirim ke controller
             },
             success: function(data) {
                 $('#lead_table').html(data);
@@ -96,17 +109,20 @@
         });
     }
 
-    $('#searchInput, #filterSales, #filterSource, #startDate, #endDate')
+    // semua filter termasuk STATUS akan trigger live fetch
+    $('#searchInput, #filterSales, #filterSource, #startDate, #endDate, #filterStatus')
         .on('change keyup', function() {
             fetch_data();
         });
 
+    // pagination tetap berjalan
     $(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
         let page = $(this).attr('href').split('page=')[1];
         fetch_data(page);
     });
 
+    // export tetap jalan
     $('#btnExport').on('click', function(e) {
         e.preventDefault();
         let search    = $('#searchInput').val();
@@ -114,18 +130,17 @@
         let source    = $('#filterSource').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
+        let status    = $('#filterStatus').val(); // sertakan STATUS di export jika mau
 
         window.location.href = "{{ route('exportlead.admin') }}" +
             "?search=" + search +
             "&sales=" + sales +
             "&source=" + source +
             "&startDate=" + startDate +
-            "&endDate=" + endDate;
+            "&endDate=" + endDate +
+            "&status=" + status;
     });
 </script>
-
-
-
 
 
 @endsection

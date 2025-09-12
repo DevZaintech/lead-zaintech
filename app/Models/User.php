@@ -14,7 +14,7 @@ class User extends Authenticatable
     public $timestamps = false; // karena CREATED_AT dan UPDATED_AT beda
     protected $fillable = ['NAMA','EMAIL','PASSWORD','ROLE','CREATED_AT','UPDATED_AT','DELETED_AT'];
     
-    protected $hidden = ['PASSWORD'];
+    // protected $hidden = ['PASSWORD'];
 
     public function getAuthPassword()
     {

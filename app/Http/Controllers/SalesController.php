@@ -763,7 +763,6 @@ class SalesController extends Controller
     {
         $quo = Quotation::where('QUO_ID', $quo_id)->firstOrFail();
     
-        // Ambil hanya tanggal (abaikan jam)
         $validDate = Carbon::parse($quo->VALID_DATE)->toDateString();
         $today     = now()->toDateString();
     
@@ -773,12 +772,14 @@ class SalesController extends Controller
             $quo->update(['STATUS' => 'OPEN']);
         }
     
-        $opp  = Opportunity::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->firstOrFail();
-        $lead = Lead::where('LEAD_ID', $opp->LEAD_ID)->firstOrFail();
-        $item = ItemTable::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->get();
+        $opp       = Opportunity::with('followups')->where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->firstOrFail();
+        $lead      = Lead::where('LEAD_ID', $opp->LEAD_ID)->firstOrFail();
+        $item      = ItemTable::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->get();
+        $followups = $opp->followups()->orderBy('TGL_FOLLOW','desc')->get();
     
-        return view('sales.quotation.detail', compact('quo','opp','lead','item'));
+        return view('sales.quotation.detail', compact('quo','opp','lead','item','followups'));
     }
+    
     
 
     public function detailLead($lead_id)
@@ -812,6 +813,30 @@ class SalesController extends Controller
 
         return view('sales.opportunity.detail', compact('opp','item'));
     }
+
+    public function storeFollow(Request $request)
+    {
+        $opportunityId = $request->input('OPPORTUNITY_ID');
+    
+        if ($request->has('followup')) {
+            foreach ($request->followup as $fu) {
+                if (empty($fu['TGL_FOLLOW']) && empty($fu['RESPON']) && empty($fu['KETERANGAN'])) {
+                    continue;
+                }
+    
+                FollowUp::create([
+                    'OPPORTUNITY_ID' => $opportunityId,
+                    'TGL_FOLLOW' => $fu['TANGGAL_FOLLOW'] ?? null,
+                    'RESPON'         => $fu['RESPON'] ?? null,
+                    'KETERANGAN'       => $fu['PROGRESS'] ?? null,
+                    'CREATED_AT'     => now(),
+                    'UPDATED_AT'     => now(),
+                ]);
+            }
+        }
+    
+        return redirect()->back()->with('success', 'Follow up berhasil ditambahkan!');
+    }    
     
     
 }

@@ -54,26 +54,30 @@
     </div>
 
     {{-- Cards --}}
-    <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-6 gap-6"> {{-- ubah ke 6 kolom biar muat --}}
         <div class="bg-blue-400 text-white rounded-2xl p-6 shadow">
             <h3 class="text-lg font-semibold">Total Lead</h3>
             <p class="text-3xl font-bold mt-2">{{ $total }}</p>
         </div>
         <div class="bg-orange-400 text-white rounded-2xl p-6 shadow">
-            <h3 class="text-lg font-semibold">Opportunity</h3>
+            <h3 class="text-lg font-semibold">Warm</h3>
             <p class="text-3xl font-bold mt-2">{{ $opportunity }}</p>
         </div>
         <div class="bg-red-400 text-white rounded-2xl p-6 shadow">
-            <h3 class="text-lg font-semibold">Quotation</h3>
+            <h3 class="text-lg font-semibold">Hot</h3>
             <p class="text-3xl font-bold mt-2">{{ $quotation }}</p>
         </div>
         <div class="bg-green-400 text-white rounded-2xl p-6 shadow">
-            <h3 class="text-lg font-semibold">Converted</h3>
+            <h3 class="text-lg font-semibold">Deal</h3>
             <p class="text-3xl font-bold mt-2">{{ $converted }}</p>
         </div>
         <div class="bg-gray-400 text-white rounded-2xl p-6 shadow">
-            <h3 class="text-lg font-semibold">Los</h3>
+            <h3 class="text-lg font-semibold">Lost</h3>
             <p class="text-3xl font-bold mt-2">{{ $lost }}</p>
+        </div>
+        <div class="bg-yellow-400 text-black rounded-2xl p-6 shadow">
+            <h3 class="text-lg font-semibold">No Respon</h3>
+            <p class="text-3xl font-bold mt-2">{{ $norespon }}</p>
         </div>
     </div>
 
@@ -109,14 +113,15 @@
     new Chart(pieCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Opportunity', 'Quotation', 'Converted', 'Lost'],
+            labels: ['Warm', 'Hot', 'Deal', 'Lost', 'No Respon'],
             datasets: [{
-                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}],
+                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}],
                 backgroundColor: [
                     '#FB923C',
                     '#F87171',
                     '#4ADE80',
-                    '#9CA3AF'
+                    '#9CA3AF',
+                    '#FACC15'
                 ],
                 borderWidth: 1
             }]
@@ -135,16 +140,17 @@
     new Chart(barCtx, {
         type: 'bar',
         data: {
-            labels: ['Total', 'Opportunity', 'Quotation', 'Converted', 'Lost'],
+            labels: ['Total', 'Warm', 'Hot', 'Deal', 'Lost', 'No Respon'],
             datasets: [{
                 label: 'Jumlah',
-                data: [{{ $total }}, {{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}],
+                data: [{{ $total }}, {{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}],
                 backgroundColor: [
                     '#60A5FA',
                     '#FB923C',
                     '#F87171',
                     '#4ADE80',
-                    '#9CA3AF'
+                    '#9CA3AF',
+                    '#FACC15'
                 ],
             }]
         },
