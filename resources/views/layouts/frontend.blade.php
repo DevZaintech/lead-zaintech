@@ -155,12 +155,13 @@
 
                 {{-- Menu khusus Sales --}}
                 @if(Auth::user()->ROLE == 'sales')
+
+                    {{-- Input Lead --}}
                     <a href="{{ route('inputlead.sales') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
-                        {{ request()->routeIs('inputlead.gate') 
+                        {{ request()->routeIs('inputlead.sales') 
                             ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
                             : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                        {{-- Clipboard Add Icon --}}
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -172,12 +173,12 @@
                         Input Lead
                     </a>
 
+                    {{-- Data Lead --}}
                     <a href="{{ route('datalead.sales') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
-                        {{ request()->routeIs('datalead.gate') 
+                        {{ request()->routeIs('datalead.sales') 
                             ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
                             : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                        {{-- Table Icon --}}
                         <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -186,30 +187,8 @@
                         Data Lead
                     </a>
 
-                    <!-- <a href="{{ route('opportunity.sales') }}"
-                        class="flex items-center px-4 py-2 rounded-lg transition
-                        {{ request()->routeIs('opportunity.sales') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M9 17v-2h6v2a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2zM12 12V5m-7 0h14"/>
-                        </svg>
-                        Data Opportunity
-                    </a>
-
-                    <a href="{{ route('quotation.sales') }}"
-                        class="flex items-center px-4 py-2 rounded-lg transition
-                        {{ request()->routeIs('quotation.sales') 
-                            ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                            : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path d="M9 17v-2h6v2a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2zM12 12V5m-7 0h14"/>
-                        </svg>
-                        Data Quotation
-                    </a> -->
                 @endif
+
 
                 {{-- Menu hanya Admin --}}
                 @if(Auth::user()->ROLE == 'admin')

@@ -577,7 +577,7 @@ class AdminController extends Controller
 
     public function exportLead(Request $request)
     {
-        $filters = $request->only(['search', 'sales', 'source', 'startDate', 'endDate']);
+        $filters = $request->only(['search', 'sales', 'source', 'startDate', 'endDate', 'status']);
         return Excel::download(new LeadExport($filters), 'lead_export.xlsx');
     }
 

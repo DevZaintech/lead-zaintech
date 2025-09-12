@@ -221,17 +221,34 @@
                                 <label class="block text-sm font-medium mb-1">
                                     VALID DATE <span class="text-red-500">*</span>
                                 </label>
-                                <div class="flex items-center">
-                                    @if($quo->STATUS === 'OPEN')
-                                        <span class="px-3 py-2 text-xs font-semibold bg-green-500 text-white rounded-l">OPEN</span>
+                                <div class="flex w-full rounded overflow-hidden border border-gray-400">
+                                    {{-- Bagian status --}}
+                                    @if($quo->VALID_DATE && \Carbon\Carbon::parse($quo->VALID_DATE)->isSameDay(\Carbon\Carbon::today()))
+                                        <div class="w-40 flex items-center justify-center bg-orange-500 text-white text-xs font-semibold px-3">
+                                            EXPIRED TODAY
+                                        </div>
+                                    @elseif($quo->STATUS === 'OPEN')
+                                        <div class="w-40 flex items-center justify-center bg-green-500 text-white text-xs font-semibold px-3">
+                                            OPEN
+                                        </div>
                                     @elseif($quo->STATUS === 'EXPIRED')
-                                        <span class="px-3 py-2 text-xs font-semibold bg-red-500 text-white rounded-l">EXPIRED</span>
+                                        <div class="w-40 flex items-center justify-center bg-red-500 text-white text-xs font-semibold px-3">
+                                            EXPIRED
+                                        </div>
                                     @else
-                                        <span class="px-3 py-2 text-xs font-semibold bg-gray-400 text-white rounded-l">{{ $quo->STATUS }}</span>
+                                        <div class="w-40 flex items-center justify-center bg-gray-400 text-white text-xs font-semibold px-3">
+                                            {{ $quo->STATUS }}
+                                        </div>
                                     @endif
-                                    <input type="text" name="VALID_DATE" value="{{ $quo->VALID_DATE ? \Carbon\Carbon::parse($quo->VALID_DATE)->translatedFormat('d F Y') : '-' }}" class="w-full border border-gray-400 border-l-0 rounded-r px-3 py-2 text-gray-600" readonly>
+
+                                    {{-- Bagian input tanggal --}}
+                                    <input type="text"
+                                        name="VALID_DATE"
+                                        value="{{ $quo->VALID_DATE ? \Carbon\Carbon::parse($quo->VALID_DATE)->translatedFormat('d F Y') : '-' }}"
+                                        class="flex-1 px-3 py-2 text-gray-600 text-sm focus:outline-none" readonly>
                                 </div>
                             </div>
+
                         </div>
 
                         <div id="reasonField" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 hidden">

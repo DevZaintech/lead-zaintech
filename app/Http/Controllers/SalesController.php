@@ -238,7 +238,7 @@ class SalesController extends Controller
     
         $produk = $query->orderBy('NAMA')
                         ->limit(50)
-                        ->get(['ID_PRODUK', 'NAMA', 'SKU']);
+                        ->get(['ID_PRODUK', 'NAMA', 'SKU' , 'HARGA']);
     
         return response()->json($produk);
     }

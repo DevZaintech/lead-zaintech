@@ -49,14 +49,14 @@
         </select>
 
         {{-- Filter Status --}}
-        <!-- <select id="filterStatus" class="w-40 border p-2 rounded">
+        <select id="filterStatus" class="w-40 border p-2 rounded">
             <option value="">Semua Status</option>
-            <option value="lead">Lead</option>
-            <option value="opportunity">Opportunity</option>
-            <option value="quotation">Quotation</option>
-            <option value="converted">Converted</option>
+            <option value="lead">Cold</option>
+            <option value="opportunity">Warm</option>
+            <option value="quotation">Hot</option>
+            <option value="converted">Deal</option>
             <option value="lost">Lost</option>
-        </select> -->
+        </select>
 
         {{-- Filter Tanggal --}}
         <input type="date" id="startDate" class="w-40 border p-2 rounded">

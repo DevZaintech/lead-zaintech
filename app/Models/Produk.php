@@ -17,6 +17,7 @@ class Produk extends Model
         'ID_SUB',
         'NAMA',
         'SKU',
+        'HARGA',
         'IMAGE',
         'STATUS',
         'CREATED_AT',

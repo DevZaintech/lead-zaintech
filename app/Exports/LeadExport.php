@@ -20,55 +20,71 @@ class LeadExport implements FromView, WithStyles
     public function view(): View
     {
         $query = Lead::with('user')->whereNull('DELETED_AT');
-
+    
+        // 🔍 Filter umum
         if (!empty($this->filters['search'])) {
             $search = $this->filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('LEAD_ID', 'like', "%{$search}%")
-                ->orWhere('NAMA', 'like', "%{$search}%")
-                ->orWhere('NO_TELP', 'like', "%{$search}%")
-                ->orWhereHas('user', function ($u) use ($search) {
-                    $u->where('NAMA', 'like', "%{$search}%");
-                });
+                  ->orWhere('NAMA', 'like', "%{$search}%")
+                  ->orWhere('NO_TELP', 'like', "%{$search}%")
+                  ->orWhereHas('user', function ($u) use ($search) {
+                      $u->where('NAMA', 'like', "%{$search}%");
+                  });
             });
         }
-
+    
         if (!empty($this->filters['sales'])) {
             $query->where('ID_USER', $this->filters['sales']);
         }
-
+    
         if (!empty($this->filters['source'])) {
             $query->where('LEAD_SOURCE', $this->filters['source']);
         }
-
+    
         if (!empty($this->filters['startDate']) && !empty($this->filters['endDate'])) {
             $query->whereBetween('CREATED_AT', [
                 $this->filters['startDate'] . ' 00:00:00',
                 $this->filters['endDate'] . ' 23:59:59'
             ]);
         }
-
-        // FILTER STATUS
+    
+        // 🎯 Filter STATUS
         if (!empty($this->filters['status'])) {
             $statusMapping = [
-                'COLD'       => 'lead',
-                'WARM'       => 'opportunity',
-                'HOT'        => 'quotation',
-                'LOST'       => 'lost',
-                'DEAL'       => 'converted',
-                'NO RESPON'  => 'norespon',
+                'lead'        => 'lead',        // Cold
+                'opportunity' => 'opportunity', // Warm
+                'quotation'   => 'quotation',   // Hot
+                'lost'        => 'lost',        // Lost
+                'converted'   => 'converted',   // Deal
+                'norespon'    => 'norespon',    // No Respon
             ];
-
-            $statusValue = $statusMapping[$this->filters['status']] ?? null;
-            if ($statusValue) {
-                $query->where('STATUS', $statusValue);
-            }
+    
+            $statusValue = $statusMapping[$this->filters['status']] ?? $this->filters['status'];
+            $query->where('STATUS', $statusValue);
         }
-
+    
         $lead = $query->orderBy('LEAD_ID', 'desc')->get();
-
+    
+        // 🔄 Mapping ke label human readable (untuk tampilan di Excel)
+        $statusLabels = [
+            'lead'        => 'COLD',
+            'opportunity' => 'WARM',
+            'quotation'   => 'HOT',
+            'lost'        => 'LOST',
+            'converted'   => 'DEAL',
+            'norespon'    => 'NO RESPON',
+        ];
+    
+        // ubah status sebelum dikirim ke view
+        $lead->transform(function ($item) use ($statusLabels) {
+            $item->STATUS = $statusLabels[$item->STATUS] ?? strtoupper($item->STATUS);
+            return $item;
+        });
+    
         return view('admin.lead.export_excel', compact('lead'));
     }
+    
 
     public function styles(Worksheet $sheet)
     {
