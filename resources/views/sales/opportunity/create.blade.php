@@ -187,7 +187,7 @@
                             </td>
                             <td class="border border-gray-400 p-2">
                                 <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
-                                <input type="hidden" name="produk[0][TOTAL]" class="total-hidden">
+                                <input type="hidden" value="0" name="produk[0][TOTAL]" class="total-hidden">
                             </td>
                             <td class="border border-gray-400 p-2 text-center">
                                 <button type="button" class="remove-row text-red-500">✖</button>
@@ -330,7 +330,7 @@ $(document).ready(function () {
                 </td>
                 <td class="border border-gray-400 p-2">
                     <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
-                    <input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden">
+                    <input type="hidden" name="produk[${rowIdx}][TOTAL]" value="0" class="total-hidden">
                 </td>
                 <td class="border border-gray-400 p-2 text-center">
                     <button type="button" class="remove-row text-red-500">✖</button>
