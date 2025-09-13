@@ -62,27 +62,27 @@
                 </td>
 
                 <td class="border p-2 text-center">
-                    @if($item->STATUS === 'lead' && $item->ID_USER === Auth::id())
+                    @if($item->STATUS == 'lead' && $item->ID_USER == Auth::id())
                         <a href="{{ route('opportunity.create', ['lead_id' => $item->LEAD_ID]) }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded">
                             Detail
                         </a>
-                    @elseif($item->STATUS === 'opportunity' && $item->ID_USER === Auth::id())
+                    @elseif($item->STATUS == 'opportunity' && $item->ID_USER == Auth::id())
                         <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
                             Detail
                         </a>
-                    @elseif($item->STATUS === 'lost' && $item->ID_USER === Auth::id())
+                    @elseif($item->STATUS == 'lost' && $item->ID_USER == Auth::id())
                         <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
                             Detail
                         </a>
-                    @elseif($item->STATUS === 'quotation' && $item->ID_USER === Auth::id())
+                    @elseif($item->STATUS == 'quotation' && $item->ID_USER == Auth::id())
                         <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
                             Detail
                         </a>
-                    @elseif($item->STATUS === 'converted' && $item->ID_USER === Auth::id())
+                    @elseif($item->STATUS == 'converted' && $item->ID_USER == Auth::id())
                         <a href="{{ route('lead.sales.detail', ['lead_id' => $item->LEAD_ID]) }}"
                             class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-1 rounded transition-colors duration-200">
                             Detail
