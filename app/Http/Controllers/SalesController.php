@@ -63,7 +63,7 @@ class SalesController extends Controller
         $lead = Lead::with(['sub_kategori', 'kota'])
             ->whereNull('DELETED_AT')
             ->when($sales, function ($q) use ($sales) {
-                if ($sales === 'me') {
+                if ($sales == 'me') {
                     $q->where('ID_USER', auth()->user()->ID_USER);
                 } else {
                     $q->where('ID_USER', $sales);
@@ -742,7 +742,7 @@ class SalesController extends Controller
                 ];
     
                 // Kalau status lost → simpan reason
-                if ($request->STATUS === 'lost') {
+                if ($request->STATUS == 'lost') {
                     $leadData['REASON'] = $request->input('REASON');
                 } else {
                     // Kalau bukan lost, kosongkan atau biarkan null (sesuai kebutuhan)

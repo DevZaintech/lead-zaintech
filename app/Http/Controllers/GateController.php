@@ -93,7 +93,7 @@ class GateController extends Controller
         $request->validate([
             'LEAD_SOURCE' => 'required',
             'STATUS' => 'required|in:lead,norespon',
-            'USER'   => $request->STATUS === 'lead' ? 'required' : 'nullable',
+            'USER'   => $request->STATUS == 'lead' ? 'required' : 'nullable',
             'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
         ], [
             'LEAD_SOURCE.required' => 'Sumber Lead wajib dipilih',
@@ -275,7 +275,7 @@ class GateController extends Controller
         $request->validate([
             'LEAD_SOURCE' => 'required',
             'STATUS' => 'required|in:lead,norespon',
-            'USER'   => $request->STATUS === 'lead' ? 'required' : 'nullable',
+            'USER'   => $request->STATUS == 'lead' ? 'required' : 'nullable',
             'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
         ], [
             'LEAD_SOURCE.required' => 'Sumber Lead wajib dipilih',
