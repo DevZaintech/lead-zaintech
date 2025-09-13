@@ -183,7 +183,7 @@
                             <td class="border border-gray-400 p-2">
                                 <input type="text" name="produk[0][PRICE]" 
                                     class="price-input w-full border border-gray-400 px-2 py-1"
-                                    inputmode="numeric" autocomplete="off">
+                                    value="0" inputmode="numeric" autocomplete="off">
                             </td>
                             <td class="border border-gray-400 p-2">
                                 <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
@@ -326,7 +326,7 @@ $(document).ready(function () {
                     <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
                 </td>
                 <td class="border border-gray-400 p-2">
-                    <input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1">
+                    <input type="text" name="produk[${rowIdx}][PRICE]" value="0" class="price-input w-full border border-gray-400 px-2 py-1">
                 </td>
                 <td class="border border-gray-400 p-2">
                     <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
