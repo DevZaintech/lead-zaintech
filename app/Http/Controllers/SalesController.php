@@ -322,7 +322,7 @@ class SalesController extends Controller
                 'UPDATED_AT' => now(),
             ]);
 
-            return redirect()->route('quotation.create', ['id' => $opportunityId]);
+            return redirect()->route('quotation.create', ['id' => $opportunityId])
                 ->with('success', 'Opportunity tersimpan: ' . $opportunity->OPPORTUNITY_ID);
         } catch (Exception $e) {
             // Pada kegagalan, kembalikan input dan tampilkan error singkat
