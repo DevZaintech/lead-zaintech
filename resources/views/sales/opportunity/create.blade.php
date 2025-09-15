@@ -200,10 +200,10 @@
                     </thead>
                     <tbody id="followup-body">
                         @forelse($followups as $fu)
-                            <tr class="odd:bg-white even:bg-gray-50">
+                            <tr class="odd:bg-white even:bg-gray-50" data-id="{{ $fu->ID_FOLLOW }}">
                                 <td class="border border-gray-400 px-3 py-2">{{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}</td>
-                                <td class="border border-gray-400 px-3 py-2">{{ $fu->RESPON }}</td>
-                                <td class="border border-gray-400 px-3 py-2">{{ $fu->KETERANGAN }}</td>
+                                <td class="border border-gray-400 px-3 py-2 editable" data-field="RESPON" contenteditable="true">{{ $fu->RESPON }}</td>
+                                <td class="border border-gray-400 px-3 py-2 editable" data-field="KETERANGAN" contenteditable="true">{{ $fu->KETERANGAN }}</td>
                             </tr>
                         @empty
                             <tr>
@@ -252,6 +252,28 @@ document.addEventListener('DOMContentLoaded', function () {
     @endif
 });
 </script>
+<script>
+document.querySelectorAll('.editable').forEach(td => {
+    td.addEventListener('blur', function(){
+        const value = this.innerText.trim();
+        const field = this.dataset.field;
+        const ID_FOLLOW = this.closest('tr').dataset.id;
+
+        fetch(`/follow/update/${ID_FOLLOW}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json',
+                'X-CSRF-TOKEN':'{{ csrf_token() }}'
+            },
+            body: JSON.stringify({field, value})
+        }).then(res => res.json())
+        .then(data => {
+            if(data.status !== 'success') alert('Update gagal!');
+        });
+    });
+});
+</script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     function openTab(tabId, element) {

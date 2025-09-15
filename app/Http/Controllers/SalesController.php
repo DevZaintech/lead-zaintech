@@ -867,6 +867,20 @@ class SalesController extends Controller
     
         return redirect()->back()->with('success', 'Follow up berhasil ditambahkan!');
     }
+
+    public function updateFollow(Request $request, $ID_FOLLOW)
+    {
+        $request->validate([
+            'field' => 'required|string|in:RESPON,KETERANGAN',
+            'value' => 'nullable|string',
+        ]);
+    
+        // Gunakan update langsung
+        FollowUp::where('ID_FOLLOW', $ID_FOLLOW)
+            ->update([$request->field => $request->value]);
+    
+        return response()->json(['status'=>'success']);
+    }
     
     
     

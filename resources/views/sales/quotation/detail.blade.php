@@ -259,29 +259,21 @@
                         <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
                             <thead class="bg-gray-100 text-gray-700 uppercase">
                                 <tr>
-                                    <th class="border border-gray-500 px-3 py-2 text-left w-1/6">TANGGAL FU</th>
-                                    <th class="border border-gray-500 px-3 py-2 text-left w-2/6">RESPON</th>
-                                    <th class="border border-gray-500 px-3 py-2 text-left w-3/6">KETERANGAN</th>
+                                    <th class="border border-gray-500 px-3 py-2">TANGGAL FU</th>
+                                    <th class="border border-gray-500 px-3 py-2">RESPON</th>
+                                    <th class="border border-gray-500 px-3 py-2">KETERANGAN</th>
                                 </tr>
                             </thead>
                             <tbody id="followup-body">
                                 @forelse($followups as $fu)
-                                    <tr class="odd:bg-white even:bg-gray-50">
-                                        <td class="border border-gray-400 px-3 py-2 text-gray-700">
-                                            {{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}
-                                        </td>
-                                        <td class="border border-gray-400 px-3 py-2 text-gray-700 whitespace-normal break-words">
-                                            {{ $fu->RESPON }}
-                                        </td>
-                                        <td class="border border-gray-400 px-3 py-2 text-gray-700 whitespace-normal break-words">
-                                            {{ $fu->KETERANGAN }}
-                                        </td>
+                                    <tr class="odd:bg-white even:bg-gray-50" data-id="{{ $fu->ID_FOLLOW }}">
+                                        <td class="border border-gray-400 px-3 py-2">{{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}</td>
+                                        <td class="border border-gray-400 px-3 py-2 editable" data-field="RESPON" contenteditable="true">{{ $fu->RESPON }}</td>
+                                        <td class="border border-gray-400 px-3 py-2 editable" data-field="KETERANGAN" contenteditable="true">{{ $fu->KETERANGAN }}</td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">
-                                            BELUM ADA FOLLOW UP
-                                        </td>
+                                        <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">BELUM ADA FOLLOW UP</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -341,7 +333,27 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+<script>
+document.querySelectorAll('.editable').forEach(td => {
+    td.addEventListener('blur', function(){
+        const value = this.innerText.trim();
+        const field = this.dataset.field;
+        const ID_FOLLOW = this.closest('tr').dataset.id;
 
+        fetch(`/follow/update/${ID_FOLLOW}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type':'application/json',
+                'X-CSRF-TOKEN':'{{ csrf_token() }}'
+            },
+            body: JSON.stringify({field, value})
+        }).then(res => res.json())
+        .then(data => {
+            if(data.status !== 'success') alert('Update gagal!');
+        });
+    });
+});
+</script>
 <script>
 function formatRupiah(angka) { 
     return angka.replace(/\B(?=(\d{3})+(?!\d))/g, "."); 
