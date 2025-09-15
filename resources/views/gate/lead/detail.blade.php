@@ -109,34 +109,9 @@
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>STATUS</b></td>
                         <td class="px-3 py-2 border border-gray-300">
-                            @php
-                                $statusClasses = [
-                                    'lead'        => 'bg-blue-400 text-white',      // Cold
-                                    'opportunity' => 'bg-orange-400 text-black',    // Warm
-                                    'quotation'   => 'bg-red-500 text-white',       // Hot
-                                    'converted'   => 'bg-green-500 text-white',     // Deal
-                                    'lost'        => 'bg-gray-500 text-white',      // Lost
-                                    'norespon'    => 'bg-yellow-400 text-black',    // No Respon
-                                ];
-
-                                $statusLabels = [
-                                    'lead'        => 'Cold',
-                                    'opportunity' => 'Warm',
-                                    'quotation'   => 'Hot',
-                                    'converted'   => 'Deal',
-                                    'lost'        => 'Lost',
-                                    'norespon'    => 'No Respon',
-                                ];
-
-                                $status = strtolower(trim($lead->STATUS));
-                                $class  = $statusClasses[$status] ?? 'bg-gray-400 text-white';
-                                $label  = $statusLabels[$status] ?? ucfirst($status);
-                            @endphp
-
                             <div class="flex items-center space-x-2">
-                                <!-- Status badge -->
-                                <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $class }}">
-                                    {{ ucfirst($label) }}
+                                <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $lead->stage_class }}">
+                                    {{ $lead->stage_label }}
                                 </span>
                             </div>
                         </td>

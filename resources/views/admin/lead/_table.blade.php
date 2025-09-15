@@ -32,33 +32,11 @@
                 <td class="border p-2">{{ $item->user->NAMA ?? '-' }}</td>
                 <td class="border p-2">{{ $item->LEAD_SOURCE ?? '-' }}</td>
                 <td class="border p-2 space-x-2">
-                    @php
-                        $statusClasses = [
-                            'lead'        => 'bg-blue-400 text-white',      // Cold
-                            'opportunity' => 'bg-orange-400 text-black',    // Warm
-                            'quotation'   => 'bg-red-400 text-white',       // Hot
-                            'converted'   => 'bg-green-400 text-white',     // Deal
-                            'lost'        => 'bg-gray-400 text-white',      // Lost
-                            'norespon'    => 'bg-yellow-400 text-black',    // No Respon
-                        ];
-
-                        $statusLabels = [
-                            'lead'        => 'Cold',
-                            'opportunity' => 'Warm',
-                            'quotation'   => 'Hot',
-                            'converted'   => 'Deal',
-                            'lost'        => 'Lost',
-                            'norespon'    => 'No Respon',
-                        ];
-
-                        $status = strtolower(trim($item->STATUS));
-                        $class  = $statusClasses[$status] ?? 'bg-gray-400 text-white';
-                        $label  = $statusLabels[$status] ?? ucfirst($status);
-                    @endphp
-
-                    <span class="px-2 py-1 rounded text-sm font-medium {{ $class }}">
-                        {{ $label }}
-                    </span>
+                <div class="flex items-center space-x-2">
+                        <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $item->stage_class }}">
+                            {{ $item->stage_label }}
+                        </span>
+                    </div>
                 </td>
                 <td class="border p-2 space-x-2">
                     <a href="{{ route('lead.admin.detail', ['lead_id' => $item->LEAD_ID]) }}"
