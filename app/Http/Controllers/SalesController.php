@@ -101,7 +101,7 @@ class SalesController extends Controller
                                   $op->where('PROSENTASE_PROSPECT', '<', 50);
                               })
                               ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
-                    });
+                    })->where('STATUS', '!=', 'norespon');
                 } elseif ($status === 'quotation') { // Hot
                     $q->where('STATUS', 'quotation');
                 } elseif ($status === 'lost') {
