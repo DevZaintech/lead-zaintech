@@ -60,7 +60,7 @@ class SalesController extends Controller
         $startDate  = $request->get('startDate');
         $endDate    = $request->get('endDate');
     
-        $lead = Lead::with(['sub_kategori', 'kota'])
+        $lead = Lead::with(['sub_kategori', 'kota', 'opportunities'])
             ->whereNull('DELETED_AT')
             ->when($sales, function ($q) use ($sales) {
                 if ($sales == 'me') {
@@ -89,7 +89,28 @@ class SalesController extends Controller
                 $q->where('LEAD_SOURCE', $source);
             })
             ->when($status, function ($q) use ($status) {
-                $q->where('STATUS', $status);
+                if ($status === 'opportunity') { // Warm
+                    $q->where('STATUS', 'opportunity')
+                      ->whereHas('opportunities', function($op) {
+                          $op->where('PROSENTASE_PROSPECT', '>=', 50);
+                      });
+                } elseif ($status === 'lead') { // Cold
+                    $q->where(function($query) {
+                        $query->where('STATUS', 'lead')
+                              ->orWhereHas('opportunities', function($op) {
+                                  $op->where('PROSENTASE_PROSPECT', '<', 50);
+                              })
+                              ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
+                    });
+                } elseif ($status === 'quotation') { // Hot
+                    $q->where('STATUS', 'quotation');
+                } elseif ($status === 'lost') {
+                    $q->where('STATUS', 'lost');
+                } elseif ($status === 'converted') { // Deal
+                    $q->where('STATUS', 'converted');
+                } elseif ($status === 'norespon') {
+                    $q->where('STATUS', 'norespon');
+                }
             })
             ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
                 $start = $startDate . ' 00:00:00';
@@ -98,11 +119,11 @@ class SalesController extends Controller
             })
             ->orderBy('LEAD_ID', 'desc')
             ->paginate(15);
-
+    
         if ($request->ajax()) {
             return view('sales.lead._table', compact('lead'))->render();
         }
-
+    
         $user = User::where('ROLE', 'sales')
             ->whereNull('DELETED_AT')
             ->where('ID_USER', '!=', auth()->user()->ID_USER)
@@ -110,6 +131,7 @@ class SalesController extends Controller
     
         return view('sales.lead.datalead', compact('lead', 'user'));
     }
+    
     
 
     public function inputLead()

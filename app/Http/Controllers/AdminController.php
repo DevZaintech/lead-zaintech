@@ -341,7 +341,28 @@ class AdminController extends Controller
                 $q->where('LEAD_SOURCE', $source);
             })
             ->when($status, function ($q) use ($status) {
-                $q->where('STATUS', $status); // ✅ filter STATUS
+                if ($status === 'opportunity') { // Warm
+                    $q->where('STATUS', 'opportunity')
+                      ->whereHas('opportunities', function($op) {
+                          $op->where('PROSENTASE_PROSPECT', '>=', 50);
+                      });
+                } elseif ($status === 'lead') { // Cold
+                    $q->where(function($query) {
+                        $query->where('STATUS', 'lead')
+                              ->orWhereHas('opportunities', function($op) {
+                                  $op->where('PROSENTASE_PROSPECT', '<', 50);
+                              })
+                              ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
+                    });
+                } elseif ($status === 'quotation') { // Hot
+                    $q->where('STATUS', 'quotation');
+                } elseif ($status === 'lost') {
+                    $q->where('STATUS', 'lost');
+                } elseif ($status === 'converted') { // Deal
+                    $q->where('STATUS', 'converted');
+                } elseif ($status === 'norespon') {
+                    $q->where('STATUS', 'norespon');
+                }
             })
             ->when($startDate && $endDate, function ($q) use ($startDate, $endDate) {
                 $start = $startDate . ' 00:00:00';
