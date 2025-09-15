@@ -115,101 +115,136 @@
         </div>
     </div>
 
-    <div class="w-full lg:w-[98%] mx-auto bg-white p-8 rounded shadow">
-        <h2 class="text-2xl font-semibold mb-6">Create Opportunity</h2>
+    <div class="space-y-6 w-full lg:w-[98%] mx-auto">
+        <!-- Tab Button -->
+        <div class="flex border-b mb-6">
+            <button data-tab-button onclick="openTab('opportunityTab', this)"
+                class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
+                Create Opportunity
+            </button>
+            <button data-tab-button onclick="openTab('followupTab', this)"
+                class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
+                Follow Up
+            </button>
+        </div>
 
-        <form action="{{ route('opportunity.store') }}" method="POST">
-            @csrf
+        <!-- Tab: Opportunity -->
+        <div id="opportunityTab" class="tab-content bg-white p-8 rounded shadow">
+            <h2 class="text-2xl font-semibold mb-6">Create Opportunity</h2>
 
-            {{-- SECTION 1 --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    
-                    <input type="hidden" name="LEAD_ID" value="{{ $lead->LEAD_ID }}" readonly
-                        class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600">
+            <form action="{{ route('opportunity.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="LEAD_ID" value="{{ $lead->LEAD_ID }}">
+
+                {{-- FORM FIELDS --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">NILAI PROSPECT</label>
+                        <input type="text" name="NILAI_PROSPECT"
+                            class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT</label>
+                        <input type="text" 
+                            name="PROSENTASE_PROSPECT"
+                            class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 percent-input"
+                            required>
+                    </div>
                 </div>
 
-                
-            </div>
-
-            {{-- SECTION 2 --}}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                    <label class="block text-sm font-medium mb-1">NILAI PROSPECT <span class="text-red-500">*</span></label>
-                    <input type="text" name="NILAI_PROSPECT"
-                        class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium mb-1">PROSENTASE PROSPECT <span class="text-red-500">*</span></label>
-                    <input type="text" name="PROSENTASE_PROSPECT"
-                        class="percent-input w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" required>
-                </div>
-            </div>
-
-            {{-- NOTE --}}
-            <div class="mb-6">
-                <label class="block text-sm font-medium mb-1">CATATAN</label>
-                <textarea name="NOTE" rows="4"
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-1">CATATAN</label>
+                    <textarea name="NOTE" rows="4"
                         class="w-full border border-gray-400 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
-            </div>
+                </div>
 
-            {{-- TABEL PRODUK --}}
-            <div class="mb-6">
-                <label class="block text-sm font-medium mb-2">ITEM PRODUK</label>
+                {{-- PRODUK TABLE --}}
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2">ITEM PRODUK</label>
+                    <table class="w-full border border-gray-400 mt-4 text-sm">
+                        <thead>
+                            <tr>
+                                <th class="border border-gray-400 p-2">NAMA PRODUK</th>
+                                <th class="border border-gray-400 p-2">SKU</th>
+                                <th class="border border-gray-400 p-2">QTY</th>
+                                <th class="border border-gray-400 p-2">PRICE</th>
+                                <th class="border border-gray-400 p-2">TOTAL</th>
+                                <th class="border border-gray-400 p-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="produk-body">
+                            <tr>
+                                <td class="border border-gray-400 p-2">
+                                    <select name="produk[0][ID_PRODUK]" class="produk-select w-full" required></select>
+                                </td>
+                                <td class="border border-gray-400 p-2">
+                                    <input type="text" name="produk[0][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
+                                </td>
+                                <td class="border border-gray-400 p-2">
+                                    <input type="number" name="produk[0][QTY]" class="qty-input w-full border border-gray-400 px-2 py-1" value="1" min="1" required>
+                                </td>
+                                <td class="border border-gray-400 p-2">
+                                    <input type="text" name="produk[0][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1" value="0">
+                                </td>
+                                <td class="border border-gray-400 p-2">
+                                    <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
+                                    <input type="hidden" name="produk[0][TOTAL]" class="total-hidden" value="0">
+                                </td>
+                                <td class="border border-gray-400 p-2 text-center">
+                                    <button type="button" class="remove-row text-red-500">✖</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="add-row" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
+                </div>
 
-                <table class="w-full border border-gray-400 mt-4 text-sm">
-                    <thead>
+                <div class="flex justify-end space-x-3">
+                    <a href="{{ url()->previous() }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded">Batal</a>
+                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tab: Follow Up -->
+        <div id="followupTab" class="tab-content hidden bg-white p-8 rounded shadow">
+            <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
+
+            <form action="{{ route('follow.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="LEAD_ID" value="{{ $lead->LEAD_ID }}">
+
+                <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
+                    <thead class="bg-gray-100 text-gray-700 uppercase">
                         <tr>
-                            <th class="border border-gray-400 p-2 w-[30%]">NAMA PRODUK</th>
-                            <th class="border border-gray-400 p-2">SKU</th>
-                            <th class="border border-gray-400 p-2">QTY</th>
-                            <th class="border border-gray-400 p-2">PRICE</th>
-                            <th class="border border-gray-400 p-2">TOTAL</th>
-                            <th class="border border-gray-400 p-2 w-[5%]"></th>
+                            <th class="border border-gray-500 px-3 py-2">TANGGAL FU</th>
+                            <th class="border border-gray-500 px-3 py-2">RESPON</th>
+                            <th class="border border-gray-500 px-3 py-2">KETERANGAN</th>
                         </tr>
                     </thead>
-                    <tbody id="produk-body">
-                        <tr>
-                            <td class="border border-gray-400 p-2">
-                                <select name="produk[0][ID_PRODUK]" class="produk-select w-full" required></select>
-                            </td>
-                            <td class="border border-gray-400 p-2">
-                                <input type="text" name="produk[0][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
-                            </td>
-                            <td class="border border-gray-400 p-2">
-                                <input type="number" name="produk[0][QTY]" class="qty-input w-full border border-gray-400 px-2 py-1" value="1" min="1" required>
-                            </td>
-                            <td class="border border-gray-400 p-2">
-                                <input type="text" name="produk[0][PRICE]" 
-                                    class="price-input w-full border border-gray-400 px-2 py-1"
-                                    value="0" inputmode="numeric" autocomplete="off">
-                            </td>
-                            <td class="border border-gray-400 p-2">
-                                <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
-                                <input type="hidden" value="0" name="produk[0][TOTAL]" class="total-hidden">
-                            </td>
-                            <td class="border border-gray-400 p-2 text-center">
-                                <button type="button" class="remove-row text-red-500">✖</button>
-                            </td>
-                        </tr>
+                    <tbody id="followup-body">
+                        @forelse($followups as $fu)
+                            <tr class="odd:bg-white even:bg-gray-50">
+                                <td class="border border-gray-400 px-3 py-2">{{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}</td>
+                                <td class="border border-gray-400 px-3 py-2">{{ $fu->RESPON }}</td>
+                                <td class="border border-gray-400 px-3 py-2">{{ $fu->KETERANGAN }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">BELUM ADA FOLLOW UP</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
 
-                <button type="button" id="add-row" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
-            </div>
+                <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Follow Up</button>
 
-            <div class="flex justify-end space-x-3">
-                <a href="{{ url()->previous() }}"
-                class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded">
-                    Batal
-                </a>
-                <button type="submit"
-                        class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">
-                    Simpan
-                </button>
-            </div>
-        </form>
+                <div class="flex justify-end space-x-3 mt-4">
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan Follow Up</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
@@ -220,7 +255,88 @@
 <!-- Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function openTab(tabId, element) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+        document.querySelectorAll('[data-tab-button]').forEach(btn => {
+            btn.classList.remove('border-blue-500', 'text-blue-600');
+            btn.classList.add('text-gray-600', 'border-transparent');
+        });
+        document.getElementById(tabId).classList.remove('hidden');
+        element.classList.remove('text-gray-600', 'border-transparent');
+        element.classList.add('border-blue-500', 'text-blue-600');
+    }
+    window.openTab = openTab;
 
+    // Default buka tab (Follow Up jika ada data, kalau tidak Opportunity)
+    @if($followups->count() > 0)
+        document.querySelectorAll('[data-tab-button]')[1].click();
+    @else
+        document.querySelectorAll('[data-tab-button]')[0].click();
+    @endif
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function openTab(tabId, element) {
+        // Sembunyikan semua tab
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.add('hidden');
+        });
+
+        // Reset style semua tombol
+        document.querySelectorAll('[data-tab-button]').forEach(btn => {
+            btn.classList.remove('border-blue-500', 'text-blue-600');
+            btn.classList.add('text-gray-600', 'border-transparent');
+        });
+
+        // Tampilkan tab yang dipilih
+        const activeTab = document.getElementById(tabId);
+        if (activeTab) {
+            activeTab.classList.remove('hidden');
+        }
+
+        // Aktifkan tombol yang dipilih
+        element.classList.remove('text-gray-600', 'border-transparent');
+        element.classList.add('border-blue-500', 'text-blue-600');
+    }
+
+    // Biar bisa dipakai di onclick
+    window.openTab = openTab;
+
+    // Default buka tab pertama
+    const defaultBtn = document.querySelector('[data-tab-button]');
+    if (defaultBtn) {
+        defaultBtn.click();
+    }
+});
+</script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('add-row-fu').addEventListener('click', function () {
+        let tbody = document.getElementById('followup-body');
+        let rowCount = tbody.querySelectorAll('tr').length;
+        let row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td class="border border-gray-400 p-2">
+                <input type="date" name="followup[${rowCount}][TANGGAL_FOLLOW]" class="w-full border border-gray-500 px-2 py-1 rounded" required>
+            </td>
+            <td class="border border-gray-400 p-2">
+                <textarea name="followup[${rowCount}][RESPON]" rows="2" class="w-full border border-gray-400 px-2 py-1" required></textarea>
+            </td>
+            <td class="border border-gray-400 p-2">
+                <textarea name="followup[${rowCount}][PROGRESS]" rows="2" class="w-full border border-gray-400 px-2 py-1" required></textarea>
+            </td>
+        `;
+        tbody.appendChild(row);
+    });
+});
+</script>
 <style>
     .select2-container .select2-selection--single {
         height: 2.5rem !important;

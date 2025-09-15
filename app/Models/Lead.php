@@ -50,4 +50,9 @@ class Lead extends Model
         return $this->belongsTo(Kota::class, 'kode_kota', 'id');
     }
 
+    public function followUps()
+    {
+        return $this->hasMany(FollowUp::class, 'LEAD_ID', 'LEAD_ID');
+    }
+
 }

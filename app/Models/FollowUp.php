@@ -13,6 +13,7 @@ class FollowUp extends Model
 
     protected $fillable = [
         'OPPORTUNITY_ID',
+        'LEAD_ID',
         'TGL_FOLLOW',
         'RESPON',
         'KETERANGAN',
@@ -25,5 +26,10 @@ class FollowUp extends Model
     public function opportunity()
     {
         return $this->belongsTo(Opportunity::class, 'OPPORTUNITY_ID', 'OPPORTUNITY_ID');
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class, 'LEAD_ID', 'LEAD_ID');
     }
 }

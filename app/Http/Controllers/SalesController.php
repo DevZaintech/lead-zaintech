@@ -222,7 +222,8 @@ class SalesController extends Controller
     public function createOpportunity($lead_id)
     {
         $lead = Lead::where('LEAD_ID', $lead_id)->firstOrFail();
-        return view('sales.opportunity.create', compact('lead'));
+        $followups = $lead->followUps()->get();
+        return view('sales.opportunity.create', compact('lead','followups'));
     }
     
     public function getProdukSales(Request $request)
@@ -488,8 +489,17 @@ class SalesController extends Controller
     {
         $opp = Opportunity::where('OPPORTUNITY_ID', $id)->firstOrFail();
         $item = ItemTable::where('OPPORTUNITY_ID', $id)->get();
-        $followups = $opp->followUps()->get(); // relasi hasMany
-        return view('sales.quotation.create', compact('opp','item','followups'));
+    
+        // follow up dari opportunity
+        $fuOpp = $opp->followUps()->get();
+    
+        // follow up dari lead (karena opportunity->lead)
+        $fuLead = $opp->lead ? $opp->lead->followUps()->get() : collect();
+    
+        // gabungkan keduanya
+        $followups = $fuOpp->merge($fuLead);
+    
+        return view('sales.quotation.create', compact('opp', 'item', 'followups'));
     }
 
     public function storeQuotation(Request $request)
@@ -772,13 +782,22 @@ class SalesController extends Controller
             $quo->update(['STATUS' => 'OPEN']);
         }
     
-        $opp       = Opportunity::with('followups')->where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->firstOrFail();
-        $lead      = Lead::where('LEAD_ID', $opp->LEAD_ID)->firstOrFail();
-        $item      = ItemTable::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->get();
-        $followups = $opp->followups()->orderBy('TGL_FOLLOW','desc')->get();
+        $opp  = Opportunity::with('followups', 'lead.followUps')
+                ->where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)
+                ->firstOrFail();
+    
+        $lead = $opp->lead;
+        $item = ItemTable::where('OPPORTUNITY_ID', $quo->OPPORTUNITY_ID)->get();
+    
+        // gabungkan follow up dari opp + lead
+        $fuOpp  = $opp->followUps()->orderBy('TGL_FOLLOW','desc')->get();
+        $fuLead = $lead ? $lead->followUps()->orderBy('TGL_FOLLOW','desc')->get() : collect();
+    
+        $followups = $fuOpp->merge($fuLead)->sortByDesc('TGL_FOLLOW');
     
         return view('sales.quotation.detail', compact('quo','opp','lead','item','followups'));
     }
+    
     
     
 
@@ -817,26 +836,38 @@ class SalesController extends Controller
     public function storeFollow(Request $request)
     {
         $opportunityId = $request->input('OPPORTUNITY_ID');
+        $leadId        = $request->input('LEAD_ID');
+        // dd($leadId );
     
         if ($request->has('followup')) {
             foreach ($request->followup as $fu) {
-                if (empty($fu['TGL_FOLLOW']) && empty($fu['RESPON']) && empty($fu['KETERANGAN'])) {
+                // Cocokkan nama field dengan form
+                if (empty($fu['TANGGAL_FOLLOW']) && empty($fu['RESPON']) && empty($fu['PROGRESS'])) {
                     continue;
                 }
     
-                FollowUp::create([
-                    'OPPORTUNITY_ID' => $opportunityId,
+                $data = [
                     'TGL_FOLLOW' => $fu['TANGGAL_FOLLOW'] ?? null,
-                    'RESPON'         => $fu['RESPON'] ?? null,
-                    'KETERANGAN'       => $fu['PROGRESS'] ?? null,
-                    'CREATED_AT'     => now(),
-                    'UPDATED_AT'     => now(),
-                ]);
+                    'RESPON'     => $fu['RESPON'] ?? null,
+                    'KETERANGAN' => $fu['PROGRESS'] ?? null, // progress dari form disimpan ke KETERANGAN
+                    'CREATED_AT' => now(),
+                    'UPDATED_AT' => now(),
+                ];
+    
+                // pilih pakai OPPORTUNITY_ID atau LEAD_ID
+                if (!empty($opportunityId)) {
+                    $data['OPPORTUNITY_ID'] = $opportunityId;
+                } elseif (!empty($leadId)) {
+                    $data['LEAD_ID'] = $leadId;
+                }
+    
+                FollowUp::create($data);
             }
         }
     
         return redirect()->back()->with('success', 'Follow up berhasil ditambahkan!');
-    }    
+    }
+    
     
     
 }
