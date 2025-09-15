@@ -35,7 +35,7 @@
                 <td class="border p-2">{{ $item->PROSENTASE_PROSPECT }}%</td>
                 
                 <td class="border p-2 space-x-2">
-                    @if($item->lead->STATUS == 'opportunity' && $item->lead->ID_USER === Auth::id())
+                    @if($item->lead->STATUS == 'opportunity' && $item->lead->ID_USER == Auth::id())
                         <a href="{{ route('quotation.create', ['id' => $item->OPPORTUNITY_ID]) }}"
                             class="bg-green-600 hover:bg-green-700 text-white font-medium px-3 py-1 rounded">
                             + Quotation

@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const perusahaanLabel = document.querySelector('label[for="PERUSAHAAN"]');
 
     function updatePerusahaanRequired() {
-        if (kategoriField.value === 'COMPANY') {
+        if (kategoriField.value == 'COMPANY') {
             perusahaanField.required = true;
             if (!perusahaanLabel.querySelector('span.text-red-500')) {
                 perusahaanLabel.innerHTML += ' <span class="text-red-500">*</span>';
