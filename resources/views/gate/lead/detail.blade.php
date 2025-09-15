@@ -44,7 +44,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" 
                             d="M16.862 4.487l1.651-1.651a2.121 2.121 0 113 3l-1.651 1.651m-3-3l-9.193 9.193a4 4 0 00-1.037 1.74l-.397 1.59a.75.75 0 00.91.91l1.59-.397a4 4 0 001.74-1.037l9.193-9.193m-3-3l3 3"/>
                     </svg>
-                    Follow Up
+                    Edit
                 </a>  
             @endif
         </div>
