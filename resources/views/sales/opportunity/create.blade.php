@@ -385,125 +385,133 @@ $(document).ready(function () {
     let rowIdx = 0;
     let manualEdit = false;
 
+    // Format angka ke format rupiah (3.150.000)
     function formatRupiah(angka) {
-        return angka.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        if (!angka) return "0";
+        return String(angka).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
 
-    // Init Select2
-    function initSelect2(selector) {
-        selector.select2({
+    // Inisialisasi Select2
+    function initSelect2($select) {
+        $select.select2({
             placeholder: 'Pilih produk',
             minimumInputLength: 0,
+            width: '100%', // supaya select full lebar kolom
             ajax: {
-                url: '{{ route('get.produk.sales') }}',
+                url: '{{ route("get.produk.sales") }}',
                 dataType: 'json',
                 delay: 250,
-                data: function (params) {
+                data: function(params) {
                     return { q: params.term || '' };
                 },
-                processResults: function (data) {
+                processResults: function(data) {
                     return {
-                        results: data.map(function (item) {
+                        results: data.map(function(item) {
                             return {
                                 id: item.ID_PRODUK,
                                 text: item.NAMA,
-                                SKU: item.SKU
+                                SKU: item.SKU,
+                                HARGA: item.HARGA
                             };
                         })
                     };
                 },
                 cache: true
             }
-        }).on('select2:open', function () {
-            $(".select2-search__field").trigger('input');
-        }).on('select2:select', function (e) {
-            let selected = e.params.data;
-            let $row = $(this).closest('tr');
-            $row.find('.sku-input').val(selected.SKU);
         });
     }
+
+    // Event produk dipilih
+    $(document).on('select2:select', '.produk-select', function(e) {
+        let selected = e.params.data;
+        let $row = $(this).closest('tr');
+
+        // isi SKU
+        $row.find('.sku-input').val(selected.SKU || '');
+
+        // isi harga (tampil rupiah, simpan raw int)
+        let harga = parseInt(selected.HARGA) || 0;
+        $row.find('.price-input')
+            .data('raw', harga)
+            .val(formatRupiah(harga));
+
+        // hitung total (pakai format Rupiah)
+        let qty = parseInt($row.find('.qty-input').val()) || 1;
+        let total = qty * harga;
+        $row.find('.total-input').val(formatRupiah(total));
+        $row.find('.total-hidden').val(total);
+    });
+
+    // Inisialisasi row pertama
     initSelect2($('.produk-select'));
 
-    // Add Row
-    $('#add-row').on('click', function () {
+    // Tambah Row
+    $('#add-row').on('click', function() {
         rowIdx++;
-        let newRow = `
-            <tr>
-                <td class="border border-gray-400 p-2">
-                    <select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select>
-                </td>
-                <td class="border border-gray-400 p-2">
-                    <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
-                </td>
-                <td class="border border-gray-400 p-2">
-                    <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
-                </td>
-                <td class="border border-gray-400 p-2">
-                    <input type="text" name="produk[${rowIdx}][PRICE]" value="0" class="price-input w-full border border-gray-400 px-2 py-1">
-                </td>
-                <td class="border border-gray-400 p-2">
-                    <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
-                    <input type="hidden" name="produk[${rowIdx}][TOTAL]" value="0" class="total-hidden">
-                </td>
-                <td class="border border-gray-400 p-2 text-center">
-                    <button type="button" class="remove-row text-red-500">✖</button>
-                </td>
-            </tr>
-        `;
+        let newRow = `<tr>
+            <td class="border border-gray-400 p-2">
+                <select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select>
+            </td>
+            <td class="border border-gray-400 p-2">
+                <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
+            </td>
+            <td class="border border-gray-400 p-2">
+                <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
+            </td>
+            <td class="border border-gray-400 p-2">
+                <input type="text" name="produk[${rowIdx}][PRICE]" value="0" class="price-input w-full border border-gray-400 px-2 py-1">
+            </td>
+            <td class="border border-gray-400 p-2">
+                <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
+                <input type="hidden" name="produk[${rowIdx}][TOTAL]" value="0" class="total-hidden">
+            </td>
+            <td class="border border-gray-400 p-2 text-center">
+                <button type="button" class="remove-row text-red-500">✖</button>
+            </td>
+        </tr>`;
         $('#produk-body').append(newRow);
-        initSelect2($(`#produk-body tr:last-child .produk-select`));
+        initSelect2($('#produk-body tr:last-child .produk-select'));
     });
 
     // Remove Row
-    $('#produk-body').on('click', '.remove-row', function () {
+    $('#produk-body').on('click', '.remove-row', function() {
         $(this).closest('tr').remove();
         updateNilaiProspectFromTable();
     });
 
-    // Input Harga → format & simpan raw
-    $(document).on('input', '.price-input', function () {
-        let raw = $(this).val().replace(/\D/g, '').replace(/^0+/, '') || '0';
+    // Input PRICE manual → tetap simpan raw int
+    $(document).on('input', '.price-input', function() {
+        let raw = $(this).val().replace(/\D/g, '') || '0';
         $(this).data('raw', raw);
-        $(this).val(formatRupiah(raw));
+        $(this).val(formatRupiah(raw)); // tampilkan dalam rupiah
         updateRowTotal($(this).closest('tr'));
     });
 
-    // Input Qty
-    $(document).on('input', '.qty-input', function () {
-        this.value = this.value.replace(/\D/g, '');
-        if (this.value === '' || parseInt(this.value) < 1) this.value = 1;
+    // Input QTY → minimal 1
+    $(document).on('input', '.qty-input', function() {
+        let val = this.value.replace(/\D/g, '');
+        if (val === '' || parseInt(val) < 1) val = 1; // minimal 1
+        this.value = val;
         updateRowTotal($(this).closest('tr'));
     });
 
-    // Hitung Total per baris
+    // Hitung total per row
     function updateRowTotal($row) {
         let qty = parseInt($row.find('.qty-input').val()) || 0;
-        let rawPrice = $row.find('.price-input').data('raw') || '0';
-        let total = qty * parseInt(rawPrice);
-        $row.find('.total-input').val(formatRupiah(String(total)));
+        let harga = parseInt($row.find('.price-input').data('raw')) || 0;
+        let total = qty * harga;
+        $row.find('.total-input').val(formatRupiah(total));
         $row.find('.total-hidden').val(total);
         updateNilaiProspectFromTable();
     }
 
-    // Hitung Nilai Prospect dari semua total-hidden
-    // function updateNilaiProspectFromTable() {
-    //     if (manualEdit) return;
-    //     let totalSemua = 0;
-    //     $('.total-hidden').each(function () {
-    //         totalSemua += parseInt($(this).val() || 0);
-    //     });
-    //     let $np = $('[name="NILAI_PROSPECT"]');
-    //     $np.data('raw', String(totalSemua));
-    //     $np.val(formatRupiah(String(totalSemua)));
-    // }
-
-    // Input manual Nilai Prospect
-    $(document).on('input', '[name="NILAI_PROSPECT"]', function () {
+    // Input manual NILAI_PROSPECT
+    $(document).on('input', '[name="NILAI_PROSPECT"]', function() {
         manualEdit = true;
-        let raw = this.value.replace(/\D/g, '').replace(/^0+/, '') || '0';
+        let raw = this.value.replace(/\D/g, '') || '0';
         $(this).data('raw', raw);
         this.value = formatRupiah(raw);
-    }).on('blur', '[name="NILAI_PROSPECT"]', function () {
+    }).on('blur', '[name="NILAI_PROSPECT"]', function() {
         if (this.value.trim() === '') {
             $(this).data('raw', '0');
             this.value = '0';
@@ -511,21 +519,23 @@ $(document).ready(function () {
         manualEdit = false;
     });
 
-    // Saat submit
-    $('form').on('submit', function () {
+    // Submit form → simpan raw int ke DB
+    $('form').on('submit', function() {
         let $np = $('[name="NILAI_PROSPECT"]');
         $np.val($np.data('raw') || '0');
-        $('.price-input').each(function () {
-            $(this).val($(this).data('raw') || '0');
-        });
-        $('.total-input').each(function () {
+        $('.price-input').each(function() { $(this).val($(this).data('raw') || '0'); });
+        $('.total-input').each(function() {
             let text = $(this).val().replace(/\D/g, '') || '0';
             $(this).val(text);
         });
     });
 
-    // Hitung awal
-    updateNilaiProspectFromTable();
+    // Dummy fungsi global biar gak error
+    function updateNilaiProspectFromTable() {
+        // hitung total keseluruhan kalau perlu
+    }
 });
 </script>
+
+
 @endsection

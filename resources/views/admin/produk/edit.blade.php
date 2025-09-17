@@ -39,6 +39,15 @@
             </select>
         </div>
 
+        <div>
+            <label class="block text-sm font-medium">Harga</label>
+            <input type="text" name="HARGA" 
+                   value="{{ old('HARGA', $produk->HARGA) }}" 
+                   class="w-full border rounded p-2" 
+                   required>
+            <p class="text-xs text-gray-500 mt-1">Masukkan angka tanpa Rp/titik. Contoh: <strong>1100000</strong></p>
+        </div>
+
         <div class="flex justify-end gap-2">
             <a href="{{ route('produk.index') }}" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Batal</a>
             <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Update</button>

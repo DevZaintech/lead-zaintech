@@ -424,12 +424,17 @@ function openTab(tabId, btn) {
     btn.classList.remove('text-gray-600', 'border-transparent');
 }
 
-// Common functions
-function formatRupiah(angka) { return angka.replace(/\B(?=(\d{3})+(?!\d))/g, "."); }
+// Format angka ke format rupiah (3.150.000)
+function formatRupiah(angka) {
+    if (!angka) return "0";
+    return String(angka).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Table produk
 function initProdukTable($tbody, rowIdxStart) {
     let rowIdx = rowIdxStart;
 
-    function initSelect2ForRow($select){
+    function initSelect2ForRow($select) {
         $select.select2({
             placeholder: 'Pilih produk',
             minimumInputLength: 0,
@@ -437,51 +442,102 @@ function initProdukTable($tbody, rowIdxStart) {
                 url: '{{ route('get.produk.sales') }}',
                 dataType: 'json',
                 delay: 250,
-                data: params => ({q: params.term || ''}),
-                processResults: data => ({results: data.map(i => ({id: i.ID_PRODUK, text: i.NAMA, SKU: i.SKU}))}),
+                data: params => ({ q: params.term || '' }),
+                processResults: data => ({
+                    results: data.map(i => ({
+                        id: i.ID_PRODUK,
+                        text: i.NAMA,
+                        SKU: i.SKU,
+                        HARGA: i.HARGA
+                    }))
+                }),
                 cache: true
             }
-        }).on('select2:select', function(e){
+        }).on('select2:select', function (e) {
             let selected = e.params.data;
-            $(this).closest('tr').find('.sku-input').val(selected.SKU);
+            let $row = $(this).closest('tr');
+            $row.find('.sku-input').val(selected.SKU);
+
+            // isi harga
+            let harga = parseInt(selected.HARGA) || 0;
+            $row.find('.price-input')
+                .data('raw', harga)
+                .val(formatRupiah(harga));
+
+            // hitung total
+            updateRowTotal($row);
         });
     }
 
-    $tbody.find('.produk-select').each(function(){ initSelect2ForRow($(this)); });
-
-    $tbody.closest('form').on('submit', function(){
-        $tbody.find('.price-input').each(function(){ $(this).val($(this).data('raw')); });
+    // inisialisasi row awal
+    $tbody.find('.produk-select').each(function () {
+        initSelect2ForRow($(this));
     });
 
-    $tbody.on('click', '.remove-row', function(){ $(this).closest('tr').remove(); });
+    // pastikan submit simpan raw value
+    $tbody.closest('form').on('submit', function () {
+        $tbody.find('.price-input').each(function () {
+            $(this).val($(this).data('raw') || 0);
+        });
+        $tbody.find('.total-input').each(function () {
+            let text = $(this).val().replace(/\D/g, '') || '0';
+            $(this).val(text);
+        });
+    });
 
-    $tbody.on('input', '.price-input', function(){
-        let raw = $(this).val().replace(/\D/g,'')||'0';
+    // hapus row
+    $tbody.on('click', '.remove-row', function () {
+        $(this).closest('tr').remove();
+    });
+
+    // input harga manual
+    $tbody.on('input', '.price-input', function () {
+        let raw = $(this).val().replace(/\D/g, '') || '0';
         $(this).data('raw', raw);
         $(this).val(formatRupiah(raw));
         updateRowTotal($(this).closest('tr'));
     });
 
-    $tbody.on('input', '.qty-input', function(){ updateRowTotal($(this).closest('tr')); });
+    // input qty
+    $tbody.on('input', '.qty-input', function () {
+        let val = parseInt($(this).val()) || 1;
+        if (val < 1) val = 1;
+        $(this).val(val);
+        updateRowTotal($(this).closest('tr'));
+    });
 
-    function updateRowTotal($row){
-        let qty = parseInt($row.find('.qty-input').val())||0;
-        let price = parseInt($row.find('.price-input').data('raw'))||0;
-        let total = qty*price;
+    function updateRowTotal($row) {
+        let qty = parseInt($row.find('.qty-input').val()) || 1;
+        let price = parseInt($row.find('.price-input').data('raw')) || 0;
+        let total = qty * price;
         $row.find('.total-input').val(formatRupiah(String(total)));
         $row.find('.total-hidden').val(total);
     }
 
-    return function(addBtnSelector){
-        $(addBtnSelector).on('click', function(){
+    // return function untuk tambah row
+    return function (addBtnSelector) {
+        $(addBtnSelector).on('click', function () {
             rowIdx++;
             let newRow = `<tr>
-                <td class="border border-gray-400 p-2"><select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select></td>
-                <td class="border border-gray-400 p-2"><input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly></td>
-                <td class="border border-gray-400 p-2"><input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1"></td>
-                <td class="border border-gray-400 p-2"><input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1"></td>
-                <td class="border border-gray-400 p-2"><input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly><input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden"></td>
-                <td class="border border-gray-400 p-2 text-center"><button type="button" class="remove-row text-red-500">✖</button></td>
+                <td class="border border-gray-400 p-2">
+                    <select name="produk[${rowIdx}][ID_PRODUK]" class="produk-select w-full"></select>
+                </td>
+                <td class="border border-gray-400 p-2">
+                    <input type="text" name="produk[${rowIdx}][SKU]" class="sku-input w-full border border-gray-400 px-2 py-1" readonly>
+                </td>
+                <td class="border border-gray-400 p-2">
+                    <input type="number" name="produk[${rowIdx}][QTY]" value="1" min="1" class="qty-input w-full border border-gray-400 px-2 py-1">
+                </td>
+                <td class="border border-gray-400 p-2">
+                    <input type="text" name="produk[${rowIdx}][PRICE]" class="price-input w-full border border-gray-400 px-2 py-1">
+                </td>
+                <td class="border border-gray-400 p-2">
+                    <input type="text" class="total-input w-full border border-gray-400 px-2 py-1" readonly>
+                    <input type="hidden" name="produk[${rowIdx}][TOTAL]" class="total-hidden">
+                </td>
+                <td class="border border-gray-400 p-2 text-center">
+                    <button type="button" class="remove-row text-red-500">✖</button>
+                </td>
             </tr>`;
             $tbody.append(newRow);
             initSelect2ForRow($tbody.find('tr:last-child .produk-select'));
@@ -489,7 +545,7 @@ function initProdukTable($tbody, rowIdxStart) {
     }
 }
 
-$(document).ready(function(){
+$(document).ready(function () {
     // Tab Opportunity
     let addRowOpp = initProdukTable($('#produk-body-opp'), {{ $rowIdxOpp-1 }});
     addRowOpp('#add-row-opp');
@@ -498,29 +554,29 @@ $(document).ready(function(){
     let addRowQuo = initProdukTable($('#produk-body-quo'), {{ $rowIdxQuo-1 }});
     addRowQuo('#add-row-quo');
 
-    // Format NILAI_PROSPECT & PROSENTASE per tab
-    function initInputFormatting(inputId, persenId=null){
+    // Format manual input (prospect & prosentase)
+    function initInputFormatting(inputId, persenId = null) {
         let input = document.getElementById(inputId);
-        if(!input) return;
-        input.value = formatRupiah(input.value);
-        input.addEventListener('input', function(){
-            const angka = input.value.replace(/\D/g,'');
+        if (!input) return;
+        input.addEventListener('input', function () {
+            const angka = input.value.replace(/\D/g, '');
             input.value = formatRupiah(angka);
         });
-        if(persenId){
+        if (persenId) {
             let persenInput = document.getElementById(persenId);
-            persenInput.addEventListener('input', function(){
-                let val = this.value.replace(/\D/g,'');
-                this.value = val? val+'%' : '';
+            persenInput.addEventListener('input', function () {
+                let val = this.value.replace(/\D/g, '');
+                this.value = val ? val + '%' : '';
             });
-            persenInput.addEventListener('blur', function(){
-                if(this.value && !this.value.includes('%')) this.value += '%';
+            persenInput.addEventListener('blur', function () {
+                if (this.value && !this.value.includes('%')) this.value += '%';
             });
         }
     }
 
-    initInputFormatting('NILAI_PROSPECT_OPP','PROSENTASE_OPP');
-    initInputFormatting('NILAI_PROSPECT_QUO','PROSENTASE_QUO');
+    initInputFormatting('NILAI_PROSPECT_OPP', 'PROSENTASE_OPP');
+    initInputFormatting('NILAI_PROSPECT_QUO', 'PROSENTASE_QUO');
 });
 </script>
+
 @endsection

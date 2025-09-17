@@ -372,13 +372,25 @@ function initProdukTable($tbody, rowIdxStart, addBtnSelector){
                 delay: 250,
                 data: params => ({q: params.term || ''}),
                 processResults: data => ({
-                    results: data.map(i => ({id: i.ID_PRODUK, text: i.NAMA, SKU: i.SKU}))
+                    results: data.map(i => ({
+                        id: i.ID_PRODUK,
+                        text: i.NAMA,
+                        SKU: i.SKU,
+                        HARGA: i.HARGA
+                    }))
                 }),
                 cache: true
             }
         }).on('select2:select', function(e){
             let selected = e.params.data;
-            $(this).closest('tr').find('.sku-input').val(selected.SKU);
+            let $row = $(this).closest('tr');
+            $row.find('.sku-input').val(selected.SKU || '');
+            if(selected.HARGA){
+                let raw = String(selected.HARGA);
+                $row.find('.price-input').data('raw', raw);
+                $row.find('.price-input').val(formatRupiah(raw));
+                updateRowTotal($row);
+            }
         });
     }
 
@@ -399,7 +411,7 @@ function initProdukTable($tbody, rowIdxStart, addBtnSelector){
         $(this).closest('tr').remove(); 
     });
 
-    // Update harga
+    // Update harga manual
     $tbody.on('input', '.price-input', function(){
         let raw = $(this).val().replace(/\D/g,'')||'0';
         $(this).data('raw', raw);
@@ -452,7 +464,10 @@ function initProdukTable($tbody, rowIdxStart, addBtnSelector){
 
 $(document).ready(function(){
     // Init produk untuk Quotation
-    initProdukTable($('#produk-body-quo'), {{ count($item) }}, '#add-row-quo');
+    initProdukTable($('#produk-body-quo'), {{ $rowIdxQuo-1 }}, '#add-row-quo');
+
+    // Init produk untuk Opportunity (fallback kalau $rowIdxOpp belum ada)
+    initProdukTable($('#produk-body-opp'), {{ ($rowIdxOpp ?? 1) - 1 }}, '#add-row-opp');
 
     // Format input Rupiah & Persen
     function initInputFormatting(inputId, persenId=null){
@@ -494,7 +509,7 @@ $(document).ready(function(){
         $('#reasonField').removeClass('hidden');
         $('#REASON').attr('required', true);
     }
-
 });
 </script>
+
 @endsection

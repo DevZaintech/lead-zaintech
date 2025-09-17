@@ -5,6 +5,7 @@
             <th class="border p-2 text-left">Nama</th>
             <th class="border p-2 text-left">Subkategori</th>
             <th class="border p-2 text-left">Kategori</th>
+            <th class="border p-2 text-left">Harga</th>
             <th class="border p-2 text-left">Action</th>
         </tr>
     </thead>
@@ -15,6 +16,9 @@
                 <td class="border p-2">{{ $item->NAMA }}</td>
                 <td class="border p-2">{{ $item->subkategori->NAMA ?? '-' }}</td>
                 <td class="border p-2">{{ $item->subkategori->kategori->NAMA ?? '-' }}</td>
+                <td class="border p-2">
+                    {{ $item->HARGA ? 'Rp ' . number_format($item->HARGA, 0, ',', '.') : '-' }}
+                </td>
                 <td class="border p-2 space-x-2">
                     <a href="{{ route('produk.edit', $item->ID_PRODUK) }}"
                        class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded">
@@ -34,11 +38,12 @@
             </tr>
         @empty
             <tr>
-                <td colspan="5" class="border p-2 text-center text-gray-500">Belum ada data</td>
+                <td colspan="6" class="border p-2 text-center text-gray-500">Belum ada data</td>
             </tr>
         @endforelse
     </tbody>
 </table>
+
 <div class="mt-4">
     {{ $produk->links() }}
 </div>

@@ -15,14 +15,19 @@ class ProdukImport implements ToCollection
         unset($rows[0]);
 
         foreach ($rows as $row) {
-            // Excel format: SKU ID | NAME | SUB CATEGORY | CATEGORY
+            // Bersihkan format harga (Rp, titik, spasi)
+            $harga = preg_replace('/[^0-9]/', '', $row[4]); 
+            // Pastikan tetap numeric
+            $harga = is_numeric($harga) ? (int) $harga : 0;
+
+            // Cari sub kategori
             $subKategori = SubKategori::where('NAMA', $row[2])->first();
-            // dd($subKategori->ID_SUB);
 
             Produk::create([
-                'ID_SUB'     => $subKategori->ID_SUB,
+                'ID_SUB'     => $subKategori->ID_SUB ?? null,
                 'NAMA'       => $row[1],   // kolom NAME
                 'SKU'        => $row[0],   // kolom SKU ID
+                'HARGA'      => $harga,    // kolom HARGA sudah dibersihkan
                 'IMAGE'      => null,
                 'STATUS'     => 'aktif',
                 'CREATED_AT' => now(),
