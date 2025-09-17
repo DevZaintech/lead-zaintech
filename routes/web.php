@@ -110,6 +110,9 @@ Route::middleware(['auth','role:sales'])->group(function () {
     Route::post('/follow/store', [SalesController::class, 'storeFollow'])->name('follow.store');
     Route::post('/follow/update/{ID_FOLLOW}', [SalesController::class, 'updateFollow'])->name('follow.update');
 
+    Route::get('/editlead/{lead_id}/sales', [SalesController::class, 'editLead'])->name('edit.lead.sales');
+    Route::post('/updatelead/sales', [SalesController::class, 'updateLead'])->name('updatelead.sales');
+
 });
 
 

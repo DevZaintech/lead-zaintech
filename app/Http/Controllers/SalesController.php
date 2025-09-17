@@ -903,6 +903,57 @@ class SalesController extends Controller
     
         return response()->json(['status'=>'success']);
     }
+
+    public function editLead($lead_id)
+    {
+        $lead = Lead::with(['sub_kategori', 'kota', 'user'])
+            ->where('LEAD_ID', $lead_id)
+            ->firstOrFail();
+        $user = User::where('ROLE', 'sales')
+        ->whereNull('DELETED_AT')
+        ->get();
+
+        $subkategori = SubKategori::whereNull('DELETED_AT')
+        ->get();
+
+        return view('sales.lead.editlead', compact('lead','user','subkategori'));
+    }
+
+    public function updateLead(Request $request)
+    {
+        // Validasi sesuai kondisi
+        $request->validate([
+            'LEAD_SOURCE' => 'required',
+            // 'STATUS' => 'required|in:lead,norespon',
+            // 'USER'   => $request->STATUS == 'lead' ? 'required' : 'nullable',
+            // 'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
+        ], [
+            'LEAD_SOURCE.required' => 'Sumber Lead wajib dipilih',
+            // 'USER.required' => 'Sales wajib dipilih jika status Lead',
+            // 'STATUS.required' => 'Status wajib diisi',
+            'NO_TELP.required'     => 'No. Telepon wajib diisi',
+            'NO_TELP.numeric'      => 'No. Telepon hanya boleh angka',
+            'NO_TELP.min'          => 'No. Telepon minimal 8 digit',
+        ]);
+        
+        // Simpan data ke tabel lead
+        Lead::where('LEAD_ID', $request->LEAD_ID)->update([
+            'ID_SUB'        => $request->KEBUTUHAN,
+            'NAMA'          => $request->NAMA,
+            'PERUSAHAAN'    => $request->PERUSAHAAN,
+            'KATEGORI'       => $request->KATEGORI,
+            'kode_kota'     => $request->kode_kota,
+            'NO_TELP'       => $request->NO_TELP,
+            'EMAIL'         => $request->EMAIL,
+            'LEAD_SOURCE'   => $request->LEAD_SOURCE,
+            'NOTE'          => $request->NOTE,
+            'UPDATED_AT'    => now(),
+            // kolom tambahan sesuai kebutuhan
+        ]);
+        return redirect()
+        ->route('datalead.sales')
+        ->with('success', 'Lead berhasil diperbarui.');
+    }
     
     
     
