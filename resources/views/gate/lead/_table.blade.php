@@ -53,6 +53,46 @@
         @endforelse
     </tbody>
 </table>
-<div class="mt-4">
-    {{ $lead->links() }}
-</div>
+@if ($lead->hasPages())
+    <div class="flex justify-between items-center mt-4 text-sm text-gray-600">
+        <div>
+            Showing 
+            <span class="font-semibold">{{ $lead->firstItem() }}</span>
+            to 
+            <span class="font-semibold">{{ $lead->lastItem() }}</span>
+            of 
+            <span class="font-semibold">{{ $lead->total() }}</span> results
+        </div>
+
+        <nav class="flex items-center space-x-1">
+            {{-- Tombol Previous --}}
+            @if ($lead->onFirstPage())
+                <span class="px-3 py-1 rounded bg-gray-200 text-gray-400 cursor-not-allowed">&laquo;</span>
+            @else
+                <a href="{{ $lead->previousPageUrl() }}" 
+                   class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600">&laquo;</a>
+            @endif
+
+            {{-- Number Page --}}
+            @foreach ($lead->getUrlRange(1, $lead->lastPage()) as $page => $url)
+                @if ($page == $lead->currentPage())
+                    <span class="px-3 py-1 rounded bg-blue-600 text-white font-bold">{{ $page }}</span>
+                @else
+                    <a href="{{ $url }}" 
+                       class="px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-blue-500 hover:text-white">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Tombol Next --}}
+            @if ($lead->hasMorePages())
+                <a href="{{ $lead->nextPageUrl() }}" 
+                   class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600">&raquo;</a>
+            @else
+                <span class="px-3 py-1 rounded bg-gray-200 text-gray-400 cursor-not-allowed">&raquo;</span>
+            @endif
+        </nav>
+    </div>
+@endif
+
