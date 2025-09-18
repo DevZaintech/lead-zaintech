@@ -370,7 +370,7 @@ class AdminController extends Controller
                 $q->whereBetween('CREATED_AT', [$start, $end]);
             })
             ->orderBy('LEAD_ID', 'desc')
-            ->paginate(15);
+            ->paginate(15)->appends(request()->query());
 
         if ($request->ajax()) {
             return view('admin.lead._table', compact('lead'))->render();
