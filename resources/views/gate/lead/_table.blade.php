@@ -69,20 +69,16 @@
             @if ($lead->onFirstPage())
                 <span class="px-3 py-1 rounded bg-gray-200 text-gray-400 cursor-not-allowed">&laquo;</span>
             @else
-                <a href="{{ $lead->previousPageUrl() }}&{{ http_build_query(request()->query()) }}" 
+                <a href="{{ $lead->previousPageUrl() }}" 
                    class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600">&laquo;</a>
             @endif
 
             {{-- Number Page --}}
             @foreach ($lead->getUrlRange(1, $lead->lastPage()) as $page => $url)
-                @php
-                    $fullUrl = $url . '&' . http_build_query(request()->query());
-                @endphp
-
                 @if ($page == $lead->currentPage())
                     <span class="px-3 py-1 rounded bg-blue-600 text-white font-bold">{{ $page }}</span>
                 @else
-                    <a href="{{ $fullUrl }}" 
+                    <a href="{{ $url }}" 
                        class="px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-blue-500 hover:text-white">
                         {{ $page }}
                     </a>
@@ -91,7 +87,7 @@
 
             {{-- Tombol Next --}}
             @if ($lead->hasMorePages())
-                <a href="{{ $lead->nextPageUrl() }}&{{ http_build_query(request()->query()) }}" 
+                <a href="{{ $lead->nextPageUrl() }}" 
                    class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600">&raquo;</a>
             @else
                 <span class="px-3 py-1 rounded bg-gray-200 text-gray-400 cursor-not-allowed">&raquo;</span>
@@ -99,5 +95,4 @@
         </nav>
     </div>
 @endif
-
 
