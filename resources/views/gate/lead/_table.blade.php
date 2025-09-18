@@ -64,8 +64,8 @@
             <span class="font-semibold">{{ $lead->total() }}</span> results
         </div>
 
-        <nav class="flex items-center space-x-1">
-            {{-- Tombol Previous --}}
+        <nav class="flex items-center space-x-1 pagination">
+            {{-- Previous --}}
             @if ($lead->onFirstPage())
                 <span class="px-3 py-1 rounded bg-gray-200 text-gray-400 cursor-not-allowed">&laquo;</span>
             @else
@@ -73,7 +73,7 @@
                    class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600">&laquo;</a>
             @endif
 
-            {{-- Number Page --}}
+            {{-- Numbered Pages --}}
             @foreach ($lead->getUrlRange(1, $lead->lastPage()) as $page => $url)
                 @if ($page == $lead->currentPage())
                     <span class="px-3 py-1 rounded bg-blue-600 text-white font-bold">{{ $page }}</span>
@@ -85,7 +85,7 @@
                 @endif
             @endforeach
 
-            {{-- Tombol Next --}}
+            {{-- Next --}}
             @if ($lead->hasMorePages())
                 <a href="{{ $lead->nextPageUrl() }}" 
                    class="px-3 py-1 rounded bg-blue-500 text-white hover:bg-blue-600">&raquo;</a>
@@ -95,4 +95,5 @@
         </nav>
     </div>
 @endif
+
 

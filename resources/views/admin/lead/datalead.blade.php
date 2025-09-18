@@ -81,7 +81,6 @@
 
 
 {{-- Script Live Search + Pagination --}}
-{{-- jQuery sudah dipanggil --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     function fetch_data(page = 1) {
@@ -90,7 +89,7 @@
         let source    = $('#filterSource').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
-        let status    = $('#filterStatus').val(); // ambil value filter STATUS
+        let status    = $('#filterStatus').val();
 
         $.ajax({
             url: "{{ route('datalead.admin') }}",
@@ -101,7 +100,7 @@
                 source: source,
                 startDate: startDate,
                 endDate: endDate,
-                status: status, // kirim ke controller
+                status: status,
             },
             success: function(data) {
                 $('#lead_table').html(data);
@@ -109,20 +108,20 @@
         });
     }
 
-    // semua filter termasuk STATUS akan trigger live fetch
+    // Trigger fetch saat filter berubah / cari
     $('#searchInput, #filterSales, #filterSource, #startDate, #endDate, #filterStatus')
         .on('change keyup', function() {
             fetch_data();
         });
 
-    // pagination tetap berjalan
+    // Pagination
     $(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
         let page = $(this).attr('href').split('page=')[1];
         fetch_data(page);
     });
 
-    // export tetap jalan
+    // Export dengan semua filter
     $('#btnExport').on('click', function(e) {
         e.preventDefault();
         let search    = $('#searchInput').val();
@@ -130,7 +129,7 @@
         let source    = $('#filterSource').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
-        let status    = $('#filterStatus').val(); // sertakan STATUS di export jika mau
+        let status    = $('#filterStatus').val();
 
         window.location.href = "{{ route('exportlead.admin') }}" +
             "?search=" + search +
@@ -141,6 +140,5 @@
             "&status=" + status;
     });
 </script>
-
 
 @endsection

@@ -118,7 +118,7 @@ class SalesController extends Controller
                 $q->whereBetween('CREATED_AT', [$start, $end]);
             })
             ->orderBy('LEAD_ID', 'desc')
-            ->paginate(15)->withQueryString();
+            ->paginate(100)->withQueryString();
     
         if ($request->ajax()) {
             return view('sales.lead._table', compact('lead'))->render();

@@ -72,7 +72,8 @@
 {{-- Ajax --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function fetch_data(page = 1) {
+    // ✅ Fungsi ambil data
+    function fetch_data(url = "{{ route('datalead.sales') }}") {
         let search    = $('#searchInput').val();
         let sales     = $('#filterSales').val();
         let source    = $('#filterSource').val();
@@ -81,15 +82,14 @@
         let endDate   = $('#endDate').val();
 
         $.ajax({
-            url: "{{ route('datalead.sales') }}",
+            url: url, // pakai full URL Laravel (page & filter ikut)
             data: {
-                page: page,
                 search: search,
                 sales: sales,
                 source: source,
                 status: status,
                 startDate: startDate,
-                endDate: endDate,
+                endDate: endDate
             },
             success: function(data) {
                 $('#lead_table').html(data);
@@ -97,15 +97,44 @@
         });
     }
 
+    // ✅ Trigger filter/search → selalu reset ke page 1
     $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate')
         .on('change keyup', function() {
-            fetch_data();
+            fetch_data("{{ route('datalead.sales') }}"); // reset ke page 1 saat filter berubah
         });
 
+    // ✅ Pagination AJAX (ambil href Laravel)
     $(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
-        let page = $(this).attr('href').split('page=')[1];
-        fetch_data(page);
+        let url = $(this).attr('href'); // URL Laravel sudah ada ?page=2&filter
+
+        let search    = $('#searchInput').val();
+        let sales     = $('#filterSales').val();
+        let source    = $('#filterSource').val();
+        let status    = $('#filterStatus').val();
+        let startDate = $('#startDate').val();
+        let endDate   = $('#endDate').val();
+
+        $.ajax({
+            url: url,
+            data: {
+                search: search,
+                sales: sales,
+                source: source,
+                status: status,
+                startDate: startDate,
+                endDate: endDate
+            },
+            success: function(data) {
+                $('#lead_table').html(data);
+            }
+        });
+    });
+
+    // ✅ Load pertama kali
+    $(document).ready(function () {
+        fetch_data();
     });
 </script>
+
 @endsection

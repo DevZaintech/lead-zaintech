@@ -98,22 +98,21 @@
     // ✅ Default My Lead ON
     let myLead = true;
 
-    function fetch_data(page = 1) {
+    function fetch_data(url = "{{ route('datalead.gate') }}") {
         let search    = $('#searchInput').val();
         let sales     = $('#filterSales').val();
         let source    = $('#filterSource').val();
-        let status    = $('#filterStatus').val(); // ✅ tambahan
+        let status    = $('#filterStatus').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
 
         $.ajax({
-            url: "{{ route('datalead.gate') }}",
+            url: url,
             data: {
-                page: page,
                 search: search,
                 sales: sales,
                 source: source,
-                status: status, // ✅ tambahan
+                status: status,
                 startDate: startDate,
                 endDate: endDate,
                 myLead: myLead
@@ -124,11 +123,13 @@
         });
     }
 
+    // trigger filter/search
     $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate')
         .on('change keyup', function() {
             fetch_data();
         });
 
+    // toggle myLead
     $('#myLeadBtn').on('click', function() {
         myLead = !myLead;
         updateMyLeadBtn();
@@ -148,10 +149,33 @@
         fetch_data();
     });
 
+    // ✅ Pagination pakai full URL dari Laravel + kirim filter aktif
     $(document).on('click', '.pagination a', function(e) {
         e.preventDefault();
-        let page = $(this).attr('href').split('page=')[1];
-        fetch_data(page);
+        let url = $(this).attr('href'); // sudah ada ?page=2 dari Laravel
+
+        let search    = $('#searchInput').val();
+        let sales     = $('#filterSales').val();
+        let source    = $('#filterSource').val();
+        let status    = $('#filterStatus').val();
+        let startDate = $('#startDate').val();
+        let endDate   = $('#endDate').val();
+
+        $.ajax({
+            url: url,
+            data: {
+                search: search,
+                sales: sales,
+                source: source,
+                status: status,
+                startDate: startDate,
+                endDate: endDate,
+                myLead: myLead
+            },
+            success: function(data) {
+                $('#lead_table').html(data);
+            }
+        });
     });
 </script>
 
