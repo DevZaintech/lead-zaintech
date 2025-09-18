@@ -46,6 +46,7 @@
             <option value="walk in">Walk In</option>
             <option value="direct">Direct</option>
             <option value="exhibition">Exhibition</option>
+            <option value="relasi">Relasi</option>
         </select>
 
         {{-- Filter Status --}}
