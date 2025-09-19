@@ -12,6 +12,7 @@ use App\Models\Quotation;
 use App\Models\User;
 use App\Models\Kota;
 use App\Models\ItemTable;
+use App\Models\FollowUp;
 use App\Imports\ProdukImport;
 use App\Exports\ProdukExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -557,15 +558,30 @@ class AdminController extends Controller
     {
         $lead = Lead::where('LEAD_ID', $lead_id)->firstOrFail();
         $user = User::all();
-
-        if (in_array($lead->STATUS, ['opportunity', 'lost', 'converted'])){
+    
+        // default follow kosong
+        $follow = collect();
+    
+        if (in_array($lead->STATUS, ['opportunity', 'quotation', 'lost', 'converted'])) {
             $opp = Opportunity::where('LEAD_ID', $lead->LEAD_ID)->firstOrFail();
             $item = ItemTable::where('OPPORTUNITY_ID', $opp->OPPORTUNITY_ID)->get();
-            return view('admin.lead.detail', compact('lead','user','opp','item'));
+    
+            // Ambil follow up yang punya salah satu atau keduanya
+            $follow = FollowUp::where(function ($q) use ($lead, $opp) {
+                    $q->where('LEAD_ID', $lead->LEAD_ID)
+                      ->orWhere('OPPORTUNITY_ID', $opp->OPPORTUNITY_ID);
+                })
+                ->get();
+    
+            return view('admin.lead.detail', compact('lead', 'user', 'opp', 'item', 'follow'));
         }
-
-        return view('admin.lead.detail', compact('lead','user'));
+    
+        // Kalau belum ada opportunity → hanya filter LEAD_ID
+        $follow = FollowUp::where('LEAD_ID', $lead->LEAD_ID)->get();
+    
+        return view('admin.lead.detail', compact('lead', 'user', 'follow'));
     }
+    
 
     public function detailOpp($opp_id)
     {
