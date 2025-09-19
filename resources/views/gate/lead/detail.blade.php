@@ -184,6 +184,43 @@
     </div>
     @endif
 
+    @if($follow->count() > 0)
+        <div class="w-full max-w-[80%] mx-auto bg-white p-8 rounded shadow mt-8">
+            {{-- TABEL FOLLOW UP --}}
+            <div class="mb-6">
+                <h2 class="text-2xl font-semibold mb-6">FOLLOW UP</h2>
+                <table class="w-full border border-gray-300 border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="bg-gray-100 px-3 py-2 w-[5%] border border-gray-300">NO</th>
+                            <th class="bg-gray-100 px-3 py-2 w-[20%] border border-gray-300">TGL FOLLOW</th>
+                            <th class="bg-gray-100 px-3 py-2 w-[20%] border border-gray-300">RESPON</th>
+                            <th class="bg-gray-100 px-3 py-2 w-[40%] border border-gray-300">KETERANGAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($follow as $index => $f)
+                            <tr>
+                                <td class="px-3 py-2 border border-gray-300 text-center">
+                                    {{ $index + 1 }}
+                                </td>
+                                <td class="px-3 py-2 border border-gray-300">
+                                    {{ \Carbon\Carbon::parse($f->TGL_FOLLOW)->translatedFormat('d F Y') }}
+                                </td>
+                                <td class="px-3 py-2 border border-gray-300">
+                                    {{ $f->RESPON }}
+                                </td>
+                                <td class="px-3 py-2 border border-gray-300">
+                                    {{ $f->KETERANGAN }}
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
 </div>
 
 @endsection
