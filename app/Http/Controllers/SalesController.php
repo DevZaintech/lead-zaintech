@@ -526,118 +526,98 @@ class SalesController extends Controller
 
     public function storeQuotation(Request $request)
     {
-        // dd((int) preg_replace('/[^0-9.]/', '', $request->input('PROSENTASE_PROSPECT')));
-        // Validasi dasar (sesuaikan pesan/aturan bila perlu)
         $request->validate([
             // 'SNK' => 'required',
         ]);
-
-        // Ambil tanggal hari ini
+    
         $today = now()->format('Ymd');
-        // Ambil nomor urut terakhir untuk hari ini
         $lastQuotation = Quotation::whereDate('CREATED_AT', now()->toDateString())
             ->orderBy('QUO_ID', 'desc')
             ->first();
         if ($lastQuotation) {
-            // Ambil 4 digit terakhir, convert ke int, lalu tambah 1
             $lastNumber = intval(substr($lastQuotation->QUO_ID, -4));
             $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
         } else {
-            // Hari ini belum ada quotation, mulai dari 0001
             $newNumber = '0001';
         }
-        // Buat ID baru
         $newId = "QUO-{$today}-{$newNumber}";
-
-        // Simpan data quotation
+    
         $quotation = Quotation::create([
-            'QUO_ID'         => $newId,
+            'QUO_ID' => $newId,
             'OPPORTUNITY_ID' => $request->OPPORTUNITY_ID,
-            'SNK'            => $request->SNK,
-            'VALID_DATE'     => $request->VALID_DATE,
-            'STATUS'         => $request->STATUS,
-            // 'NOTE'           => $request->NOTE,
-            'CREATED_AT'     => now(),
-            'UPDATED_AT'     => now(),
+            'SNK' => $request->SNK,
+            'VALID_DATE' => $request->VALID_DATE,
+            'STATUS' => $request->STATUS,
+            'CREATED_AT' => now(),
+            'UPDATED_AT' => now(),
         ]);
-
+    
         try {
             DB::transaction(function () use ($request) {
                 $now = now()->toDateTimeString();
                 $opportunityId = $request->input('OPPORTUNITY_ID');
-                $nilaiProspect = preg_replace('/\D/', '', $request->input('NILAI_PROSPECT'));
-                $nilaiProspect = (int) $nilaiProspect;
+                $nilaiProspect = (int) preg_replace('/\D/', '', $request->input('NILAI_PROSPECT'));
+                $opportunity = Opportunity::where('OPPORTUNITY_ID', $opportunityId)->first();
     
-                // Update tabel opportunity
-                Opportunity::where('OPPORTUNITY_ID', $opportunityId)
-                    ->update([
-                        'NILAI_PROSPECT'      => $nilaiProspect,
-                        'PROSENTASE_PROSPECT' => (int) preg_replace('/[^0-9.]/', '', $request->input('PROSENTASE_PROSPECT')),
-                        'UPDATED_AT'          => $now,
-                    ]);
-                
+                $prosentaseInput = (int) preg_replace('/[^0-9.]/', '', $request->input('PROSENTASE_PROSPECT'));
+                $prosentase = $prosentaseInput != $opportunity->PROSENTASE_PROSPECT ? $prosentaseInput : 90;
+    
+                $opportunity->update([
+                    'NILAI_PROSPECT' => $nilaiProspect,
+                    'PROSENTASE_PROSPECT' => $prosentase,
+                    'UPDATED_AT' => $now,
+                ]);
     
                 $items = $request->input('produk', []);
-                $sentIds = []; // Track semua ID_ITEM yang diproses
-    
+                $sentIds = [];
                 foreach ($items as $row) {
-                    $qty   = intval($row['QTY']);
-                    // $price = intval($row['PRICE']);
+                    $qty = intval($row['QTY']);
                     $price = (int) preg_replace('/\D/', '', $row['PRICE']);
-                    // dd($price);
                     $total = intval($row['TOTAL'] ?? $qty * $price);
-    
                     if (!empty($row['ID_ITEM'])) {
-                        // Cek data item lama untuk update
                         $existing = ItemTable::where('ID_ITEM', $row['ID_ITEM'])
                             ->where('OPPORTUNITY_ID', $opportunityId)
                             ->exists();
-    
                         if ($existing) {
-                            ItemTable::where('ID_ITEM', $row['ID_ITEM'])
-                                ->update([
-                                    'ID_PRODUK'  => $row['ID_PRODUK'],
-                                    'QTY'        => $qty,
-                                    'PRICE'      => $price,
-                                    'TOTAL'      => $total,
-                                    'UPDATED_AT' => $now,
-                                ]);
+                            ItemTable::where('ID_ITEM', $row['ID_ITEM'])->update([
+                                'ID_PRODUK' => $row['ID_PRODUK'],
+                                'QTY' => $qty,
+                                'PRICE' => $price,
+                                'TOTAL' => $total,
+                                'UPDATED_AT' => $now,
+                            ]);
                             $sentIds[] = $row['ID_ITEM'];
                         }
                     } else {
-                        // Insert produk baru
                         $newItem = ItemTable::create([
                             'OPPORTUNITY_ID' => $opportunityId,
-                            'ID_PRODUK'      => $row['ID_PRODUK'],
-                            'QTY'            => $qty,
-                            'PRICE'          => $price,
-                            'TOTAL'          => $total,
-                            'CREATED_AT'     => $now,
-                            'UPDATED_AT'     => $now,
+                            'ID_PRODUK' => $row['ID_PRODUK'],
+                            'QTY' => $qty,
+                            'PRICE' => $price,
+                            'TOTAL' => $total,
+                            'CREATED_AT' => $now,
+                            'UPDATED_AT' => $now,
                         ]);
                         $sentIds[] = $newItem->ID_ITEM;
                     }
                 }
-    
-                // Hapus item yang tidak ada di form (dihapus user)
                 ItemTable::where('OPPORTUNITY_ID', $opportunityId)
                     ->whereNotIn('ID_ITEM', $sentIds)
                     ->delete();
             });
-
+    
             $lead_id = Opportunity::where('OPPORTUNITY_ID', $request->input('OPPORTUNITY_ID'))->first();
-            $lead = Lead::where('LEAD_ID', $lead_id->LEAD_ID)->update([
+            Lead::where('LEAD_ID', $lead_id->LEAD_ID)->update([
                 'STATUS' => 'quotation',
                 'UPDATED_AT' => now(),
             ]);
-
+    
             return redirect()->route('datalead.sales')->with('success', 'Opportunity terupdate');
         } catch (Exception $e) {
             return back()->withInput()->withErrors(['error' => 'Gagal menyimpan opportunity: ' . $e->getMessage()]);
         }
-        
-        return redirect()->route('datalead.sales')->with('success', 'quotation berhasil disimpan');
     }
+    
 
 
     public function quotation(Request $request)
@@ -702,8 +682,7 @@ class SalesController extends Controller
     public function updateQuotation(Request $request)
     {
         $opp = Opportunity::where('OPPORTUNITY_ID', $request->input('OPPORTUNITY_ID'))->first();
-        
-        // Simpan data quotation
+    
         Quotation::where('OPPORTUNITY_ID', $request->input('OPPORTUNITY_ID'))->update([
             'SNK'        => $request->SNK,
             'UPDATED_AT' => now(),
@@ -713,19 +692,21 @@ class SalesController extends Controller
             DB::transaction(function () use ($request, $opp) {
                 $now = now()->toDateTimeString();
                 $opportunityId = $request->input('OPPORTUNITY_ID');
-                $nilaiProspect = preg_replace('/\D/', '', $request->input('NILAI_PROSPECT'));
-                $nilaiProspect = (int) $nilaiProspect;
+                $nilaiProspect = (int) preg_replace('/\D/', '', $request->input('NILAI_PROSPECT'));
     
-                // Update tabel opportunity
-                Opportunity::where('OPPORTUNITY_ID', $opportunityId)
-                    ->update([
-                        'NILAI_PROSPECT'      => $nilaiProspect,
-                        'PROSENTASE_PROSPECT' => (int) preg_replace('/[^0-9.]/', '', $request->input('PROSENTASE_PROSPECT')),
-                        'UPDATED_AT'          => now(),
-                    ]);
-                
+                // ambil prosentase dari request
+                $prosentaseInput = (int) preg_replace('/[^0-9.]/', '', $request->input('PROSENTASE_PROSPECT'));
+                // cek apakah berubah
+                $prosentase = $prosentaseInput != $opp->PROSENTASE_PROSPECT ? $prosentaseInput : 90;
+    
+                Opportunity::where('OPPORTUNITY_ID', $opportunityId)->update([
+                    'NILAI_PROSPECT'      => $nilaiProspect,
+                    'PROSENTASE_PROSPECT' => $prosentase,
+                    'UPDATED_AT'          => $now,
+                ]);
+    
                 $items = $request->input('produk', []);
-                $sentIds = []; // Track semua ID_ITEM yang diproses
+                $sentIds = [];
     
                 foreach ($items as $row) {
                     $qty   = intval($row['QTY']);
@@ -736,16 +717,14 @@ class SalesController extends Controller
                         $existing = ItemTable::where('ID_ITEM', $row['ID_ITEM'])
                             ->where('OPPORTUNITY_ID', $opportunityId)
                             ->exists();
-    
                         if ($existing) {
-                            ItemTable::where('ID_ITEM', $row['ID_ITEM'])
-                                ->update([
-                                    'ID_PRODUK'  => $row['ID_PRODUK'],
-                                    'QTY'        => $qty,
-                                    'PRICE'      => $price,
-                                    'TOTAL'      => $total,
-                                    'UPDATED_AT' => now(),
-                                ]);
+                            ItemTable::where('ID_ITEM', $row['ID_ITEM'])->update([
+                                'ID_PRODUK'  => $row['ID_PRODUK'],
+                                'QTY'        => $qty,
+                                'PRICE'      => $price,
+                                'TOTAL'      => $total,
+                                'UPDATED_AT' => $now,
+                            ]);
                             $sentIds[] = $row['ID_ITEM'];
                         }
                     } else {
@@ -755,31 +734,22 @@ class SalesController extends Controller
                             'QTY'            => $qty,
                             'PRICE'          => $price,
                             'TOTAL'          => $total,
-                            'CREATED_AT'     => now(),
-                            'UPDATED_AT'     => now(),
+                            'CREATED_AT'     => $now,
+                            'UPDATED_AT'     => $now,
                         ]);
                         $sentIds[] = $newItem->ID_ITEM;
                     }
                 }
     
-                // Hapus item yang tidak ada di form
                 ItemTable::where('OPPORTUNITY_ID', $opportunityId)
                     ->whereNotIn('ID_ITEM', $sentIds)
                     ->delete();
     
-                // Update Lead
                 $leadData = [
                     'STATUS'     => $request->STATUS,
-                    'UPDATED_AT' => now(),
+                    'UPDATED_AT' => $now,
                 ];
-    
-                // Kalau status lost → simpan reason
-                if ($request->STATUS == 'lost') {
-                    $leadData['REASON'] = $request->input('REASON');
-                } else {
-                    // Kalau bukan lost, kosongkan atau biarkan null (sesuai kebutuhan)
-                    $leadData['REASON'] = null;
-                }
+                $leadData['REASON'] = $request->STATUS == 'lost' ? $request->input('REASON') : null;
     
                 Lead::where('LEAD_ID', $opp->LEAD_ID)->update($leadData);
             });
@@ -789,6 +759,7 @@ class SalesController extends Controller
             return back()->withInput()->withErrors(['error' => 'Gagal menyimpan opportunity: ' . $e->getMessage()]);
         }
     }
+    
     
 
     public function detailQuotation($quo_id)
