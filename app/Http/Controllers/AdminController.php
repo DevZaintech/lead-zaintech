@@ -35,7 +35,7 @@ class AdminController extends Controller
             : now()->endOfDay();
     
         $salesId = $request->get('sales_id');
-        $source  = $request->get('source', 'Web'); // default Web
+        $source  = $request->get('source'); // default Web
     
         // Ambil daftar sales dari seluruh lead
         $sales = User::where('ROLE', 'sales')
