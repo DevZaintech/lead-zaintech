@@ -43,11 +43,11 @@
             <p class="text-3xl font-bold mt-2">{{ $total }}</p>
         </div>
         <div class="bg-orange-400 text-white rounded-2xl p-6 shadow">
-            <h3 class="text-lg font-semibold">Warm</h3>
+            <h3 class="text-lg font-semibold">Opportunity</h3>
             <p class="text-3xl font-bold mt-2">{{ $opportunity }}</p>
         </div>
         <div class="bg-red-400 text-white rounded-2xl p-6 shadow">
-            <h3 class="text-lg font-semibold">Hot</h3>
+            <h3 class="text-lg font-semibold">Quotation</h3>
             <p class="text-3xl font-bold mt-2">{{ $quotation }}</p>
         </div>
         <div class="bg-green-400 text-white rounded-2xl p-6 shadow">
@@ -96,7 +96,7 @@
     new Chart(pieCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Warm', 'Hot', 'Deal', 'Lost', 'No Respon'],
+            labels: ['Opportunity', 'Quotation', 'Deal', 'Lost', 'No Respon'],
             datasets: [{
                 data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}],
                 backgroundColor: [
@@ -121,7 +121,7 @@
     new Chart(barCtx, {
         type: 'bar',
         data: {
-            labels: ['Total', 'Warm', 'Hot', 'Deal', 'Lost', 'No Respon'],
+            labels: ['Total', 'Opportunity', 'Quotation', 'Deal', 'Lost', 'No Respon'],
             datasets: [{
                 label: 'Jumlah',
                 data: [{{ $total }}, {{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}],
