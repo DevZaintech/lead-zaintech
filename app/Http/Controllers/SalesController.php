@@ -59,6 +59,7 @@ class SalesController extends Controller
         $status     = $request->get('status');
         $startDate  = $request->get('startDate');
         $endDate    = $request->get('endDate');
+        $follow     = $request->get('follow');
     
         $lead = Lead::with(['sub_kategori', 'kota', 'opportunities'])
             ->whereNull('DELETED_AT')
@@ -100,7 +101,7 @@ class SalesController extends Controller
                               ->orWhereHas('opportunities', function($op) {
                                   $op->where('PROSENTASE_PROSPECT', '<', 50);
                               })
-                              ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
+                              ->orWhereDoesntHave('opportunities');
                     })->where('STATUS', '!=', 'norespon');
                 } elseif ($status === 'quotation') { // Hot
                     $q->where('STATUS', 'quotation');
@@ -117,8 +118,41 @@ class SalesController extends Controller
                 $end   = $endDate . ' 23:59:59';
                 $q->whereBetween('CREATED_AT', [$start, $end]);
             })
+        
+            // ================= FOLLOW UP =================
+            ->addSelect([
+                'fu_lead_count' => FollowUp::selectRaw('count(*)')
+                    ->whereColumn('follow_up.LEAD_ID', 'lead.LEAD_ID'),
+            ])
+            ->addSelect([
+                'fu_opp_count' => FollowUp::selectRaw('count(*)')
+                    ->whereIn('follow_up.OPPORTUNITY_ID', function ($sub) {
+                        $sub->select('opportunity.OPPORTUNITY_ID')
+                            ->from('opportunity')
+                            ->whereColumn('opportunity.LEAD_ID', 'lead.LEAD_ID');
+                    }),
+            ])
+            ->addSelect(DB::raw('( 
+                (select count(*) from follow_up where follow_up.LEAD_ID = lead.LEAD_ID) 
+                + 
+                (select count(*) from follow_up where follow_up.OPPORTUNITY_ID in 
+                    (select opportunity.OPPORTUNITY_ID from opportunity where opportunity.LEAD_ID = lead.LEAD_ID)
+                )
+            ) as total_fu'))
+            ->when($follow, function ($q) use ($follow) {
+                if ($follow == 1) {
+                    $q->having('total_fu', '=', 1);
+                } elseif ($follow == 2) {
+                    $q->having('total_fu', '=', 2);
+                } elseif ($follow == 3) {
+                    $q->having('total_fu', '>=', 3);
+                }
+            })
+            // =============================================
+        
             ->orderBy('LEAD_ID', 'desc')
-            ->paginate(100)->withQueryString();
+            ->paginate(100)
+            ->withQueryString();
     
         if ($request->ajax()) {
             return view('sales.lead._table', compact('lead'))->render();
@@ -421,9 +455,9 @@ class SalesController extends Controller
         
         $request->validate([
             'OPPORTUNITY_ID' => 'required',
-            'produk'         => 'required|array|min:1',
-            'produk.*.ID_PRODUK' => 'required',
-            'produk.*.QTY'   => 'required|integer|min:1',
+            // 'produk'         => 'required|array|min:1',
+            // 'produk.*.ID_PRODUK' => 'required',
+            // 'produk.*.QTY'   => 'required|integer|min:1',
             // 'produk.*.PRICE' => 'required|numeric|min:0',
             // 'produk.*.TOTAL' => 'required|numeric|min:0',
         ]);

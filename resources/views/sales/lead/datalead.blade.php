@@ -62,6 +62,14 @@
         {{-- Filter Tanggal --}}
         <input type="date" id="startDate" class="w-40 border p-2 rounded">
         <input type="date" id="endDate" class="w-40 border p-2 rounded">
+
+        {{-- Filter Follow JANGAN LAUNCING DULU --}}
+        <select id="filterFollow" class="w-40 border p-2 rounded" hidden>
+            <option value="">Follow Ke</option>
+            <option value="1">Ke 1</option>
+            <option value="2">Ke 2</option>
+            <option value="3">Ke 3</option>
+        </select>
     </div>
 
     {{-- Table --}}
@@ -81,6 +89,7 @@
         let status    = $('#filterStatus').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
+        let follow    = $('#filterFollow').val();
 
         $.ajax({
             url: url, // pakai full URL Laravel (page & filter ikut)
@@ -90,7 +99,8 @@
                 source: source,
                 status: status,
                 startDate: startDate,
-                endDate: endDate
+                endDate: endDate,
+                follow: follow
             },
             success: function(data) {
                 $('#lead_table').html(data);
@@ -99,7 +109,7 @@
     }
 
     // ✅ Trigger filter/search → selalu reset ke page 1
-    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate')
+    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterFollow')
         .on('change keyup', function() {
             fetch_data("{{ route('datalead.sales') }}"); // reset ke page 1 saat filter berubah
         });
@@ -115,6 +125,7 @@
         let status    = $('#filterStatus').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
+        let follow    = $('#filterFollow').val();
 
         $.ajax({
             url: url,
@@ -124,7 +135,8 @@
                 source: source,
                 status: status,
                 startDate: startDate,
-                endDate: endDate
+                endDate: endDate,
+                follow: follow
             },
             success: function(data) {
                 $('#lead_table').html(data);

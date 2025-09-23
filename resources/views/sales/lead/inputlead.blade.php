@@ -69,7 +69,7 @@
                 </label>
                 <input type="text" name="NO_TELP" id="NO_TELP"
                     class="w-full border border-gray-300 rounded px-3 py-2"
-                    inputmode="numeric" pattern="[0-9]*" minlength="8" required>
+                    inputmode="numeric" placeholder="08xxx" pattern="[0-9]*" minlength="8" required>
             </div>
         </div>
 
@@ -164,7 +164,15 @@
 <script>
 // Uppercase input & numeric telepon
 document.getElementById('NO_TELP').addEventListener('input', function () {
-    this.value = this.value.replace(/\D/g,'');
+    // Hanya angka
+    let val = this.value.replace(/\D/g,'');
+
+    // Jika diawali 62 → ubah jadi 0
+    if (val.startsWith("62")) {
+        val = "0" + val.slice(2);
+    }
+
+    this.value = val;
 });
 document.querySelectorAll('.uppercase-input').forEach(el => {
     el.addEventListener('input', function() { this.value = this.value.toUpperCase(); });
