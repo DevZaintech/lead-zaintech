@@ -19,7 +19,7 @@
         <div class="flex items-center justify-between mb-6">
             <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
 
-            @if($opp->lead->USER_ID == Auth::id())
+            @if($opp->lead->ID_USER == Auth::id())
             <a href="{{ route('edit.lead.sales', $opp->lead->LEAD_ID) }}"
             class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
                 <svg xmlns="http://www.w3.org/2000/svg" 
