@@ -129,7 +129,7 @@
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-300 align-top"><b>REASON LOST</b></td>
                         <td class="px-3 py-2 border border-gray-300">
-                            <textarea class="w-full border-gray-300 rounded-md" rows="2" readonly>{{ $opp->lead->REASON }}</textarea>
+                            <textarea class="w-full border-gray-300 rounded-md" rows="2" readonly>{{ $opp->lead->REASON }}. {{ $opp->NOTE }}</textarea>
                         </td>
                     </tr>
                     @else
