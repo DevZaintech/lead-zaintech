@@ -123,16 +123,10 @@
                 <label for="LEAD_SOURCE" class="block text-gray-700 font-medium mb-1">
                     SOURCE <span class="text-red-500">*</span>
                 </label>
-                <select name="LEAD_SOURCE" id="LEAD_SOURCE"
-                    class="w-full border border-gray-300 rounded px-3 py-2 
-                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                    <option value="">Pilih Sumber Lead</option>
-                    @foreach(['Sosmed Pribadi','Walk In','Direct','Exibition','Relasi'] as $src)
-                        <option value="{{ $src }}" {{ $lead->LEAD_SOURCE == $src ? 'selected' : '' }}>
-                            {{ $src }}
-                        </option>
-                    @endforeach
-                </select>
+                <input type="text" name="LEAD_SOURCE" id="LEAD_SOURCE"
+                    value="{{ $lead->LEAD_SOURCE }}"
+                    class="uppercase-input w-full border border-gray-300 rounded px-3 py-2 
+                           focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200" readonly>
             </div>
         </div>
 
