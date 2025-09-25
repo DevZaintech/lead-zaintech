@@ -16,7 +16,22 @@
 @endif
 <div class="space-y-6">
     <div class="w-full max-w-[90%] mx-auto bg-white p-8 rounded shadow">
-        <h2 class="text-2xl font-semibold mb-6">DETAIL OPPORTUNITY</h2>
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
+
+            @if($opp->lead->CREATOR_ID == Auth::id())
+            <a href="{{ route('edit.lead.sales', $opp->lead->LEAD_ID) }}"
+            class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
+                <svg xmlns="http://www.w3.org/2000/svg" 
+                    class="w-5 h-5 mr-2" fill="none" 
+                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" 
+                        d="M16.862 4.487l1.651-1.651a2.121 2.121 0 113 3l-1.651 1.651m-3-3l-9.193 9.193a4 4 0 00-1.037 1.74l-.397 1.59a.75.75 0 00.91.91l1.59-.397a4 4 0 001.74-1.037l9.193-9.193m-3-3l3 3"/>
+                </svg>
+                Edit
+            </a>
+            @endif
+        </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             <!-- Kiri -->

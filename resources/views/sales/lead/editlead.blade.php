@@ -151,8 +151,41 @@
                 </select>
             </div> 
             
-        </div>        
-        
+        </div>
+
+        @php
+            $reasons = [
+                'INDEN',
+                'SUDAH BELI DI VENDOR LAIN',
+                'HARGA TINGGI',
+                'LOKASI TERLALU JAUH',
+                'PEMBAYARAN',
+                'STOCK KOSONG',
+                'NO RESPON',
+                'TIDAK JUAL',
+            ];
+        @endphp
+
+        @if($lead->STATUS == 'lost')
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+                <div>
+                    <label for="REASON" class="block text-gray-700 font-medium mb-1">
+                        REASON <span class="text-red-500">*</span>
+                    </label>
+                    <select name="REASON" id="REASON"
+                        class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600"
+                        required>
+                        <option value="">-- Pilih Reason --</option>
+                        @foreach($reasons as $reason)
+                            <option value="{{ $reason }}"
+                                {{ old('REASON', $lead->REASON ?? '') == $reason ? 'selected' : '' }}>
+                                {{ $reason }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        @endif
 
         {{-- Email --}}
         <div>
