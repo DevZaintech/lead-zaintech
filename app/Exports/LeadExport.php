@@ -56,20 +56,31 @@ class LeadExport implements FromView, WithStyles
             if ($status === 'opportunity') { // Warm
                 $query->where('STATUS', 'opportunity')
                     ->whereHas('opportunities', function($op) {
-                        $op->where('PROSENTASE_PROSPECT', '>=', 50);
+                        $op->where('PROSENTASE_PROSPECT', '>', 10)
+                        ->where('PROSENTASE_PROSPECT', '<=', 50);
                     });
 
             } elseif ($status === 'lead') { // Cold
                 $query->where(function($query) {
                     $query->where('STATUS', 'lead')
                         ->orWhereHas('opportunities', function($op) {
-                            $op->where('PROSENTASE_PROSPECT', '<', 50);
+                            $op->where('PROSENTASE_PROSPECT', '<=', 10);
                         })
                         ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
                 })->where('STATUS', '!=', 'norespon');
 
             } elseif ($status === 'quotation') { // Hot
-                $query->where('STATUS', 'quotation');
+                $query->where(function($q) {
+                    // Semua quotation = Hot
+                    $q->where('STATUS', 'quotation')
+                      // Plus opportunity dengan prosentase > 50
+                      ->orWhere(function($q2) {
+                          $q2->where('STATUS', 'opportunity')
+                             ->whereHas('opportunities', function($op) {
+                                 $op->where('PROSENTASE_PROSPECT', '>', 50);
+                             });
+                      });
+                });
 
             } elseif ($status === 'lost') {
                 $query->where('STATUS', 'lost');
@@ -86,31 +97,52 @@ class LeadExport implements FromView, WithStyles
 
         // 🔄 Tentukan STATUS manual
         $lead->transform(function ($item) {
-            $status = strtolower($item->STATUS);
-
-            if ($status === 'lead') {
-                $item->STATUS = 'COLD';
-            } elseif ($status === 'opportunity') {
-                $opp = $item->opportunities()->latest('CREATED_AT')->first();
-                if ($opp && $opp->PROSENTASE_PROSPECT >= 50) {
-                    $item->STATUS = 'WARM';
-                } else {
+            switch (strtolower($item->STATUS)) {
+                case 'lead':
                     $item->STATUS = 'COLD';
-                }
-            } elseif ($status === 'quotation') {
-                $item->STATUS = 'HOT';
-            } elseif ($status === 'converted') {
-                $item->STATUS = 'DEAL';
-            } elseif ($status === 'lost') {
-                $item->STATUS = 'LOST';
-            } elseif ($status === 'norespon') {
-                $item->STATUS = 'NO RESPON';
-            } else {
-                $item->STATUS = strtoupper($status);
+                    break;
+        
+                case 'opportunity':
+                    $opp = $item->opportunities()->latest('CREATED_AT')->first();
+                    if ($opp && $opp->PROSENTASE_PROSPECT > 10 && $opp->PROSENTASE_PROSPECT <= 50) {
+                        $item->STATUS = 'WARM';
+                    }elseif ($opp && $opp->PROSENTASE_PROSPECT > 50) {
+                        $item->STATUS = 'HOT';
+                    } else {
+                        $item->STATUS = 'COLD';
+                    }
+                    break;
+        
+                case 'quotation':
+                    $opp = $item->opportunities()->latest('CREATED_AT')->first();
+                    if ($opp && $opp->PROSENTASE_PROSPECT > 50) {
+                        $item->STATUS = 'HOT';
+                    } else {
+                        $item->STATUS = 'COLD';
+                    }
+                    break;
+        
+                case 'converted':
+                    $item->STATUS = 'DEAL';
+                    break;
+        
+                case 'lost':
+                    $item->STATUS = 'LOST';
+                    break;
+        
+                case 'norespon':
+                    $item->STATUS = 'NO RESPON';
+                    break;
+        
+                default:
+                    $item->STATUS = ucfirst($item->STATUS);
+                    break;
             }
-
+        
             return $item;
         });
+        
+             
 
         return view('admin.lead.export_excel', compact('lead'));
     }

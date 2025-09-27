@@ -345,18 +345,27 @@ class AdminController extends Controller
                 if ($status === 'opportunity') { // Warm
                     $q->where('STATUS', 'opportunity')
                       ->whereHas('opportunities', function($op) {
-                          $op->where('PROSENTASE_PROSPECT', '>=', 50);
+                          $op->where('PROSENTASE_PROSPECT', '>', 10)
+                             ->where('PROSENTASE_PROSPECT', '<=', 50);
                       });
                 } elseif ($status === 'lead') { // Cold
                     $q->where(function($query) {
                         $query->where('STATUS', 'lead')
                               ->orWhereHas('opportunities', function($op) {
-                                  $op->where('PROSENTASE_PROSPECT', '<', 50);
+                                  $op->where('PROSENTASE_PROSPECT', '<=', 10);
                               })
-                              ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
+                              ->orWhereDoesntHave('opportunities');
                     })->where('STATUS', '!=', 'norespon');
                 } elseif ($status === 'quotation') { // Hot
-                    $q->where('STATUS', 'quotation');
+                    $q->where(function ($q) {
+                        $q->where('STATUS', 'quotation')
+                          ->orWhere(function ($q) {
+                              $q->where('STATUS', 'opportunity')
+                                ->whereHas('opportunities', function ($op) {
+                                    $op->where('PROSENTASE_PROSPECT', '>', 50);
+                                });
+                          });
+                    });
                 } elseif ($status === 'lost') {
                     $q->where('STATUS', 'lost');
                 } elseif ($status === 'converted') { // Deal

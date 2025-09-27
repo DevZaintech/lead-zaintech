@@ -71,13 +71,18 @@ class Lead extends Model
             case 'opportunity':
                 // cek prosentase terakhir
                 $opp = $this->opportunities()->latest('CREATED_AT')->first();
-                if ($opp && $opp->PROSENTASE_PROSPECT >= 50) {
+                if ($opp && $opp->PROSENTASE_PROSPECT > 10 && $opp->PROSENTASE_PROSPECT <= 50) {
                     return 'Warm';
                 }
-                return 'Cold';
+                // return 'Cold';
 
             case 'quotation':
-                return 'Hot';
+                // cek prosentase terakhir
+                $opp = $this->opportunities()->latest('CREATED_AT')->first();
+                if ($opp && $opp->PROSENTASE_PROSPECT > 50) {
+                    return 'Hot';
+                }
+                return 'Cold';
 
             case 'converted':
                 return 'Deal';
