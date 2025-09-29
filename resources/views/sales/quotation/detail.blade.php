@@ -249,10 +249,12 @@
                                     <option value="INDEN">INDEN</option>
                                     <option value="SUDAH BELI DI VENDOR LAIN">SUDAH BELI DI VENDOR LAIN</option>
                                     <option value="HARGA TINGGI">HARGA TINGGI</option>
+                                    <option value="TIDAK ADA DANA">TIDAK ADA DANA</option>
                                     <option value="LOKASI TERLALU JAUH">LOKASI TERLALU JAUH</option>
                                     <option value="PEMBAYARAN">PEMBAYARAN</option>
                                     <option value="STOCK KOSONG">STOCK KOSONG</option>
                                     <option value="NO RESPON">NO RESPON</option>
+                                    <option value="TIDAK JUAL">TIDAK JUAL</option>
                                 </select>
                             </div>
                         </div>
