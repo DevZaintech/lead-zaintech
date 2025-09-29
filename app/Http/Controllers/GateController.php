@@ -227,7 +227,7 @@ class GateController extends Controller
                                   $op->where('PROSENTASE_PROSPECT', '<=', 10);
                               })
                               ->orWhereDoesntHave('opportunities');
-                    })->where('STATUS', '!=', 'norespon');
+                    })->whereNotIn('STATUS', ['norespon', 'lost']);
                 } elseif ($status === 'quotation') { // Hot
                     $q->where(function ($q) {
                         $q->where('STATUS', 'quotation')
