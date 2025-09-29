@@ -67,7 +67,7 @@ class LeadExport implements FromView, WithStyles
                             $op->where('PROSENTASE_PROSPECT', '<=', 10);
                         })
                         ->orWhereDoesntHave('opportunities'); // Termasuk lead tanpa opportunity
-                })->where('STATUS', '!=', 'norespon');
+                })->whereNotIn('STATUS', ['norespon', 'lost']);
 
             } elseif ($status === 'quotation') { // Hot
                 $query->where(function($q) {
