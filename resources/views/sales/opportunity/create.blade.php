@@ -109,14 +109,16 @@
     <div class="space-y-6 w-full lg:w-[98%] mx-auto">
         <!-- Tab Button -->
         <div class="flex border-b mb-6">
-            <button data-tab-button onclick="openTab('opportunityTab', this)"
-                class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
-                Create Opportunity
-            </button>
+            
             <button data-tab-button onclick="openTab('followupTab', this)"
                 class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
                 Follow Up
             </button>
+            <button data-tab-button onclick="openTab('opportunityTab', this)"
+                class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
+                Create Opportunity
+            </button>
+            
         </div>
 
         <!-- Tab: Opportunity -->

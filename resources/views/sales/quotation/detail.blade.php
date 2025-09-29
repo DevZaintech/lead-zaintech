@@ -118,14 +118,16 @@
         <div class="w-full max-w-[90%] mx-auto bg-white p-8 rounded shadow space-y-8">
             <!-- Tabs -->
             <div class="flex border-b mb-6">
-                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('quotationTab', this)">Edit Quotation</button>
-                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('followupTab', this)">Follow Up</button>
+
+                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('followupTab', this)">Follow Up</button>
+                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('quotationTab', this)">Edit Quotation</button>
+                
             </div>
 
             <!-- Tab Contents -->
             <div>
                 <!-- Edit Quotation Tab -->
-                <div id="quotationTab" class="tab-content block">
+                <div id="quotationTab" class="tab-content hidden">
                     <h2 class="text-2xl font-semibold mb-6">Edit Quotation</h2>
                     <form action="{{ route('quotation.update') }}" method="POST">
                         @csrf
@@ -266,7 +268,7 @@
                 </div>
 
                 <!-- Tab Contents -->
-                <div id="followupTab" class="tab-content hidden">
+                <div id="followupTab" class="tab-content block">
                     <!-- Paste form Follow Up kamu di sini -->
                     <form action="{{ route('follow.store') }}" method="POST">
                         @csrf

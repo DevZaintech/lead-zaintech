@@ -98,13 +98,15 @@
     <!-- Tabs -->
     <div class="space-y-6 w-full lg:w-[98%] mx-auto">
         <div class="flex border-b mb-6">
-            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('opportunityTab', this)">Edit Opportunity</button>
+
+            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('followupTab', this)">Follow Up</button>
+            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('opportunityTab', this)">Edit Opportunity</button>
             <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('quotationTab', this)">Create Quotation</button>
-            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('followupTab', this)">Follow Up</button>
+            
         </div>
 
         <!-- Tab: Edit Opportunity -->
-        <div id="opportunityTab" class="tab-content block bg-white p-8 rounded shadow">
+        <div id="opportunityTab" class="tab-content hidden bg-white p-8 rounded shadow">
             <h2 class="text-2xl font-semibold mb-6">Edit Opportunity</h2>
             <form action="{{ route('opportunity.update', $opp->OPPORTUNITY_ID) }}" method="POST">
                 @csrf
@@ -309,7 +311,7 @@
         </div>
 
         <!-- Tab: Follow Up -->
-        <div id="followupTab" class="tab-content hidden bg-white p-8 rounded shadow">
+        <div id="followupTab" class="tab-content block bg-white p-8 rounded shadow">
             <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
 
             <form action="{{ route('follow.store') }}" method="POST">
