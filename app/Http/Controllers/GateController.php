@@ -326,7 +326,7 @@ class GateController extends Controller
         // Validasi sesuai kondisi
         $request->validate([
             'LEAD_SOURCE' => 'required',
-            'STATUS' => 'required|in:lead,norespon',
+            // 'STATUS' => 'required|in:lead,norespon',
             'USER'   => $request->STATUS == 'lead' ? 'required' : 'nullable',
             'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
         ], [
