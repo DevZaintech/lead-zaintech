@@ -191,12 +191,21 @@
         </div>
 
         {{-- Catatan --}}
+        @if($lead->STATUS == 'lead')
         <div>
             <label for="NOTE" class="block text-gray-700 font-medium mb-1">CATATAN</label>
             <textarea name="NOTE" id="NOTE" rows="3"
                 class="w-full border border-gray-300 rounded px-3 py-2 
                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">{{ $lead->NOTE }}</textarea>
         </div>
+        @else
+        <div>
+            <label for="NOTE" class="block text-gray-700 font-medium mb-1">CATATAN</label>
+            <textarea name="NOTE" id="NOTE" rows="3"
+                class="w-full border border-gray-300 rounded px-3 py-2 
+                       focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">{{ optional($lead->opportunities()->latest('CREATED_AT')->first())->NOTE }}</textarea>
+        </div>
+        @endif
 
         <div class="flex justify-end">
             <button type="submit"
