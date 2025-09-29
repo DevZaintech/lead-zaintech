@@ -338,22 +338,26 @@ class GateController extends Controller
             'NO_TELP.min'          => 'No. Telepon minimal 8 digit',
         ]);
         
-        // Simpan data ke tabel lead
-        Lead::where('LEAD_ID', $request->LEAD_ID)->update([
-            'ID_SUB'        => $request->KEBUTUHAN,
-            'ID_USER'       => $request->USER,
-            'NAMA'          => $request->NAMA,
-            'PERUSAHAAN'    => $request->PERUSAHAAN,
-            'KATEGORI'       => $request->KATEGORI,
-            'kode_kota'     => $request->kode_kota,
-            'NO_TELP'       => $request->NO_TELP,
-            'EMAIL'         => $request->EMAIL,
-            'STATUS'        => $request->STATUS,
-            'LEAD_SOURCE'   => $request->LEAD_SOURCE,
-            'NOTE'          => $request->NOTE,
-            'UPDATED_AT'    => now(),
-            // kolom tambahan sesuai kebutuhan
-        ]);
+        $data = [
+            'ID_SUB'      => $request->KEBUTUHAN,
+            'ID_USER'     => $request->USER,
+            'NAMA'        => $request->NAMA,
+            'PERUSAHAAN'  => $request->PERUSAHAAN,
+            'KATEGORI'    => $request->KATEGORI,
+            'kode_kota'   => $request->kode_kota,
+            'NO_TELP'     => $request->NO_TELP,
+            'EMAIL'       => $request->EMAIL,
+            'LEAD_SOURCE' => $request->LEAD_SOURCE,
+            'NOTE'        => $request->NOTE,
+            'UPDATED_AT'  => now(),
+        ];
+        
+        // hanya update STATUS kalau ada di form
+        if ($request->filled('STATUS')) {
+            $data['STATUS'] = $request->STATUS;
+        }
+        
+        Lead::where('LEAD_ID', $request->LEAD_ID)->update($data);
         return redirect()
         ->route('lead.gate.detail', ['lead_id' => $request->LEAD_ID])
         ->with('success', 'Data berhasil diperbarui.');
