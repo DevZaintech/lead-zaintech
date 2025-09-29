@@ -64,7 +64,7 @@
         <input type="date" id="endDate" class="w-40 border p-2 rounded">
 
         {{-- Filter Follow JANGAN LAUNCING DULU --}}
-        <select id="filterFollow" class="w-40 border p-2 rounded" hidden>
+        <select id="filterFollow" class="w-40 border p-2 rounded">
             <option value="">Follow Ke</option>
             <option value="1">Ke 1</option>
             <option value="2">Ke 2</option>
