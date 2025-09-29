@@ -150,6 +150,7 @@
                     @endif
                 </select>
             </div> 
+            @if($lead->STATUS == 'norespon')
             <div>
                 <label for="STATUS" class="block text-gray-700 font-medium mb-1">STATUS</label>
                 <select name="STATUS" id="STATUS"
@@ -159,6 +160,7 @@
                     <option value="norespon" {{ $lead->STATUS == 'norespon' ? 'selected' : '' }}>NO RESPON</option>
                 </select>
             </div>
+            @endif
         </div>        
 
         {{-- Lead Source --}}
