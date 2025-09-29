@@ -119,19 +119,26 @@ class GateController extends Controller
         }
 
         // === Generate LEAD_ID ===
-        $today = Carbon::now()->format('Ymd');
+        // Ambil tanggal dari CREATED_AT (kalau diisi), kalau tidak pakai now()
+        $createdAt = $request->CREATED_AT ? Carbon::parse($request->CREATED_AT) : now();
+        $today     = $createdAt->format('Ymd');
+
         $prefix = "LEAD-{$today}-";
-        // Cari nomor urut terakhir hari ini
+
+        // Cari nomor urut terakhir untuk tanggal tsb
         $lastLead = Lead::where('LEAD_ID', 'like', $prefix.'%')
                         ->orderBy('LEAD_ID', 'desc')
                         ->first();
+
         if ($lastLead) {
-            $lastNumber = (int) substr($lastLead->LEAD_ID, -4);
-            $nextNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+            $lastNumber  = (int) substr($lastLead->LEAD_ID, -4);
+            $nextNumber  = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
         } else {
-            $nextNumber = '0001';
+            $nextNumber  = '0001';
         }
+
         $LEAD_ID = $prefix.$nextNumber;
+
         $creatorId = Auth::user()->ID_USER;  // jika nama kolom user kamu "ID_USER"
         
         // Simpan data ke tabel lead
@@ -148,7 +155,7 @@ class GateController extends Controller
             'STATUS'        => $request->STATUS,
             'LEAD_SOURCE'   => $request->LEAD_SOURCE,
             'NOTE'          => $request->NOTE,
-            'CREATED_AT'    => now(),
+            'CREATED_AT' => $request->CREATED_AT ?? now(),
             'CREATOR_ID'    => $creatorId,
             // kolom tambahan sesuai kebutuhan
         ]);

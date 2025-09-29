@@ -141,27 +141,44 @@
                     <option value="norespon">NO RESPON</option>
                 </select>
             </div>
-        </div>        
-
-        {{-- Lead Source --}}
-        <div>
-            <label for="LEAD_SOURCE" class="block text-gray-700 font-medium mb-1">
-                SOURCE <span class="text-red-500">*</span>
-            </label>
-            <select name="LEAD_SOURCE" id="LEAD_SOURCE"
-                class="w-full border border-gray-300 rounded px-3 py-2 
-                       focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                <option value="">Pilih Sumber Lead</option>
-                <option value="Meta Ads">Meta Ads</option>
-                <option value="Google Ads">Google Ads</option>
-                <option value="Youtube">Youtube</option>
-                <option value="Tiktok">Tiktok</option>
-                <option value="Instagram">Instagram</option>
-                <option value="Facebook">Facebook</option>
-                <option value="Marketplace">Marketplace</option>
-                <option value="Web">Web</option>
-            </select>
+        </div> 
+        
+        {{-- Lead Source & TGL --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label for="LEAD_SOURCE" class="block text-gray-700 font-medium mb-1">
+                    SOURCE <span class="text-red-500">*</span>
+                </label>
+                <select name="LEAD_SOURCE" id="LEAD_SOURCE"
+                    class="w-full border border-gray-300 rounded px-3 py-2 
+                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <option value="">Pilih Sumber Lead</option>
+                    <option value="Meta Ads">Meta Ads</option>
+                    <option value="Google Ads">Google Ads</option>
+                    <option value="Youtube">Youtube</option>
+                    <option value="Tiktok">Tiktok</option>
+                    <option value="Instagram">Instagram</option>
+                    <option value="Facebook">Facebook</option>
+                    <option value="Marketplace">Marketplace</option>
+                    <option value="Web">Web</option>
+                </select>
+            </div> 
+            <div>
+                <label for="CREATED_AT" class="block text-gray-700 font-medium mb-1">
+                    TANGGAL LEAD <span class="text-red-500">*</span>
+                </label>
+                <input 
+                    type="date" 
+                    name="CREATED_AT" 
+                    id="CREATED_AT" 
+                    value="{{ old('CREATED_AT', now()->toDateString()) }}" 
+                    class="w-full border border-gray-300 rounded px-3 py-2 
+                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+            </div>
         </div>
+
+        
+        
 
         {{-- Email --}}
         <div>
