@@ -160,8 +160,7 @@ class SalesController extends Controller
             // =============================================
         
             ->orderBy('LEAD_ID', 'desc')
-            ->paginate(100)
-            ->withQueryString();
+            ->paginate(100)->withQueryString();
     
         if ($request->ajax()) {
             return view('sales.lead._table', compact('lead'))->render();
