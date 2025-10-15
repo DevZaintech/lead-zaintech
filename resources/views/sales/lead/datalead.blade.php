@@ -66,6 +66,7 @@
         {{-- Filter Follow JANGAN LAUNCING DULU --}}
         <select id="filterFollow" class="w-40 border p-2 rounded">
             <option value="">Follow Ke</option>
+            <option value="0">Belum Follow</option>
             <option value="1">Ke 1</option>
             <option value="2">Ke 2</option>
             <option value="3">Ke 3</option>

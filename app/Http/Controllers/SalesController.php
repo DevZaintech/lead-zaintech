@@ -149,7 +149,9 @@ class SalesController extends Controller
                 )
             ) as total_fu'))
             ->when($follow, function ($q) use ($follow) {
-                if ($follow == 1) {
+                if ($follow == 0) {
+                    $q->having('total_fu', '=', 0);
+                } elseif ($follow == 1) {
                     $q->having('total_fu', '=', 1);
                 } elseif ($follow == 2) {
                     $q->having('total_fu', '=', 2);
