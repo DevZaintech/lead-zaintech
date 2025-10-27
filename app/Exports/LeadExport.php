@@ -34,8 +34,16 @@ class LeadExport implements FromView, WithStyles
             });
         }
 
-        if (!empty($this->filters['sales'])) {
-            $query->where('ID_USER', $this->filters['sales']);
+        if (isset($this->filters['sales'])) {
+            $sales = $this->filters['sales'];
+        
+            if ($sales == 404) {
+                $query->whereNull('ID_USER');
+            } elseif ($sales == 200) {
+                $query->whereNotNull('ID_USER');
+            } elseif (!empty($sales)) {
+                $query->where('ID_USER', $sales);
+            }
         }
 
         if (!empty($this->filters['source'])) {
