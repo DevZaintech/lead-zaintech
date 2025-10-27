@@ -44,7 +44,11 @@ class AdminController extends Controller
     
         $query = Lead::whereBetween('CREATED_AT', [$startDate, $endDate]);
     
-        if ($salesId) {
+        if ($salesId == 404) {
+            $query->whereNull('ID_USER');
+        } elseif ($salesId == 200) {
+            $query->whereNotNull('ID_USER');
+        } elseif (!empty($salesId)) {
             $query->where('ID_USER', $salesId);
         }
     
@@ -336,7 +340,16 @@ class AdminController extends Controller
                 });
             })
             ->when($sales, function ($q) use ($sales) {
-                $q->where('ID_USER', $sales);
+                if ($sales == 404) {
+                    // Kalau 404: ID_USER null
+                    $q->whereNull('ID_USER');
+                } elseif ($sales == 200) {
+                    // Kalau 200: ID_USER tidak null
+                    $q->whereNotNull('ID_USER');
+                } else {
+                    // Kalau lainnya: ID_USER sama dengan $sales
+                    $q->where('ID_USER', $sales);
+                }
             })
             ->when($source, function ($q) use ($source) {
                 $q->where('LEAD_SOURCE', $source);

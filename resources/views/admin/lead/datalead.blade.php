@@ -45,6 +45,8 @@
         {{-- Filter Sales --}}
         <select id="filterSales" class="w-40 border p-2 rounded">
             <option value="">Semua Sales</option>
+            <option value="404">Tidak Diteruskan</option>
+            <option value="200">Diteruskan</option>
             @foreach($user as $s)
                 <option value="{{ $s->ID_USER }}">{{ $s->NAMA }}</option>
             @endforeach

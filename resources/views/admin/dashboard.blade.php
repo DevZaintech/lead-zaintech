@@ -17,7 +17,9 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700">Sales</label>
                 <select name="sales_id" class="mt-1 w-full border rounded p-2">
-                    <option value="">-- Semua Sales --</option>
+                    <option value="">-- Semua --</option>
+                    <option value="404">Tidak Diteruskan</option>
+                    <option value="200">Diteruskan</option>
                     @foreach($sales as $s)
                         <option value="{{ $s->ID_USER }}" {{ $salesId == $s->ID_USER ? 'selected' : '' }}>
                             {{ $s->NAMA }}
