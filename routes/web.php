@@ -28,7 +28,9 @@ Route::post('/profile/update', [App\Http\Controllers\ProfileController::class, '
 // halaman role
 Route::get('/dashboard/gate', fn()=> 'Dashboard Gate')->name('dashboard.gate')->middleware('auth');
 Route::get('/dashboard/sales', fn()=> 'Dashboard Sales')->name('dashboard.sales')->middleware('auth');
-Route::get('/', fn()=> 'Homepage')->name('home');
+Route::get('/', function () {
+    return redirect('/login');
+});
 
 // Dashboard berdasarkan role
 Route::middleware(['auth','role:admin'])->group(function () {
