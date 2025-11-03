@@ -131,18 +131,11 @@
             </select>
         </div> 
 
-            <div>
-                <label for="CREATED_AT" class="block text-gray-700 font-medium mb-1">
-                    TANGGAL LEAD <span class="text-red-500">*</span>
-                </label>
-                <input 
-                    type="date" 
-                    name="CREATED_AT" 
-                    id="CREATED_AT" 
-                    value="{{ old('CREATED_AT', now()->toDateString()) }}" 
-                    class="w-full border border-gray-300 rounded px-3 py-2 
-                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-            </div>
+        <input 
+            type="hidden" 
+            name="CREATED_AT" 
+            id="CREATED_AT" 
+            value="{{ old('CREATED_AT', now()->toDateString()) }}">
 
         {{-- Email --}}
         <div>
