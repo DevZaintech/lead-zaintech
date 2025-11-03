@@ -118,4 +118,6 @@ Route::middleware(['auth','role:sales'])->group(function () {
 });
 
 
-Route::get('/', fn()=> 'Homepage')->name('home');
+Route::get('/', function () {
+    return redirect('/login');
+});
