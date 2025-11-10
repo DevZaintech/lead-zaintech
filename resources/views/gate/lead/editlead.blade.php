@@ -120,20 +120,21 @@
                 </select>
             </div>
             <div>
-  <label for="USER" class="block text-gray-700 font-medium mb-1">
-    SALES <span class="text-red-500" id="salesAsterisk">*</span>
-  </label>
-  <select name="USER" id="USER"
-      class="w-full border border-gray-300 rounded px-3 py-2 
-             focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-      <option value="" {{ $lead->ID_USER == null ? 'selected' : '' }}>-- Pilih Sales --</option>
-      @foreach($user as $s)
-          <option value="{{ $s->ID_USER }}" {{ $lead->ID_USER == $s->ID_USER ? 'selected' : '' }}>
-              {{ $s->NAMA }}
-          </option>
-      @endforeach
-  </select>
-</div>
+                <label for="USER" class="block text-gray-700 font-medium mb-1">
+                    SALES <span class="text-red-500" id="salesAsterisk">*</span>
+                </label>
+                <select name="USER" id="USER"
+                    class="w-full border border-gray-300 rounded px-3 py-2 
+                            focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <option value="" {{ $lead->ID_USER == null ? 'selected' : '' }}>-- Pilih Sales --</option>
+                    @foreach($user as $s)
+                        <option value="{{ $s->ID_USER }}" {{ $lead->ID_USER == $s->ID_USER ? 'selected' : '' }}>
+                            {{ $s->NAMA }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
 
         {{-- Baris 3: Kebutuhan & Lead Status --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
