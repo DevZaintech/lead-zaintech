@@ -151,14 +151,14 @@
             </div> 
             @if($lead->STATUS == 'norespon')
             <div>
-  <label for="STATUS" class="block text-gray-700 font-medium mb-1">STATUS</label>
-  <select name="STATUS" id="STATUS"
-      class="w-full border border-gray-300 rounded px-3 py-2 
-             focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-      <option value="lead" {{ $lead->STATUS == 'lead' ? 'selected' : '' }}>LEAD</option>
-      <option value="norespon" {{ $lead->STATUS == 'norespon' ? 'selected' : '' }}>NO RESPON</option>
-  </select>
-</div>
+                <label for="STATUS" class="block text-gray-700 font-medium mb-1">STATUS</label>
+                <select name="STATUS" id="STATUS"
+                    class="w-full border border-gray-300 rounded px-3 py-2 
+                            focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+                    <option value="lead" {{ $lead->STATUS == 'lead' ? 'selected' : '' }}>LEAD</option>
+                    <option value="norespon" {{ $lead->STATUS == 'norespon' ? 'selected' : '' }}>NO RESPON</option>
+                </select>
+            </div>
             @endif
         </div>        
 
