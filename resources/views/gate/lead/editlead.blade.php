@@ -120,21 +120,20 @@
                 </select>
             </div>
             <div>
-                <label for="USER" class="block text-gray-700 font-medium mb-1">
-                    SALES <span class="text-red-500" id="salesAsterisk">*</span>
-                </label>
-                <select name="USER" id="USER"
-                    class="w-full border border-gray-300 rounded px-3 py-2 
-                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                    <option value="" {{ $lead->ID_USER == null ? 'selected' : '' }}>-- Pilih Sales --</option>
-                    @foreach($user as $s)
-                        <option value="{{ $s->ID_USER }}" {{ $lead->ID_USER == $s->ID_USER ? 'selected' : '' }}>
-                            {{ $s->NAMA }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-        </div>
+  <label for="USER" class="block text-gray-700 font-medium mb-1">
+    SALES <span class="text-red-500" id="salesAsterisk">*</span>
+  </label>
+  <select name="USER" id="USER"
+      class="w-full border border-gray-300 rounded px-3 py-2 
+             focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+      <option value="" {{ $lead->ID_USER == null ? 'selected' : '' }}>-- Pilih Sales --</option>
+      @foreach($user as $s)
+          <option value="{{ $s->ID_USER }}" {{ $lead->ID_USER == $s->ID_USER ? 'selected' : '' }}>
+              {{ $s->NAMA }}
+          </option>
+      @endforeach
+  </select>
+</div>
 
         {{-- Baris 3: Kebutuhan & Lead Status --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -152,14 +151,14 @@
             </div> 
             @if($lead->STATUS == 'norespon')
             <div>
-                <label for="STATUS" class="block text-gray-700 font-medium mb-1">STATUS</label>
-                <select name="STATUS" id="STATUS"
-                    class="w-full border border-gray-300 rounded px-3 py-2 
-                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
-                    <option value="lead" {{ $lead->STATUS == 'lead' ? 'selected' : '' }}>LEAD</option>
-                    <option value="norespon" {{ $lead->STATUS == 'norespon' ? 'selected' : '' }}>NO RESPON</option>
-                </select>
-            </div>
+  <label for="STATUS" class="block text-gray-700 font-medium mb-1">STATUS</label>
+  <select name="STATUS" id="STATUS"
+      class="w-full border border-gray-300 rounded px-3 py-2 
+             focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200">
+      <option value="lead" {{ $lead->STATUS == 'lead' ? 'selected' : '' }}>LEAD</option>
+      <option value="norespon" {{ $lead->STATUS == 'norespon' ? 'selected' : '' }}>NO RESPON</option>
+  </select>
+</div>
             @endif
         </div>        
 
@@ -210,6 +209,17 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.getElementById('USER').addEventListener('change', function() {
+    const userVal = this.value;
+    const statusSelect = document.getElementById('STATUS');
+
+    if (userVal !== "") {
+        statusSelect.value = "lead"; // ubah otomatis ke LEAD
+    }
+});
+</script>
 
 <script>
 // Uppercase & numeric
