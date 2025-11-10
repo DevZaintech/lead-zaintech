@@ -215,8 +215,14 @@ document.getElementById('USER').addEventListener('change', function() {
     const userVal = this.value;
     const statusSelect = document.getElementById('STATUS');
 
+    // Kalau user dipilih (bukan kosong/null)
     if (userVal !== "") {
-        statusSelect.value = "lead"; // ubah otomatis ke LEAD
+        // ubah value STATUS jadi lead
+        statusSelect.value = "lead";
+
+        // picu event change agar semua script terkait ikut jalan
+        const event = new Event('change', { bubbles: true });
+        statusSelect.dispatchEvent(event);
     }
 });
 </script>
