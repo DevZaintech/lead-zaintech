@@ -104,7 +104,7 @@
                     '#F87171',
                     '#4ADE80',
                     '#9CA3AF',
-                    '#FACC15'
+                    '#FACC15',
                     '#60A5FA',
                 ],
                 borderWidth: 1
