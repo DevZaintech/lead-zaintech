@@ -44,10 +44,11 @@ class SalesController extends Controller
         $quotation  = (clone $query)->where('STATUS', 'quotation')->count();
         $converted  = (clone $query)->where('STATUS', 'converted')->count();
         $lost        = (clone $query)->where('STATUS', 'lost')->count();
+        $cold       = (clone $query)->where('STATUS', 'lead')->count();
 
         return view('sales.dashboard', compact(
             'source','startDate','endDate',
-            'total','opportunity','quotation','converted','lost'
+            'total','opportunity','quotation','converted','lost', 'cold'
         ));
     }
 
