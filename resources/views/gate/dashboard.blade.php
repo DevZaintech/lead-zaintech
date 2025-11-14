@@ -98,7 +98,7 @@
         data: {
             labels: ['Opportunity', 'Quotation', 'Deal', 'Lost', 'No Respon', 'Cold'],
             datasets: [{
-                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}, {{ $lead }}],
+                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}, {{ $cold }}],
                 backgroundColor: [
                     '#FB923C',
                     '#F87171',

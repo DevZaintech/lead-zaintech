@@ -53,7 +53,7 @@ class GateController extends Controller
         return view('gate.dashboard', compact(
             'sales','salesId',
             'startDate','endDate',
-            'total','opportunity','quotation','converted','lost','norespon', 'lead'
+            'total','opportunity','quotation','converted','lost','norespon', 'cold'
         ));
     }
     
