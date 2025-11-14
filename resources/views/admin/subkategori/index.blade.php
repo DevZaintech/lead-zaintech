@@ -69,8 +69,62 @@
         </tbody>
     </table>
 
-    <div class="mt-4">
-        {{ $subkategori->links() }}
+    @php
+        $currentPage = $subkategori->currentPage();
+        $lastPage = $subkategori->lastPage();
+        $total = $subkategori->total();
+        $start = ($currentPage - 1) * $subkategori->perPage() + 1;
+        $end = min($start + $subkategori->count() - 1, $total);
+    @endphp
+
+    <div class="flex justify-between items-center mt-4">
+
+        {{-- Info --}}
+        <div class="text-sm text-gray-600">
+            Menampilkan {{ $start }} sampai {{ $end }} dari {{ $total }} data
+        </div>
+
+        {{-- Pagination --}}
+        <div class="flex items-center space-x-1">
+
+            {{-- Prev --}}
+            @if ($subkategori->onFirstPage())
+                <span class="px-3 py-1 border rounded bg-gray-200 text-gray-400 cursor-not-allowed">
+                    « Prev
+                </span>
+            @else
+                <a href="{{ $subkategori->previousPageUrl() }}"
+                class="px-3 py-1 border rounded bg-white hover:bg-gray-100">
+                    « Prev
+                </a>
+            @endif
+
+            {{-- Nomor Halaman --}}
+            @for ($i = 1; $i <= $lastPage; $i++)
+                @if ($i == $currentPage)
+                    <span class="px-3 py-1 border rounded bg-blue-600 text-white">{{ $i }}</span>
+                @else
+                    <a href="{{ $subkategori->url($i) }}"
+                    class="px-3 py-1 border rounded bg-white hover:bg-gray-100">
+                        {{ $i }}
+                    </a>
+                @endif
+            @endfor
+
+            {{-- Next --}}
+            @if ($subkategori->hasMorePages())
+                <a href="{{ $subkategori->nextPageUrl() }}"
+                class="px-3 py-1 border rounded bg-white hover:bg-gray-100">
+                    Next »
+                </a>
+            @else
+                <span class="px-3 py-1 border rounded bg-gray-200 text-gray-400 cursor-not-allowed">
+                    Next »
+                </span>
+            @endif
+
+        </div>
+
     </div>
 </div>
 @endsection
