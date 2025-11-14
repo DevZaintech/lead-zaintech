@@ -1,6 +1,7 @@
 <table class="min-w-full table-auto border-collapse">
     <thead class="bg-gray-100">
         <tr>
+            <th class="border px-4 py-2 text-left">No</th>
             <th class="border p-2 text-left">SKU</th>
             <th class="border p-2 text-left">Nama</th>
             <th class="border p-2 text-left">Subkategori</th>
@@ -12,6 +13,9 @@
     <tbody>
         @forelse($produk as $item)
             <tr>
+                <td class="border px-4 py-2">
+                    {{ $produk->firstItem() + $loop->index }}
+                </td>
                 <td class="border p-2">{{ $item->SKU }}</td>
                 <td class="border p-2">{{ $item->NAMA }}</td>
                 <td class="border p-2">{{ $item->subkategori->NAMA ?? '-' }}</td>
