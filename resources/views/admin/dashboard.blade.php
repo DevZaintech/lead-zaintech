@@ -91,10 +91,10 @@
             <h3 class="text-lg font-bold mb-4">Distribusi Status</h3>
             <div class="relative w-80 h-80">
                 <canvas id="pieChart"></canvas>
-                <div id="pieTotal"
+                <!-- <div id="pieTotal"
                     class="absolute inset-0 flex items-center justify-center text-3xl font-bold text-gray-700">
                     {{ $total }}
-                </div>
+                </div> -->
             </div>
             <p class="mt-2 text-sm text-gray-500">Total Lead</p>
         </div>
@@ -118,13 +118,14 @@
         data: {
             labels: ['Opportunity', 'Quotation', 'Deal', 'Lost', 'No Respon'],
             datasets: [{
-                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}],
+                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}, {{ $cold }}],
                 backgroundColor: [
                     '#FB923C',
                     '#F87171',
                     '#4ADE80',
                     '#9CA3AF',
-                    '#FACC15'
+                    '#FACC15',
+                    '#60A5FA',
                 ],
                 borderWidth: 1
             }]

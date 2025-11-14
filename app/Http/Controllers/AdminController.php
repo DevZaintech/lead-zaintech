@@ -60,13 +60,14 @@ class AdminController extends Controller
         $opportunity= (clone $query)->where('STATUS', 'opportunity')->count();
         $quotation  = (clone $query)->where('STATUS', 'quotation')->count();
         $converted  = (clone $query)->where('STATUS', 'converted')->count();
-        $lost        = (clone $query)->where('STATUS', 'lost')->count();
-        $norespon        = (clone $query)->where('STATUS', 'norespon')->count();
+        $lost       = (clone $query)->where('STATUS', 'lost')->count();
+        $norespon   = (clone $query)->where('STATUS', 'norespon')->count();
+        $cold       = (clone $query)->where('STATUS', 'lead')->count();
     
         return view('admin.dashboard', compact(
             'sales','salesId','source',
             'startDate','endDate',
-            'total','opportunity','quotation','converted','lost','norespon'
+            'total','opportunity','quotation','converted','lost','norespon','cold'
         ));
     }
     
