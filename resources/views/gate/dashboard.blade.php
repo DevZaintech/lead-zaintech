@@ -71,10 +71,10 @@
             <h3 class="text-lg font-bold mb-4">Distribusi Status</h3>
             <div class="relative w-80 h-80">
                 <canvas id="pieChart"></canvas>
-                <div id="pieTotal"
+                <!-- <div id="pieTotal"
                     class="absolute inset-0 flex items-center justify-center text-3xl font-bold text-gray-700">
                     Total {{ $total }}
-                </div>
+                </div> -->
             </div>
             <p class="mt-2 text-sm text-gray-500">Total Lead</p>
         </div>
