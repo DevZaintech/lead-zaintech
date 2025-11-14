@@ -96,15 +96,16 @@
     new Chart(pieCtx, {
         type: 'doughnut',
         data: {
-            labels: ['Opportunity', 'Quotation', 'Deal', 'Lost', 'No Respon'],
+            labels: ['Opportunity', 'Quotation', 'Deal', 'Lost', 'No Respon', 'Cold'],
             datasets: [{
-                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}],
+                data: [{{ $opportunity }}, {{ $quotation }}, {{ $converted }}, {{ $lost }}, {{ $norespon }}, {{ $lead }}],
                 backgroundColor: [
                     '#FB923C',
                     '#F87171',
                     '#4ADE80',
                     '#9CA3AF',
                     '#FACC15'
+                    '#60A5FA',
                 ],
                 borderWidth: 1
             }]

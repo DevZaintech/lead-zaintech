@@ -47,12 +47,13 @@ class GateController extends Controller
         $quotation  = (clone $query)->where('STATUS', 'quotation')->count();
         $converted  = (clone $query)->where('STATUS', 'converted')->count();
         $lost       = (clone $query)->where('STATUS', 'lost')->count();
-        $norespon   = (clone $query)->where('STATUS', 'norespon')->count(); // 👈 tambahan
+        $norespon   = (clone $query)->where('STATUS', 'norespon')->count();
+        $cold       = (clone $query)->where('STATUS', 'lead')->count();
         
         return view('gate.dashboard', compact(
             'sales','salesId',
             'startDate','endDate',
-            'total','opportunity','quotation','converted','lost','norespon'
+            'total','opportunity','quotation','converted','lost','norespon', 'lead'
         ));
     }
     
