@@ -73,7 +73,7 @@
                 <canvas id="pieChart"></canvas>
                 <div id="pieTotal"
                     class="absolute inset-0 flex items-center justify-center text-3xl font-bold text-gray-700">
-                    {{ $total }}
+                    Total {{ $total }}
                 </div>
             </div>
             <p class="mt-2 text-sm text-gray-500">Total Lead</p>
