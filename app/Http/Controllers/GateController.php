@@ -30,21 +30,22 @@ class GateController extends Controller
             : now()->endOfDay();
     
         $salesId = $request->get('sales_id');
-
-        // ambil filter lead source, default null = semua
-        $source = $request->get('source');
+        $source  = $request->get('source');
     
-        // Ambil daftar sales yang ada di lead milik CREATOR_ID ini
-        $sales = User::where('ROLE', 'sales')
-                    ->get();
+        $sales = User::where('ROLE', 'sales')->get();
     
-        $query = Lead::where('CREATOR_ID', Auth::id())
-                    ->whereBetween('CREATED_AT', [$startDate, $endDate]);
+        $query = Lead::query()
+            ->whereBetween('CREATED_AT', [$startDate, $endDate]);
+    
+        // jika source TIDAK dipilih -> filter creator_id
+        if (!$source) {
+            $query->where('CREATOR_ID', Auth::id());
+        }
     
         if ($salesId) {
             $query->where('ID_USER', $salesId);
         }
-
+    
         if ($source) {
             $query->where('LEAD_SOURCE', $source);
         }
@@ -60,9 +61,10 @@ class GateController extends Controller
         return view('gate.dashboard', compact(
             'sales','salesId','source',
             'startDate','endDate',
-            'total','opportunity','quotation','converted','lost','norespon', 'cold'
+            'total','opportunity','quotation','converted','lost','norespon','cold'
         ));
     }
+    
     
     public function inputLead()
     {
