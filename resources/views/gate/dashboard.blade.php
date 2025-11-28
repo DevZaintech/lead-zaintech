@@ -25,6 +25,22 @@
                     @endforeach
                 </select>
             </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Source</label>
+                @php
+                    $sources = ['Meta Ads','Google Ads','Youtube','Tiktok','Instagram','Facebook','Marketplace','Web'];
+                @endphp
+                <select name="source" class="mt-1 w-full border rounded p-2">
+                    <option value="">-- Semua Source --</option>
+                    @foreach ($sources as $s)
+                        <option value="{{ $s }}" {{ request('source') === $s ? 'selected' : '' }}>
+                            {{ $s }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
             <div class="flex space-x-2">
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
                     Filter

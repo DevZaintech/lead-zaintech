@@ -30,6 +30,9 @@ class GateController extends Controller
             : now()->endOfDay();
     
         $salesId = $request->get('sales_id');
+
+        // ambil filter lead source, default null = semua
+        $source = $request->get('source');
     
         // Ambil daftar sales yang ada di lead milik CREATOR_ID ini
         $sales = User::where('ROLE', 'sales')
@@ -41,6 +44,10 @@ class GateController extends Controller
         if ($salesId) {
             $query->where('ID_USER', $salesId);
         }
+
+        if ($source) {
+            $query->where('LEAD_SOURCE', $source);
+        }
     
         $total      = (clone $query)->count();
         $opportunity= (clone $query)->where('STATUS', 'opportunity')->count();
@@ -51,7 +58,7 @@ class GateController extends Controller
         $cold       = (clone $query)->where('STATUS', 'lead')->count();
         
         return view('gate.dashboard', compact(
-            'sales','salesId',
+            'sales','salesId','source',
             'startDate','endDate',
             'total','opportunity','quotation','converted','lost','norespon', 'cold'
         ));
