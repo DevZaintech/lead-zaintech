@@ -131,7 +131,7 @@
         </div>
 
         {{-- Baris 3: Kebutuhan & Lead Status --}}
-        <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="KEBUTUHAN" class="block text-gray-700 font-medium mb-1">
                     KEBUTUHAN <span class="text-red-500">*</span>
@@ -144,6 +144,24 @@
                     @endif
                 </select>
             </div> 
+
+            @if($lead->STATUS == 'lost')
+            <div>
+                <label for="STATUS" class="block text-gray-700 font-medium mb-1">
+                STATUS <span class="text-red-500"></span>
+                </label>
+                <select name="STATUS" id="STATUS" class="w-full border border-gray-300 rounded px-3 py-2">
+                    @if(!empty($lead->STATUS))
+                        <option value="{{ $lead->STATUS }}" selected>
+                            {{ $lead->STATUS ?? '-' }}
+                        </option>
+                        <option value="opportunity">
+                            Opportunity
+                        </option>
+                    @endif
+                </select>
+            </div> 
+            @endif
             
         </div>
 

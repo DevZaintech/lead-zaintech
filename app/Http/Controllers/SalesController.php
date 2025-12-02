@@ -980,6 +980,9 @@ class SalesController extends Controller
         if ($lead && $lead->STATUS === 'lost') {
             $data['REASON'] = $request->REASON;
         }
+        if ($request->STATUS === 'opportunity') {
+            $data['STATUS'] = $request->STATUS;
+        }
         if ($lead && $lead->STATUS != 'lead') {
             $opp = Opportunity::where('LEAD_ID', $request->LEAD_ID)->update([
                 'NOTE'=> $request->NOTE,
