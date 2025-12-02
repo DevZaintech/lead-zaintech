@@ -205,6 +205,7 @@
                             <option value="PEMBAYARAN" @if(old('REASON', $opp->REASON ?? '') == 'PEMBAYARAN') selected @endif>PEMBAYARAN</option>
                             <option value="STOCK KOSONG" @if(old('REASON', $opp->REASON ?? '') == 'STOCK KOSONG') selected @endif>STOCK KOSONG</option>
                             <option value="NO RESPON" @if(old('REASON', $opp->REASON ?? '') == 'NO RESPON') selected @endif>NO RESPON</option>
+                            <option value="TIDAK SERIUS" @if(old('REASON', $opp->REASON ?? '') == 'TIDAK SERIUS') selected @endif>TIDAK SERIUS</option>
                             <option value="TIDAK JUAL" @if(old('REASON', $opp->REASON ?? '') == 'TIDAK JUAL') selected @endif>TIDAK JUAL</option>
                         </select>
                     </div>

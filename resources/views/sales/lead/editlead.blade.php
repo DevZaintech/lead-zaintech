@@ -174,6 +174,7 @@
                 'PEMBAYARAN',
                 'STOCK KOSONG',
                 'NO RESPON',
+                'TIDAK SERIUS',
                 'TIDAK JUAL',
             ];
         @endphp
