@@ -82,7 +82,15 @@
                                 </button>
                             </form>
                         @else
-                            <span class="text-gray-400 italic">Sudah nonaktif</span>
+                            <form action="{{ route('aktifuser.admin') }}" method="POST" class="inline">
+                                @csrf
+                                <input type="hidden" name="ID_USER" value="{{ $user->ID_USER }}">
+                                <button type="submit"
+                                    onclick="return confirm('Yakin ingin menaktifkan lagi user ini?')"
+                                    class="px-3 py-1 bg-green-500 text-white rounded hover:bg-red-600">
+                                    Aktifkan
+                                </button>
+                            </form>
                         @endif
                     </td>
                 </tr>

@@ -708,5 +708,18 @@ class AdminController extends Controller
         return redirect()->route('getuser.admin')->with('success', 'User berhasil dinonaktifkan');
     }
 
+    public function aktifUser(Request $request)
+    {
+        $user = User::findOrFail($request->ID_USER);
+
+        // Tandai user sebagai nonaktif
+        $user->update([
+            'STATUS' => 'aktif',
+            'UPDATED_AT' => now(),
+        ]);
+
+        return redirect()->route('getuser.admin')->with('success', 'User berhasil diaktifkan lagi');
+    }
+
 
 }

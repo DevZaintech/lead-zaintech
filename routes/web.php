@@ -69,6 +69,7 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::post('/storeuser/admin', [AdminController::class, 'storeUser'])->name('storeuser.admin');
     Route::post('/updateuser/admin', [AdminController::class, 'updateUser'])->name('updateuser.admin');
     Route::post('/nonaktifuser/admin', [AdminController::class, 'nonaktifUser'])->name('nonaktifuser.admin');
+    Route::post('/aktifuser/admin', [AdminController::class, 'aktifUser'])->name('aktifuser.admin');
 
 
 });
