@@ -68,7 +68,8 @@ class GateController extends Controller
     
     public function inputLead()
     {
-        $user = User::where('ROLE', 'sales')
+        $user = User::where('ROLE', 'sales', 'AND')
+            ->where('STATUS', 'aktif')
              ->whereNull('DELETED_AT')
              ->get();
 
