@@ -701,7 +701,8 @@ class AdminController extends Controller
 
         // Tandai user sebagai nonaktif
         $user->update([
-            'DELETED_AT' => now(),
+            'STATUS' => 'nonaktif',
+            'UPDATED_AT' => now(),
         ]);
 
         return redirect()->route('getuser.admin')->with('success', 'User berhasil dinonaktifkan');

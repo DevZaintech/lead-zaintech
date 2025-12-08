@@ -41,7 +41,7 @@
                 <th class="border px-4 py-2">EMAIL</th>
                 <th class="border px-4 py-2">ROLE</th>
                 <th class="border px-4 py-2">CREATED_AT</th>
-                <th class="border px-4 py-2">Status</th>
+                <th class="border px-4 py-2">STATUS</th>
                 <th class="border px-4 py-2">Action</th>
             </tr>
         </thead>
@@ -56,7 +56,7 @@
                         {{ \Carbon\Carbon::parse($user->CREATED_AT)->translatedFormat('d F Y') }}
                     </td>
                     <td class="border px-4 py-2 text-center">
-                        @if($user->DELETED_AT)
+                        @if($user->STATUS == 'nonaktif')
                             <span class="text-red-500 font-semibold">Nonaktif</span>
                         @else
                             <span class="text-green-600 font-semibold">Aktif</span>
@@ -71,7 +71,7 @@
                         </button>
 
                         {{-- Tombol Nonaktif --}}
-                        @if(!$user->DELETED_AT)
+                        @if($user->STATUS == 'aktif')
                             <form action="{{ route('nonaktifuser.admin') }}" method="POST" class="inline">
                                 @csrf
                                 <input type="hidden" name="ID_USER" value="{{ $user->ID_USER }}">
