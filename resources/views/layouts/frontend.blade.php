@@ -8,7 +8,7 @@
     <script src="https://unpkg.com/alpinejs" defer></script>
     @yield('css')
 </head>
-<body class="bg-gray-100 h-screen flex flex-col"
+<body class="bg-gray-100 flex flex-col"
       x-data="{ sidebarOpen: false, profileOpen: false }">
 
         @if(session('success'))
@@ -91,7 +91,7 @@
         </div>
     </header>
 
-    <div class="flex flex-1 overflow-hidden">
+    <div class="flex flex-1">
         <!-- Sidebar ala Filament -->
         <aside
             class="fixed inset-y-0 left-0 transform bg-white w-64 shadow-lg flex flex-col z-30 transition-transform duration-200 ease-in-out
@@ -276,7 +276,7 @@
              x-show="sidebarOpen" @click="sidebarOpen=false"></div>
 
         <!-- Content -->
-        <main class="flex-1 p-6 overflow-y-auto md:ml-0 bg-grey-100">
+        <main class="flex-1 p-6 md:ml-0 bg-grey-100">
             <div class="w-full bg-white-100">
                 @yield('content')
             </div>
