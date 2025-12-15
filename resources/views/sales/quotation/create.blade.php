@@ -197,16 +197,10 @@
                         <select name="REASON" id="REASON" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600"
                             @if($currentStatus == 'lost') required @endif>
                             <option value="">-- Pilih Reason --</option>
-                            <option value="INDEN" @if(old('REASON', $opp->REASON ?? '') == 'INDEN') selected @endif>INDEN</option>
-                            <option value="SUDAH BELI DI VENDOR LAIN" @if(old('REASON', $opp->REASON ?? '') == 'SUDAH BELI DI VENDOR LAIN') selected @endif>SUDAH BELI DI VENDOR LAIN</option>
-                            <option value="HARGA TINGGI" @if(old('REASON', $opp->REASON ?? '') == 'HARGA TINGGI') selected @endif>HARGA TINGGI</option>
-                            <option value="TIDAK ADA DANA" @if(old('REASON', $opp->REASON ?? '') == 'TIDAK ADA DANA') selected @endif>TIDAK ADA DANA</option>
-                            <option value="LOKASI TERLALU JAUH" @if(old('REASON', $opp->REASON ?? '') == 'LOKASI TERLALU JAUH') selected @endif>LOKASI TERLALU JAUH</option>
-                            <option value="PEMBAYARAN" @if(old('REASON', $opp->REASON ?? '') == 'PEMBAYARAN') selected @endif>PEMBAYARAN</option>
-                            <option value="STOCK KOSONG" @if(old('REASON', $opp->REASON ?? '') == 'STOCK KOSONG') selected @endif>STOCK KOSONG</option>
-                            <option value="NO RESPON" @if(old('REASON', $opp->REASON ?? '') == 'NO RESPON') selected @endif>NO RESPON</option>
-                            <option value="TIDAK SERIUS" @if(old('REASON', $opp->REASON ?? '') == 'TIDAK SERIUS') selected @endif>TIDAK SERIUS</option>
-                            <option value="TIDAK JUAL" @if(old('REASON', $opp->REASON ?? '') == 'TIDAK JUAL') selected @endif>TIDAK JUAL</option>
+                            @foreach($reason as $r)
+                            <option value="{{$r->REASON}}" @if(old('REASON', $opp->REASON ?? '') == '{{$r->REASON}}') selected @endif>{{$r->REASON}}</option>
+                            @endforeach
+                            
                         </select>
                     </div>
                 </div>

@@ -13,6 +13,7 @@ use App\Models\Opportunity;
 use App\Models\ItemTable;
 use App\Models\Quotation;
 use App\Models\FollowUp;
+use App\Models\ReasonLost;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -564,6 +565,7 @@ class SalesController extends Controller
     {
         $opp = Opportunity::where('OPPORTUNITY_ID', $id)->firstOrFail();
         $item = ItemTable::where('OPPORTUNITY_ID', $id)->get();
+        $reason = ReasonLost::all();
     
         // follow up dari opportunity
         $fuOpp = $opp->followUps()->get();
@@ -574,7 +576,7 @@ class SalesController extends Controller
         // gabungkan keduanya
         $followups = $fuOpp->merge($fuLead);
     
-        return view('sales.quotation.create', compact('opp', 'item', 'followups'));
+        return view('sales.quotation.create', compact('opp', 'item', 'followups', 'reason'));
     }
 
     public function storeQuotation(Request $request)
@@ -818,6 +820,7 @@ class SalesController extends Controller
     public function detailQuotation($quo_id)
     {
         $quo = Quotation::where('QUO_ID', $quo_id)->firstOrFail();
+        $reason = ReasonLost::all();
     
         $validDate = Carbon::parse($quo->VALID_DATE)->toDateString();
         $today     = now()->toDateString();
@@ -841,7 +844,7 @@ class SalesController extends Controller
     
         $followups = $fuOpp->merge($fuLead)->sortByDesc('TGL_FOLLOW');
     
-        return view('sales.quotation.detail', compact('quo','opp','lead','item','followups'));
+        return view('sales.quotation.detail', compact('quo','opp','lead','item','followups','reason'));
     }
     
     
@@ -933,6 +936,7 @@ class SalesController extends Controller
         $lead = Lead::with(['sub_kategori', 'kota', 'user'])
             ->where('LEAD_ID', $lead_id)
             ->firstOrFail();
+        $reason = ReasonLost::all();
         $user = User::where('ROLE', 'sales')
         ->whereNull('DELETED_AT')
         ->get();
@@ -940,7 +944,7 @@ class SalesController extends Controller
         $subkategori = SubKategori::whereNull('DELETED_AT')
         ->get();
 
-        return view('sales.lead.editlead', compact('lead','user','subkategori'));
+        return view('sales.lead.editlead', compact('lead','user','subkategori','reason'));
     }
 
     public function updateLead(Request $request)

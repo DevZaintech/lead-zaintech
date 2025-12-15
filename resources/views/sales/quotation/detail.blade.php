@@ -248,15 +248,10 @@
                                 <label class="block text-sm font-medium mb-1">REASON <span class="text-red-500">*</span></label>
                                 <select id="REASON" name="REASON" class="w-full border border-gray-400 rounded px-3 py-2 text-gray-600">
                                     <option value="">-- Pilih Reason --</option>
-                                    <option value="INDEN">INDEN</option>
-                                    <option value="SUDAH BELI DI VENDOR LAIN">SUDAH BELI DI VENDOR LAIN</option>
-                                    <option value="HARGA TINGGI">HARGA TINGGI</option>
-                                    <option value="TIDAK ADA DANA">TIDAK ADA DANA</option>
-                                    <option value="LOKASI TERLALU JAUH">LOKASI TERLALU JAUH</option>
-                                    <option value="PEMBAYARAN">PEMBAYARAN</option>
-                                    <option value="STOCK KOSONG">STOCK KOSONG</option>
-                                    <option value="NO RESPON">NO RESPON</option>
-                                    <option value="TIDAK JUAL">TIDAK JUAL</option>
+                                    @foreach($reason as $r)
+                                    <option value="{{$r->REASON}}">{{$r->REASON}}</option>
+                                    @endforeach
+                                    
                                 </select>
                             </div>
                         </div>

@@ -166,18 +166,14 @@
         </div>
 
         @php
-            $reasons = [
-                'INDEN',
-                'SUDAH BELI DI VENDOR LAIN',
-                'HARGA TINGGI',
-                'LOKASI TERLALU JAUH',
-                'PEMBAYARAN',
-                'STOCK KOSONG',
-                'NO RESPON',
-                'TIDAK SERIUS',
-                'TIDAK JUAL',
-            ];
+            $reasons = [];
         @endphp
+
+        @foreach ($reason as $r)
+            @php
+                $reasons[] = $r->REASON;
+            @endphp
+        @endforeach
 
         @if($lead->STATUS == 'lost')
             <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
