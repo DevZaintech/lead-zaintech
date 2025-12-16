@@ -65,6 +65,13 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::get('/dataopp/{opp_id}/detail', [AdminController::class, 'detailOpp'])->name('opp.admin.detail');
     Route::get('/dataquo/{quo_id}/detail', [AdminController::class, 'detailQuo'])->name('dataquo.admin.detail');
 
+    Route::get('/datareason/admin', [AdminController::class, 'dataReason'])->name('datareason.admin');
+    Route::post('/reason/store', [AdminController::class, 'reasonStore'])->name('reason.store');
+    Route::post('/reason/{id}/edit', [AdminController::class, 'reasonEdit'])->name('reason.edit');
+    Route::put('/reason/{id}', [AdminController::class, 'reasonUpdate'])->name('reason.update');
+    Route::get('/reason/{id}', [AdminController::class, 'reasonDelete'])->name('reason.delete');
+    Route::get('/reason/undo/{id}', [AdminController::class, 'reasonUndo'])->name('reason.undo');
+
     Route::get('/getuser/admin', [AdminController::class, 'getUser'])->name('getuser.admin');
     Route::post('/storeuser/admin', [AdminController::class, 'storeUser'])->name('storeuser.admin');
     Route::post('/updateuser/admin', [AdminController::class, 'updateUser'])->name('updateuser.admin');

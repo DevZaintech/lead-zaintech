@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Kota;
 use App\Models\ItemTable;
 use App\Models\FollowUp;
+use App\Models\ReasonLost;
 use App\Imports\ProdukImport;
 use App\Exports\ProdukExport;
 use Maatwebsite\Excel\Facades\Excel;
@@ -720,6 +721,60 @@ class AdminController extends Controller
 
         return redirect()->route('getuser.admin')->with('success', 'User berhasil diaktifkan lagi');
     }
+
+    // DATA REASON
+    public function dataReason()
+    {
+        // Ambil Data Reason
+        $reason = ReasonLost::All();
+
+        return view('admin.lead.datareason', compact('reason'));
+    }
+
+    public function reasonDelete($id)
+    {
+        $reason = ReasonLost::where('ID_REASON', $id)->whereNull('DELETED_AT')->update([
+            'UPDATED_AT' => now(),
+            'DELETED_AT' => now(),
+        ]);
+         return redirect()->route('datareason.admin')->with('success', 'Reason Dihapus Dari Viewport');
+    }
+
+    public function reasonUndo($id)
+    {
+        $reason = ReasonLost::where('ID_REASON', $id)->update([
+            'UPDATED_AT' => now(),
+            'DELETED_AT' => null,
+        ]);
+         return redirect()->route('datareason.admin')->with('success', 'Reason Ditampilkan ke Viewport');
+    }
+
+    public function reasonEdit(Request $request, $id)
+    {
+        if ($request->isMethod('post')) {
+            ReasonLost::where('ID_REASON', $id)->update([
+                'REASON' => $request->REASON,
+                'UPDATED_AT' => now(),
+            ]);
+
+            return redirect()->back();
+        }
+    }
+
+    public function reasonStore(Request $request)
+    {
+        $request->validate([
+            'NAMA' => 'required|string|max:255',
+        ]);
+
+        ReasonLost::create([
+            'REASON' => $request->NAMA,
+            'CREATED_AT' => now(),
+        ]);
+
+        return redirect()->route('datareason.admin')->with('success', 'Reason Berhasil Ditambahkan');
+    }
+
 
 
 }

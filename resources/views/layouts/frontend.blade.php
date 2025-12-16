@@ -209,6 +209,19 @@
                         Lead
                     </a>
 
+                    <a href="{{ route('datareason.admin') }}"
+                        class="flex items-center px-4 py-2 rounded-lg transition
+                        {{ request()->routeIs('datareason.admin') 
+                            ? 'bg-blue-100 text-blue-600 border-l-4 border-blue-600' 
+                            : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600' }}">
+                        <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" 
+                                d="M9 12h6m-6 4h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v12a2 2 0 01-2 2z"/>
+                        </svg>
+                        Reason Lost
+                    </a>
+
                     {{-- Kategori --}}
                     <a href="{{ route('kategori.index') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition

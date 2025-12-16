@@ -565,7 +565,7 @@ class SalesController extends Controller
     {
         $opp = Opportunity::where('OPPORTUNITY_ID', $id)->firstOrFail();
         $item = ItemTable::where('OPPORTUNITY_ID', $id)->get();
-        $reason = ReasonLost::all();
+        $reason = ReasonLost::whereNull('DELETED_AT')->get();
     
         // follow up dari opportunity
         $fuOpp = $opp->followUps()->get();
@@ -820,7 +820,7 @@ class SalesController extends Controller
     public function detailQuotation($quo_id)
     {
         $quo = Quotation::where('QUO_ID', $quo_id)->firstOrFail();
-        $reason = ReasonLost::all();
+        $reason = ReasonLost::whereNull('DELETED_AT')->get();
     
         $validDate = Carbon::parse($quo->VALID_DATE)->toDateString();
         $today     = now()->toDateString();
@@ -936,7 +936,7 @@ class SalesController extends Controller
         $lead = Lead::with(['sub_kategori', 'kota', 'user'])
             ->where('LEAD_ID', $lead_id)
             ->firstOrFail();
-        $reason = ReasonLost::all();
+        $reason = ReasonLost::whereNull('DELETED_AT')->get();
         $user = User::where('ROLE', 'sales')
         ->whereNull('DELETED_AT')
         ->get();
