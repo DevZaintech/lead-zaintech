@@ -116,6 +116,16 @@
                             </div>
                         </td>
                     </tr>
+                    @if($lead->STATUS == 'converted')
+                    <tr>
+                        <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>TANGGAL DEAL</b></td>
+                        <td class="px-3 py-2 border border-gray-300">
+                        <div class="flex items-center space-x-2">
+                            {{ \Carbon\Carbon::parse($lead->UPDATED_AT)->translatedFormat('d F Y') }}
+                        </div>
+                        </td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
