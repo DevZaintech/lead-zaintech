@@ -117,6 +117,7 @@
                     <option value="Direct">Direct</option>
                     <option value="Exhibition">Exhibition</option>
                     <option value="Relasi">Relasi</option>
+                    <option value="Youtube">Youtube</option>
                 </select>
             </div>
         </div>
