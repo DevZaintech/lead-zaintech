@@ -427,13 +427,20 @@
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KATEGORI CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-400">
-                            @if($opp->lead->KATEGORI === 'INDIVIDU')
+
+                            @if($opp->lead->KATEGORI_CUST != NULL)
+                                {{ $opp->lead->KATEGORI_CUST }}
+                            @else
+                                NULL
+                            @endif
+
+                            <!-- @if($opp->lead->KATEGORI === 'INDIVIDU')
                                 {{ $opp->lead->KATEGORI }}
                             @elseif($opp->lead->KATEGORI === 'COMPANY')
                                 {{ $opp->lead->KATEGORI }} - {{ $opp->lead->PERUSAHAAN ?? '-' }}
                             @else
                                 -
-                            @endif
+                            @endif -->
                         </td>
                     </tr>
 

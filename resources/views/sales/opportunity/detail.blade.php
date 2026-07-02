@@ -432,7 +432,7 @@
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
 
-                @if($opp->lead->ID_USER == Auth::id())
+                @if($opp->lead->ID_USER == Auth::id() && $opp->lead->STATUS != 'converted')
                 <a href="{{ route('edit.lead.sales', $opp->lead->LEAD_ID) }}"
                 class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" 
@@ -465,13 +465,20 @@
                         <tr>
                             <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KATEGORI CUSTOMER</b></td>
                             <td class="px-3 py-2 border border-gray-300">
-                                @if($opp->lead->KATEGORI === 'INDIVIDU')
+
+                                @if($opp->lead->KATEGORI_CUST != NULL)
+                                    {{ $opp->lead->KATEGORI_CUST }}
+                                @else
+                                    NULL
+                                @endif
+
+                                <!-- @if($opp->lead->KATEGORI === 'INDIVIDU')
                                     {{ $opp->lead->KATEGORI }}
                                 @elseif($opp->lead->KATEGORI === 'COMPANY')
                                     {{ $opp->lead->KATEGORI }} - {{ $opp->lead->PERUSAHAAN ?? '-' }}
                                 @else
                                     -
-                                @endif
+                                @endif -->
                             </td>
                         </tr>
                         <tr>
@@ -611,7 +618,7 @@
                         Detail Lead
                     </h2>
 
-                    @if($opp->lead->ID_USER == Auth::id())
+                    @if($opp->lead->ID_USER == Auth::id() && $opp->lead->STATUS != 'converted')
                         <a href="{{ route('edit.lead.sales', $opp->lead->LEAD_ID) }}"
                             class="px-4 py-2 rounded-lg bg-green-600 text-white text-sm font-medium">
                             Edit
@@ -642,11 +649,19 @@
                 <div class="mobile-row">
                     <div class="mobile-label">Kategori</div>
                     <div class="mobile-value">
-                        @if($opp->lead->KATEGORI == 'COMPANY')
+
+
+                        @if($opp->lead->KATEGORI_CUST != NULL)
+                            {{ $opp->lead->KATEGORI_CUST }}
+                        @else
+                            NULL
+                        @endif
+
+                        <!-- @if($opp->lead->KATEGORI == 'COMPANY')
                             {{ $opp->lead->KATEGORI }} - {{ $opp->lead->PERUSAHAAN }}
                         @else
                             {{ $opp->lead->KATEGORI }}
-                        @endif
+                        @endif -->
                     </div>
                 </div>
 

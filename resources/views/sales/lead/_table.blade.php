@@ -4,12 +4,14 @@
             <tr>
                 <th class="border p-2 text-center" style="width:3%">NO</th>
                 <th class="border p-2 text-center">TANGGAL</th>
+                <th class="border p-2 text-center">TANGGAL DEAL</th>
                 <th class="border p-2 text-center">NAMA/KOTA</th>
                 <!-- <th class="border p-2 text-center">Kota</th> -->
                 <th class="border p-2 text-center">TELP</th>
                 <th class="border p-2 text-center">KEBUTUHAN</th>
                 <th class="border p-2 text-center">SALES</th>
                 <th class="border p-2 text-center">SOURCE</th>
+                <th class="border p-2 text-center">KATEGORI CUST</th>
                 <th class="border p-2 text-center">STATUS</th>
                 <th class="border p-2 text-center"> </th>
             </tr>
@@ -24,14 +26,29 @@
                                 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
                         ];
                         $tanggal = \Carbon\Carbon::parse($item->CREATED_AT);
+                        $deal = \Carbon\Carbon::parse($item->UPDATED_AT);
                     @endphp
                     <td class="border p-2 text-center">{{ $tanggal->format('d') }} {{ $bulanIndo[$tanggal->format('n')] }} {{ $tanggal->format('Y') }}</td>
+                    <td class="border p-2 text-center">
+                        @if($item->STATUS == 'converted')
+                            {{ $deal->format('d') }} {{ $bulanIndo[$deal->format('n')] }} {{ $deal->format('Y') }}
+                        @else
+                            Belum
+                        @endif
+                    </td>
                     <td class="border p-2 text-center">{{ $item->NAMA ?? '-' }} - {{ $item->kota->name ?? '-' }}</td>
                     <!-- <td class="border p-2 text-center">{{ $item->kota->name ?? '-' }}</td> -->
-                    <td class="border p-2 text-center">{{ $item->NO_TELP }}</td>
+                    <td class="border p-2 text-center">
+                        @if($item->ID_USER == auth()->id())
+                            {{ $item->NO_TELP }}
+                        @else
+                            ********{{ substr($item->NO_TELP, -4) }}
+                        @endif
+                    </td>
                     <td class="border p-2 text-center">{{ $item->sub_kategori->NAMA ?? '-' }}</td>
                     <td class="border p-2 text-center">{{ $item->user->NAMA ?? '-' }}</td>
                     <td class="border p-2 text-center">{{ $item->LEAD_SOURCE ?? '-' }}</td>
+                    <td class="border p-2 text-center">{{ $item->KATEGORI_CUST ?? '-' }}</td>
                     <td class="border p-2 text-center">
                         <div class="flex items-center space-x-2">
                             <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $item->stage_class }}">
@@ -129,6 +146,9 @@
 
                 <div class="text-sm mb-3">
                     <span class="inline-block w-24">Source</span>: {{ $item->LEAD_SOURCE ?? '-' }}
+                </div>
+                <div class="text-sm mb-3">
+                    <span class="inline-block w-24">Kategori</span>: {{ $item->KATEGORI_CUST ?? '-' }}
                 </div>
 
             </div>

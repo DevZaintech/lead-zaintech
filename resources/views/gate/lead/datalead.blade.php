@@ -25,6 +25,10 @@
         display:none;
     }
 
+    .filter-kategori {
+        width: 160px; /* desktop = w-40 */
+    }
+
     @media (max-width: 768px){
 
         .desktop-table{
@@ -33,6 +37,9 @@
 
         .mobile-card-list{
             display:block;
+        }
+        .filter-kategori {
+            width: 100%;
         }
     }
 
@@ -103,6 +110,14 @@
         {{-- Filter Tanggal --}}
         <input type="date" id="startDate" class="w-40 border p-2 rounded">
         <input type="date" id="endDate" class="w-40 border p-2 rounded">
+
+        {{-- Filter PEMAIN EXPAND --}}
+        <select id="filterKategori" class="filter-kategori border p-2 rounded">
+            <option value="">Semua Kategori</option>
+            <option value="EXPAND">EXPAND</option>
+            <option value="PEMULA">PEMULA</option>
+        </select>
+
     </div>
 
 
@@ -126,6 +141,7 @@
         let status    = $('#filterStatus').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
+        let kategori    = $('#filterKategori').val();
 
         $.ajax({
             url: url,
@@ -136,7 +152,8 @@
                 status: status,
                 startDate: startDate,
                 endDate: endDate,
-                myLead: myLead
+                myLead: myLead,
+                kategori: kategori
             },
             success: function(data) {
                 $('#lead_table').html(data);
@@ -145,7 +162,7 @@
     }
 
     // trigger filter/search
-    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate')
+    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterKategori')
         .on('change keyup', function() {
             fetch_data();
         });
@@ -181,6 +198,7 @@
         let status    = $('#filterStatus').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
+        let kategori    = $('#filterKategori').val();
 
         $.ajax({
             url: url,
@@ -191,7 +209,8 @@
                 status: status,
                 startDate: startDate,
                 endDate: endDate,
-                myLead: myLead
+                myLead: myLead,
+                kategori: kategori
             },
             success: function(data) {
                 $('#lead_table').html(data);

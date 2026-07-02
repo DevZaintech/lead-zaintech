@@ -12,7 +12,7 @@
     <div class="w-full max-w-md mx-auto bg-white rounded-xl shadow-xl p-8 md:p-10">
         <!-- Logo -->
         <div class="text-center mb-6">
-            <img src="https://zaintech.co.id/public/icon/Zflow-CRM.webp" alt="Logo" class="w-auto h-32 mx-auto mb-3">
+            <img src="https://zaintech.co.id/public/assets/logo/Logo%20Zaintech%20Sukses%20Gemilang-04-1.webp" alt="Logo" class="h-auto w-48 mx-auto mb-3">
             <!-- <h2 class="text-2xl font-bold text-gray-800">Selamat Datang</h2> -->
             <p class="text-gray-500 text-sm mt-1">Masuk ke akun Anda untuk melanjutkan</p>
         </div>
@@ -65,7 +65,7 @@
         </form>
 
         <p class="text-xs text-center text-gray-500 mt-6">
-            © {{ date('Y') }} Zflow CRM. Semua Hak Dilindungi.
+            © {{ date('Y') }} Zaintech. Semua Hak Dilindungi.
         </p>
     </div>
 </body>

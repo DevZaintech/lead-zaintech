@@ -160,6 +160,7 @@ class GateController extends Controller
             'NAMA'          => $request->NAMA,
             'PERUSAHAAN'    => $request->PERUSAHAAN,
             'KATEGORI'      => $request->KATEGORI,
+            'KATEGORI_CUST' => $request->KATEGORI_CUST,
             'kode_kota'     => $request->kode_kota,
             'NO_TELP'       => $request->NO_TELP,
             'EMAIL'         => $request->EMAIL,
@@ -199,6 +200,7 @@ class GateController extends Controller
         $status     = $request->get('status'); // ✅ tambahan
         $startDate  = $request->get('startDate');
         $endDate    = $request->get('endDate');
+        $kategori   = $request->get('kategori');
     
         // ✅ kalau bukan ajax → default MyLead = true
         if ($request->ajax()) {
@@ -230,6 +232,9 @@ class GateController extends Controller
             })
             ->when($source, function ($q) use ($source) {
                 $q->where('LEAD_SOURCE', $source);
+            })
+            ->when($kategori, function ($q) use ($kategori) {
+                $q->where('KATEGORI_CUST', $kategori);
             })
             ->when($status, function ($q) use ($status) {
                 if ($status === 'opportunity') { // Warm
@@ -355,12 +360,13 @@ class GateController extends Controller
             'NAMA'        => $request->NAMA,
             'PERUSAHAAN'  => $request->PERUSAHAAN,
             'KATEGORI'    => $request->KATEGORI,
+            'KATEGORI_CUST' => $request->KATEGORI_CUST,
             'kode_kota'   => $request->kode_kota,
             'NO_TELP'     => $request->NO_TELP,
             'EMAIL'       => $request->EMAIL,
             'LEAD_SOURCE' => $request->LEAD_SOURCE,
             'NOTE'        => $request->NOTE,
-            'UPDATED_AT'  => now(),
+            // 'UPDATED_AT'  => now(),
         ];
         
         // hanya update STATUS kalau ada di form

@@ -323,13 +323,19 @@
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KATEGORI CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-300">
-                            @if($quo->opportunity->lead->KATEGORI === 'INDIVIDU')
+                            @if($quo->opportunity->lead->KATEGORI_CUST != NULL)
+                                {{ $quo->opportunity->lead->KATEGORI_CUST }}
+                            @else
+                                NULL
+                            @endif
+
+                            <!-- @if($quo->opportunity->lead->KATEGORI === 'INDIVIDU')
                                 {{ $quo->opportunity->lead->KATEGORI }}
                             @elseif($quo->opportunity->lead->KATEGORI === 'COMPANY')
                                 {{ $quo->opportunity->lead->KATEGORI }} - {{ $quo->opportunity->lead->PERUSAHAAN ?? '-' }}
                             @else
                                 -
-                            @endif
+                            @endif -->
                         </td>
                     </tr>
 

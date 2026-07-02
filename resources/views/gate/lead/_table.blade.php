@@ -10,6 +10,7 @@
                 <th class="border p-2 text-center">KEBUTUHAN</th>
                 <th class="border p-2 text-center">SALES</th>
                 <th class="border p-2 text-center">SOURCE</th>
+                <th class="border p-2 text-center">KATEGORI</th>
                 <th class="border p-2 text-center">STATUS</th>
                 <th class="border p-2 text-center"> </th>
             </tr>
@@ -32,6 +33,7 @@
                     <td class="border p-2 text-center">{{ $item->sub_kategori->NAMA ?? '-' }}</td>
                     <td class="border p-2 text-center">{{ $item->user->NAMA ?? '-' }}</td>
                     <td class="border p-2 text-center">{{ $item->LEAD_SOURCE ?? '-' }}</td>
+                    <td class="border p-2 text-center">{{ $item->KATEGORI_CUST ?? '-' }}</td>
                     <td class="border p-2 text-center">
                     <div class="flex items-center space-x-2">
                             <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $item->stage_class }}">
@@ -104,6 +106,9 @@
 
             <div class="text-sm mb-3">
                 <span class="inline-block w-24">Source</span>: {{ $item->LEAD_SOURCE ?? '-' }}
+            </div>
+            <div class="text-sm mb-3">
+                <span class="inline-block w-24">Kategori</span>: {{ $item->KATEGORI_CUST ?? '-' }}
             </div>
 
             <a href="{{ route('lead.gate.detail', ['lead_id' => $item->LEAD_ID]) }}"

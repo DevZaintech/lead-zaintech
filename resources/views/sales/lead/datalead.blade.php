@@ -8,6 +8,9 @@
     .mobile-card-list{
         display:none;
     }
+    .filter-kategori {
+        width: 160px; /* desktop = w-40 */
+    }
 
     @media (max-width: 768px){
 
@@ -17,6 +20,9 @@
 
         .mobile-card-list{
             display:block;
+        }
+        .filter-kategori {
+            width: 100%;
         }
     }
 </style>
@@ -82,7 +88,7 @@
             <option value="lost">Lost</option>
         </select>
 
-        {{-- Filter Follow JANGAN LAUNCING DULU --}}
+        {{-- Filter Follow --}}
         <select id="filterFollow" class="w-40 border p-2 rounded">
             <option value="">Follow Ke</option>
             <option value="9">Belum Follow</option>
@@ -94,6 +100,13 @@
         {{-- Filter Tanggal --}}
         <input type="date" id="startDate" class="w-40 border p-2 rounded">
         <input type="date" id="endDate" class="w-40 border p-2 rounded">
+
+        {{-- Filter PEMAIN EXPAND --}}
+        <select id="filterKategori" class="filter-kategori border p-2 rounded">
+            <option value="">Semua Kategori</option>
+            <option value="EXPAND">EXPAND</option>
+            <option value="PEMULA">PEMULA</option>
+        </select>
 
     </div>
 
@@ -115,6 +128,7 @@
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
         let follow    = $('#filterFollow').val();
+        let kategori    = $('#filterKategori').val();
 
         $.ajax({
             url: url, // pakai full URL Laravel (page & filter ikut)
@@ -125,7 +139,8 @@
                 status: status,
                 startDate: startDate,
                 endDate: endDate,
-                follow: follow
+                follow: follow,
+                kategori: kategori
             },
             success: function(data) {
                 $('#lead_table').html(data);
@@ -134,7 +149,7 @@
     }
 
     // ✅ Trigger filter/search → selalu reset ke page 1
-    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterFollow')
+    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterFollow, #filterKategori')
         .on('change keyup', function() {
             fetch_data("{{ route('datalead.sales') }}"); // reset ke page 1 saat filter berubah
         });
@@ -151,6 +166,7 @@
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
         let follow    = $('#filterFollow').val();
+        let kategori    = $('#filterKategori').val();
 
         $.ajax({
             url: url,
@@ -161,7 +177,8 @@
                 status: status,
                 startDate: startDate,
                 endDate: endDate,
-                follow: follow
+                follow: follow,
+                kategori: kategori
             },
             success: function(data) {
                 $('#lead_table').html(data);

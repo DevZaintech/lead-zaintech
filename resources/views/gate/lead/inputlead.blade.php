@@ -97,6 +97,20 @@
             </div>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-6">
+            <div>
+                <label for="KATEGORI_CUST" class="block text-gray-700 font-medium mb-1">KATEGORI CUSTOMER <span class="text-red-500">*</span></label>
+                <select name="KATEGORI_CUST" id="KATEGORI_CUST"
+                    class="w-full border border-gray-300 rounded px-3 py-2 
+                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                    required>
+                    <option value="" >-- Pilih Satu --</option>
+                    <option value="EXPAND">EXPAND</option>
+                    <option value="PEMULA">PEMULA</option>
+                </select>
+            </div>
+        </div>
+
         {{-- Baris 2: Kota & Sales --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>

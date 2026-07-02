@@ -62,6 +62,7 @@ class SalesController extends Controller
         $startDate  = $request->get('startDate');
         $endDate    = $request->get('endDate');
         $follow     = $request->get('follow');
+        $kategori   = $request->get('kategori');
     
         $lead = Lead::with(['sub_kategori', 'kota', 'opportunities'])
             ->whereNull('DELETED_AT')
@@ -90,6 +91,9 @@ class SalesController extends Controller
             })
             ->when($source, function ($q) use ($source) {
                 $q->where('LEAD_SOURCE', $source);
+            })
+            ->when($kategori, function ($q) use ($kategori) {
+                $q->where('KATEGORI_CUST', $kategori);
             })
             ->when($status, function ($q) use ($status) {
                 if ($status === 'opportunity') { // Warm
@@ -232,8 +236,10 @@ class SalesController extends Controller
         $request->validate([
             'LEAD_SOURCE' => 'required',
             'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
+            'KATEGORI_CUST' => 'required',
         ], [
             'LEAD_SOURCE.required' => 'Sumber Lead wajib dipilih',
+            'KATEGORI_CUST.required' => 'Sumber Lead wajib dipilih',
             'NO_TELP.required'     => 'No. Telepon wajib diisi',
             'NO_TELP.numeric'      => 'No. Telepon hanya boleh angka',
             'NO_TELP.min'          => 'No. Telepon minimal 8 digit',
@@ -282,6 +288,7 @@ class SalesController extends Controller
             'NAMA'          => $request->NAMA,
             'PERUSAHAAN'    => $request->PERUSAHAAN,
             'KATEGORI'      => $request->KATEGORI,
+            'KATEGORI_CUST' => $request->KATEGORI_CUST,
             'kode_kota'     => $request->kode_kota,
             'NO_TELP'       => $request->NO_TELP,
             'EMAIL'         => $request->EMAIL,
@@ -972,6 +979,7 @@ class SalesController extends Controller
             'NAMA'          => $request->NAMA,
             'PERUSAHAAN'    => $request->PERUSAHAAN,
             'KATEGORI'      => $request->KATEGORI,
+            'KATEGORI_CUST' => $request->KATEGORI_CUST,
             'kode_kota'     => $request->kode_kota,
             'NO_TELP'       => $request->NO_TELP,
             'EMAIL'         => $request->EMAIL,

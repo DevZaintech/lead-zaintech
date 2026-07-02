@@ -18,6 +18,7 @@ class Lead extends Model
         'ID_USER',
         'NAMA',
         'KATEGORI',
+        'KATEGORI_CUST',
         'PERUSAHAAN',
         'KOTA',
         'kode_kota',

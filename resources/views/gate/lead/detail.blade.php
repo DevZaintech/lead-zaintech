@@ -425,7 +425,7 @@
                     </svg>
                     Follow Up
                 </a>
-            @else
+            @elseif($lead->STATUS != 'converted')
                 <a href="{{ route('edit.lead.gate', $lead->LEAD_ID) }}"
                 class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
                     <svg xmlns="http://www.w3.org/2000/svg" 
@@ -455,13 +455,20 @@
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KATEGORI CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-300">
-                            @if($lead->KATEGORI === 'INDIVIDU')
+
+                            @if($lead->KATEGORI_CUST != NULL)
+                                {{ $lead->KATEGORI_CUST }}
+                            @else
+                                NULL
+                            @endif
+
+                            <!-- @if($lead->KATEGORI === 'INDIVIDU')
                                 {{ $lead->KATEGORI }}
                             @elseif($lead->KATEGORI === 'COMPANY')
                                 {{ $lead->KATEGORI }} - {{ $lead->PERUSAHAAN ?? '-' }}
                             @else
                                 -
-                            @endif
+                            @endif -->
                         </td>
                     </tr>
                     <tr>
@@ -676,7 +683,13 @@
 
             <div class="mobile-value">
 
-                @if($lead->KATEGORI=='INDIVIDU')
+                @if($lead->KATEGORI_CUST != NULL)
+                    {{ $lead->KATEGORI_CUST }}
+                @else
+                    NULL
+                @endif
+
+                <!-- @if($lead->KATEGORI=='INDIVIDU')
 
                     {{ $lead->KATEGORI }}
 
@@ -694,7 +707,7 @@
 
                     -
 
-                @endif
+                @endif -->
 
             </div>
 
@@ -782,7 +795,7 @@
 
                 </a>
 
-            @else
+            @elseif($lead->STATUS != 'converted')
 
                 <a
                     href="{{ route('edit.lead.gate',$lead->LEAD_ID) }}"
