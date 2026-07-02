@@ -1,38 +1,398 @@
 @extends('layouts.frontend')
+@section('css')
+<style>
+    @media (max-width:768px){
 
+        .detail-table td{
+
+            padding:10px 12px !important;
+
+            font-size:14px;
+
+        }
+
+    }
+    @media (max-width: 768px) {
+
+        /* Container */
+
+        #followupTab{
+            padding:16px;
+        }
+
+        #followupTab h2{
+            font-size:24px;
+            margin-bottom:20px;
+        }
+
+        /* Hilangkan header */
+
+        #followupTab thead{
+            display:none;
+        }
+
+        /* Table tetap table di desktop */
+
+        #followupTab table,
+        #followupTab tbody,
+        #followupTab tr,
+        #followupTab td{
+            display:block;
+            width:100%;
+        }
+
+        /* Card */
+
+        #followupTab tr{
+
+            margin-bottom:20px;
+
+            border:1px solid #d1d5db;
+
+            border-radius:10px;
+
+            padding:15px;
+
+            background:white;
+
+        }
+
+        /* td */
+
+        #followupTab td{
+
+            border:none !important;
+
+            padding:0;
+
+            margin-bottom:15px;
+
+        }
+
+        #followupTab td:last-child{
+
+            margin-bottom:0;
+
+        }
+
+        /* Label */
+
+        #followupTab td:nth-child(1)::before{
+
+            content:"Tanggal Follow Up";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        #followupTab td:nth-child(2)::before{
+
+            content:"Respon";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        #followupTab td:nth-child(3)::before{
+
+            content:"Keterangan";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        /* Input */
+
+        #followupTab input[type=date]{
+
+            width:100%;
+
+            padding:10px;
+
+        }
+
+        #followupTab textarea{
+
+            width:100%;
+
+            min-height:90px;
+
+            padding:10px;
+
+            resize:vertical;
+
+        }
+
+        /* Tombol */
+
+        #add-row-fu{
+
+            width:100%;
+
+            margin-top:10px;
+
+            padding:12px;
+
+        }
+
+        #followupTab .flex{
+
+            display:block;
+
+        }
+
+        #followupTab button[type=submit]{
+
+            width:100%;
+
+            margin-top:15px;
+
+            padding:12px;
+
+        }
+
+    }
+
+    @media (max-width:768px){
+
+        /* ======================
+        TABLE -> CARD
+        ======================= */
+
+        #produk-table{
+            width:100%;
+            border:none;
+            border-collapse:collapse;
+        }
+
+        #produk-table thead{
+            display:none;
+        }
+
+        #produk-table,
+        #produk-table tbody,
+        #produk-table tr,
+        #produk-table td{
+            display:block;
+            width:100%;
+            max-width:100%;
+            min-width:0;
+            box-sizing:border-box;
+        }
+
+        #produk-table tr{
+            margin-bottom:18px;
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            padding:15px;
+            background:#fff;
+            overflow:hidden;
+        }
+
+        #produk-table td{
+            border:none !important;
+            padding:0;
+            margin-bottom:15px;
+            overflow:hidden;
+        }
+
+        #produk-table td:last-child{
+            margin-bottom:0;
+        }
+
+        /* ======================
+        LABEL
+        ======================= */
+
+        #produk-table td:nth-child(1)::before{
+            content:"Nama Produk";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table td:nth-child(2)::before{
+            content:"SKU";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table td:nth-child(3)::before{
+            content:"Qty";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table td:nth-child(4)::before{
+            content:"Price";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table td:nth-child(5)::before{
+            content:"Total";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        /* ======================
+        INPUT
+        ======================= */
+
+        #produk-table input,
+        #produk-table select,
+        #produk-table textarea{
+            width:100%;
+            max-width:100%;
+            min-width:0;
+            min-height:42px;
+            box-sizing:border-box;
+        }
+
+        /* ======================
+        SELECT2
+        ======================= */
+
+        .select2-container{
+            display:block !important;
+            width:100% !important;
+            max-width:100% !important;
+            min-width:0 !important;
+            box-sizing:border-box !important;
+        }
+
+        .select2-selection{
+            width:100% !important;
+            max-width:100% !important;
+            min-width:0 !important;
+            overflow:hidden !important;
+            box-sizing:border-box !important;
+        }
+
+        .select2-selection__rendered{
+            display:block !important;
+            max-width:100% !important;
+            min-width:0 !important;
+
+            overflow:hidden !important;
+            text-overflow:ellipsis !important;
+            white-space:nowrap !important;
+
+            padding-right:30px !important;
+        }
+
+        .select2-selection__arrow{
+            right:8px !important;
+        }
+
+        .select2-results__option{
+            white-space:normal !important;
+            word-break:break-word !important;
+            overflow-wrap:anywhere;
+        }
+
+        /* ======================
+        BUTTON
+        ======================= */
+
+        .remove-row{
+            width:100%;
+            padding:10px;
+            background:#ef4444;
+            color:#fff;
+            border-radius:6px;
+        }
+
+        #add-row{
+            width:100%;
+            padding:12px;
+            margin-top:10px;
+        }
+
+        #opportunityTab .flex{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+
+        #opportunityTab .flex a,
+        #opportunityTab .flex button{
+            width:100%;
+            text-align:center;
+        }
+
+        body{
+            overflow-x:hidden;
+        }
+
+    }
+    
+    
+</style>
+@endsection
 @section('content')
 <div class="space-y-6">
-    <div class="w-full lg:w-[98%] mx-auto bg-white p-8 rounded shadow">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
+    <div class="w-full lg:w-[98%] mx-auto bg-white p-4 md:p-8 rounded shadow">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+
+            <h2 class="text-xl md:text-2xl font-semibold">
+                Detail Lead
+            </h2>
 
             @if($lead->CREATOR_ID == Auth::id())
             <a href="{{ route('edit.lead.sales', $lead->LEAD_ID) }}"
-            class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    class="w-5 h-5 mr-2" fill="none" 
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" 
+            class="inline-flex items-center justify-center px-3 md:px-5 py-2 bg-green-600 text-white text-sm md:text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
                         d="M16.862 4.487l1.651-1.651a2.121 2.121 0 113 3l-1.651 1.651m-3-3l-9.193 9.193a4 4 0 00-1.037 1.74l-.397 1.59a.75.75 0 00.91.91l1.59-.397a4 4 0 001.74-1.037l9.193-9.193m-3-3l3 3"/>
                 </svg>
+
                 Edit
             </a>
             @endif
+
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            
-            <!-- Kiri -->
-            <table class="w-full border border-gray-400 border-collapse">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
+            <!-- KIRI -->
+            <table class="detail-table w-full border border-gray-400 border-collapse">
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>LEAD ID</b></td>
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/3 border border-gray-400"><b>LEAD ID</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $lead->LEAD_ID }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>NAMA CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $lead->NAMA }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KATEGORI CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-400">
@@ -45,84 +405,118 @@
                             @endif
                         </td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>SALES HANDLE</b></td>
                         <td class="px-3 py-2 border border-gray-400">
                             {{ $lead->user->NAMA }}
                         </td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KEBUTUHAN</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $lead->sub_kategori->NAMA }}</td>
                     </tr>
+
                 </tbody>
             </table>
 
-            <!-- Kanan -->
-            <table class="w-full border border-gray-400 border-collapse">
+            <!-- KANAN -->
+            <table class="detail-table w-full border border-gray-400 border-collapse">
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>TANGGAL LEAD</b></td>
-                        <td class="px-3 py-2 border border-gray-400">{{ \Carbon\Carbon::parse($lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/3 border border-gray-400"><b>TANGGAL LEAD</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
+                            {{ \Carbon\Carbon::parse($lead->CREATED_AT)->translatedFormat('d F Y') }}
+                        </td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>TELEPON</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $lead->NO_TELP }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KOTA</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $lead->kota->name ?? '-' }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>LEAD SOURCE</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $lead->LEAD_SOURCE }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>STATUS</b></td>
                         <td class="px-3 py-2 border border-gray-400">
-                        <div class="flex items-center space-x-2">
-                            <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $lead->stage_class }}">
-                                {{ $lead->stage_label }}
-                            </span>
-                        </div>
+
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $lead->stage_class }}">
+                                    {{ $lead->stage_label }}
+                                </span>
+                            </div>
+
                         </td>
                     </tr>
+
                 </tbody>
             </table>
 
         </div>
-        <!-- Catatan full width -->
+
+        <!-- CATATAN -->
+
         <div class="mt-6">
-            <table class="w-full border border-gray-400 border-collapse">
-                <tbody>
-                    <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-400 align-top"><b>CATATAN</b></td>
-                        <td class="px-3 py-2 border border-gray-400">
-                            <textarea class="w-full border-gray-400 rounded-md" rows="2" readonly>{{ $lead->NOTE }}</textarea>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
 
+            <table class="detail-table w-full border border-gray-400 border-collapse">
+
+                <tbody>
+
+                    <tr>
+
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/6 border border-gray-400 align-top">
+                            <b>CATATAN</b>
+                        </td>
+
+                        <td class="px-3 py-2 border border-gray-400">
+
+                            <textarea
+                                class="w-full border border-gray-300 rounded-md p-2 bg-gray-50 resize-none"
+                                rows="3"
+                                readonly>{{ $lead->NOTE }}</textarea>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
     <div class="space-y-6 w-full lg:w-[98%] mx-auto">
         <!-- Tab Button -->
-        <div class="flex border-b mb-6">
-            
-            <button data-tab-button onclick="openTab('followupTab', this)"
-                class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
+        <div class="flex border-b mb-6 overflow-x-auto">
+            <button
+                data-tab-button
+                onclick="openTab('followupTab', this)"
+                class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-sm md:text-base -mb-px border-b-2 font-medium text-gray-600 border-transparent">
                 Follow Up
             </button>
-            <button data-tab-button onclick="openTab('opportunityTab', this)"
-                class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent">
+
+            <button
+                data-tab-button
+                onclick="openTab('opportunityTab', this)"
+                class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-sm md:text-base -mb-px border-b-2 font-medium text-gray-600 border-transparent">
                 Create Opportunity
             </button>
-            
         </div>
 
         <!-- Tab: Opportunity -->
-        <div id="opportunityTab" class="tab-content bg-white p-8 rounded shadow">
+        <div id="opportunityTab" class="tab-content bg-white p-4 md:p-8 rounded shadow">
             <h2 class="text-2xl font-semibold mb-6">Create Opportunity</h2>
 
             <form action="{{ route('opportunity.store') }}" method="POST">
@@ -155,7 +549,7 @@
                 {{-- PRODUK TABLE --}}
                 <div class="mb-6">
                     <label class="block text-sm font-medium mb-2">ITEM PRODUK</label>
-                    <table class="w-full border border-gray-400 mt-4 text-sm">
+                    <table id="produk-table" class="w-full border border-gray-400 mt-4 text-sm">
                         <thead>
                             <tr>
                                 <th class="border border-gray-400 p-2">NAMA PRODUK</th>
@@ -194,7 +588,6 @@
                 </div>
 
                 <div class="flex justify-end space-x-3">
-                    <a href="{{ url()->previous() }}" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded">Batal</a>
                     <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
                 </div>
             </form>
@@ -202,6 +595,7 @@
 
         <!-- Tab: Follow Up -->
         <div id="followupTab" class="tab-content hidden bg-white p-8 rounded shadow">
+
             <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
 
             <form action="{{ route('follow.store') }}" method="POST">
@@ -216,27 +610,62 @@
                             <th class="border border-gray-500 px-3 py-2">KETERANGAN</th>
                         </tr>
                     </thead>
+
                     <tbody id="followup-body">
+
                         @forelse($followups as $fu)
-                            <tr class="odd:bg-white even:bg-gray-50" data-id="{{ $fu->ID_FOLLOW }}">
-                                <td class="border border-gray-400 px-3 py-2">{{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}</td>
-                                <td class="border border-gray-400 px-3 py-2 editable" data-field="RESPON" contenteditable="true">{{ $fu->RESPON }}</td>
-                                <td class="border border-gray-400 px-3 py-2 editable" data-field="KETERANGAN" contenteditable="true">{{ $fu->KETERANGAN }}</td>
-                            </tr>
+
+                        <tr class="odd:bg-white even:bg-gray-50">
+
+                            <td class="border border-gray-400 px-3 py-2">
+                                {{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}
+                            </td>
+
+                            <td class="border border-gray-400 px-3 py-2 editable" contenteditable="true">
+                                {{ $fu->RESPON }}
+                            </td>
+
+                            <td class="border border-gray-400 px-3 py-2 editable" contenteditable="true">
+                                {{ $fu->KETERANGAN }}
+                            </td>
+
+                        </tr>
+
                         @empty
-                            <tr>
-                                <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">BELUM ADA FOLLOW UP</td>
-                            </tr>
+
+                        <tr>
+                            <td colspan="3" class="text-center py-3">
+                                BELUM ADA FOLLOW UP
+                            </td>
+                        </tr>
+
                         @endforelse
+
                     </tbody>
                 </table>
 
-                <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Follow Up</button>
+                <button type="button"
+                    id="add-row-fu"
+                    class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">
 
-                <div class="flex justify-end space-x-3 mt-4">
-                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan Follow Up</button>
+                    + Tambah Follow Up
+
+                </button>
+
+                <div class="flex justify-end mt-4">
+
+                    <button
+                        type="submit"
+                        class="px-4 py-2 bg-green-600 text-white rounded">
+
+                        Simpan Follow Up
+
+                    </button>
+
                 </div>
+
             </form>
+
         </div>
     </div>
 </div>
@@ -415,6 +844,20 @@ $(document).ready(function () {
             placeholder: 'Pilih produk',
             minimumInputLength: 0,
             width: '100%', // supaya select full lebar kolom
+            templateSelection: function (data) {
+
+                // Desktop tampil normal
+                if (window.innerWidth > 768) {
+                    return data.text;
+                }
+
+                // Mobile dipotong
+                if (data.text && data.text.length > 26) {
+                    return data.text.substring(0, 26) + "...";
+                }
+
+                return data.text;
+            },
             ajax: {
                 url: '{{ route("get.produk.sales") }}',
                 dataType: 'json',

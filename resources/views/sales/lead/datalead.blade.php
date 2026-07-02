@@ -1,4 +1,27 @@
 @extends('layouts.frontend')
+@section('css')
+<style>
+    .desktop-table{
+        display:block;
+    }
+
+    .mobile-card-list{
+        display:none;
+    }
+
+    @media (max-width: 768px){
+
+        .desktop-table{
+            display:none;
+        }
+
+        .mobile-card-list{
+            display:block;
+        }
+    }
+</style>
+@endsection
+
 @section('content')
 
 @if(session('success'))
@@ -18,6 +41,11 @@
     {{-- Filter --}}
     <div class="flex flex-wrap gap-2 mb-4 items-center">
 
+        {{-- Search --}}
+        <input type="text" id="searchInput"
+            placeholder="Cari NAMA, NO TELP..."
+            class="flex-1 min-w-[200px] border p-2 rounded">
+
         {{-- Filter Sales --}}
         <select id="filterSales" class="w-40 border p-2 rounded">
             <option value="me" selected>Lead Saya</option>
@@ -25,11 +53,6 @@
                 <option value="{{ $s->ID_USER }}">{{ $s->NAMA }}</option>
             @endforeach
         </select>
-
-        {{-- Search --}}
-        <input type="text" id="searchInput"
-            placeholder="Cari NAMA, NO TELP..."
-            class="flex-1 min-w-[200px] border p-2 rounded">
 
         {{-- Filter Source --}}
         <select id="filterSource" class="w-40 border p-2 rounded">
@@ -59,10 +82,6 @@
             <option value="lost">Lost</option>
         </select>
 
-        {{-- Filter Tanggal --}}
-        <input type="date" id="startDate" class="w-40 border p-2 rounded">
-        <input type="date" id="endDate" class="w-40 border p-2 rounded">
-
         {{-- Filter Follow JANGAN LAUNCING DULU --}}
         <select id="filterFollow" class="w-40 border p-2 rounded">
             <option value="">Follow Ke</option>
@@ -71,6 +90,11 @@
             <option value="2">Ke 2</option>
             <option value="3">Ke 3</option>
         </select>
+        
+        {{-- Filter Tanggal --}}
+        <input type="date" id="startDate" class="w-40 border p-2 rounded">
+        <input type="date" id="endDate" class="w-40 border p-2 rounded">
+
     </div>
 
     {{-- Table --}}

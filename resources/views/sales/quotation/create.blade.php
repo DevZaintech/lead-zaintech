@@ -1,37 +1,429 @@
 @extends('layouts.frontend')
+@section('css')
+<style>
+    @media (max-width:768px){
+        .detail-table td{
 
+            padding:10px 12px !important;
+
+            font-size:14px;
+
+        }
+    }
+    @media (max-width: 768px) {
+
+        /* Container */
+
+        #followupTab{
+            padding:16px;
+        }
+
+        #followupTab h2{
+            font-size:24px;
+            margin-bottom:20px;
+        }
+
+        /* Hilangkan header */
+
+        #followupTab thead{
+            display:none;
+        }
+
+        /* Table tetap table di desktop */
+
+        #followupTab table,
+        #followupTab tbody,
+        #followupTab tr,
+        #followupTab td{
+            display:block;
+            width:100%;
+        }
+
+        /* Card */
+
+        #followupTab tr{
+
+            margin-bottom:20px;
+
+            border:1px solid #d1d5db;
+
+            border-radius:10px;
+
+            padding:15px;
+
+            background:white;
+
+        }
+
+        /* td */
+
+        #followupTab td{
+
+            border:none !important;
+
+            padding:0;
+
+            margin-bottom:15px;
+
+        }
+
+        #followupTab td:last-child{
+
+            margin-bottom:0;
+
+        }
+
+        /* Label */
+
+        #followupTab td:nth-child(1)::before{
+
+            content:"Tanggal Follow Up";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        #followupTab td:nth-child(2)::before{
+
+            content:"Respon";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        #followupTab td:nth-child(3)::before{
+
+            content:"Keterangan";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        /* Input */
+
+        #followupTab input[type=date]{
+
+            width:100%;
+
+            padding:10px;
+
+        }
+
+        #followupTab textarea{
+
+            width:100%;
+
+            min-height:90px;
+
+            padding:10px;
+
+            resize:vertical;
+
+        }
+
+        /* Tombol */
+
+        #add-row-fu{
+
+            width:100%;
+
+            margin-top:10px;
+
+            padding:12px;
+
+        }
+
+        #followupTab .flex{
+
+            display:block;
+
+        }
+
+        #followupTab button[type=submit]{
+
+            width:100%;
+
+            margin-top:15px;
+
+            padding:12px;
+
+        }
+
+    }
+
+    @media (max-width:768px){
+
+        /* ===== Edit Opportunity ===== */
+
+        #produk-table-opp{
+            border:none;
+        }
+
+        #produk-table-opp thead{
+            display:none;
+        }
+
+        #produk-table-opp,
+        #produk-table-opp tbody,
+        #produk-table-opp tr,
+        #produk-table-opp td{
+            display:block;
+            width:100%;
+            box-sizing:border-box;
+        }
+
+        #produk-table-opp tr{
+
+            border:1px solid #d1d5db;
+            border-radius:10px;
+
+            padding:15px;
+
+            margin-bottom:20px;
+
+            background:#fff;
+
+        }
+
+        #produk-table-opp td{
+
+            border:none !important;
+
+            padding:0;
+
+            margin-bottom:15px;
+
+        }
+
+        #produk-table-opp td:last-child{
+
+            margin-bottom:0;
+
+        }
+
+        /* Label */
+
+        #produk-table-opp td:nth-child(1)::before{
+            content:"Nama Produk";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-opp td:nth-child(2)::before{
+            content:"SKU";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-opp td:nth-child(3)::before{
+            content:"Qty";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-opp td:nth-child(4)::before{
+            content:"Price";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-opp td:nth-child(5)::before{
+            content:"Total";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-opp input,
+        #produk-table-opp select{
+
+            width:100%;
+
+            min-height:42px;
+
+        }
+
+        #add-row-opp{
+
+            width:100%;
+
+        }
+
+        .add-product-btn{
+            width:100%;
+        }
+
+        .action-buttons{
+            display:flex;
+            flex-direction:column;
+            gap:10px;
+        }
+
+        .action-buttons button{
+            width:100%;
+        }
+
+    }
+
+    @media (max-width:768px){
+
+        /* =========================
+        CREATE QUOTATION MOBILE
+        ========================= */
+
+        #produk-table-quo{
+            width:100%;
+            border:none;
+            border-collapse:collapse;
+        }
+
+        #produk-table-quo thead{
+            display:none;
+        }
+
+        #produk-table-quo,
+        #produk-table-quo tbody,
+        #produk-table-quo tr,
+        #produk-table-quo td{
+            display:block;
+            width:100%;
+            max-width:100%;
+            box-sizing:border-box;
+        }
+
+        #produk-table-quo tr{
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            padding:15px;
+            margin-bottom:20px;
+            background:#fff;
+        }
+
+        #produk-table-quo td{
+            border:none !important;
+            padding:0;
+            margin-bottom:15px;
+        }
+
+        #produk-table-quo td:last-child{
+            margin-bottom:0;
+        }
+
+        /* Label */
+
+        #produk-table-quo td:nth-child(1)::before{
+            content:"Nama Produk";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-quo td:nth-child(2)::before{
+            content:"SKU";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-quo td:nth-child(3)::before{
+            content:"Qty";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-quo td:nth-child(4)::before{
+            content:"Price";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-quo td:nth-child(5)::before{
+            content:"Total";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-quo input,
+        #produk-table-quo select,
+        #produk-table-quo textarea{
+            width:100%;
+            min-height:42px;
+            box-sizing:border-box;
+        }
+
+        #add-row-quo{
+            width:100%;
+        }
+
+    }
+</style>
+@endsection
 @section('content')
 <div class="space-y-6">
-    <div class="w-full lg:w-[98%] mx-auto bg-white p-8 rounded shadow">
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
+    <div class="w-full lg:w-[98%] mx-auto bg-white p-4 md:p-8 rounded shadow">
+
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+
+            <h2 class="text-xl md:text-2xl font-semibold">
+                Detail Lead
+            </h2>
 
             @if($opp->lead->CREATOR_ID == Auth::id())
             <a href="{{ route('edit.lead.sales', $opp->lead->LEAD_ID) }}"
-            class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    class="w-5 h-5 mr-2" fill="none" 
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" 
+                class="inline-flex items-center justify-center px-3 md:px-5 py-2 bg-green-600 text-white text-sm md:text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
                         d="M16.862 4.487l1.651-1.651a2.121 2.121 0 113 3l-1.651 1.651m-3-3l-9.193 9.193a4 4 0 00-1.037 1.74l-.397 1.59a.75.75 0 00.91.91l1.59-.397a4 4 0 001.74-1.037l9.193-9.193m-3-3l3 3"/>
                 </svg>
+
                 Edit
             </a>
             @endif
+
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Kiri -->
-            <table class="w-full border border-gray-400 border-collapse">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
+            <!-- KIRI -->
+            <table class="detail-table w-full border border-gray-400 border-collapse">
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>LEAD ID</b></td>
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/3 border border-gray-400"><b>LEAD ID</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->LEAD_ID }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>NAMA CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->NAMA }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KATEGORI CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-400">
@@ -44,69 +436,111 @@
                             @endif
                         </td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>LEAD SOURCE</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->LEAD_SOURCE }}</td>
                     </tr>
+
                 </tbody>
             </table>
 
-            <!-- Kanan -->
-            <table class="w-full border border-gray-400 border-collapse">
+            <!-- KANAN -->
+            <table class="detail-table w-full border border-gray-400 border-collapse">
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-400"><b>TANGGAL LEAD</b></td>
-                        <td class="px-3 py-2 border border-gray-400">{{ \Carbon\Carbon::parse($opp->lead->CREATED_AT)->translatedFormat('d F Y') }}</td>
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/3 border border-gray-400"><b>TANGGAL LEAD</b></td>
+                        <td class="px-3 py-2 border border-gray-400">
+                            {{ \Carbon\Carbon::parse($opp->lead->CREATED_AT)->translatedFormat('d F Y') }}
+                        </td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>TELEPON</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->NO_TELP }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>KOTA</b></td>
                         <td class="px-3 py-2 border border-gray-400">{{ $opp->lead->kota->name ?? '-' }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-400"><b>STATUS</b></td>
                         <td class="px-3 py-2 border border-gray-400">
-                        <div class="flex items-center space-x-2">
-                            <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $opp->lead->stage_class }}">
-                                {{ $opp->lead->stage_label }}
-                            </span>
-                        </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $opp->lead->stage_class }}">
+                                    {{ $opp->lead->stage_label }}
+                                </span>
+                            </div>
                         </td>
                     </tr>
+
                 </tbody>
             </table>
+
         </div>
 
-        <!-- Catatan -->
+        <!-- CATATAN -->
+
         <div class="mt-6">
-            <table class="w-full border border-gray-400 border-collapse">
+
+            <table class="detail-table w-full border border-gray-400 border-collapse">
+
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-400 align-top"><b>CATATAN</b></td>
-                        <td class="px-3 py-2 border border-gray-400">
-                            <textarea class="w-full border-gray-400 rounded-md" rows="2" readonly>{{ $opp->NOTE }}</textarea>
+
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/6 border border-gray-400 align-top">
+                            <b>CATATAN</b>
                         </td>
+
+                        <td class="px-3 py-2 border border-gray-400">
+
+                            <textarea
+                                class="w-full border border-gray-300 rounded-md p-2 bg-gray-50 resize-none"
+                                rows="3"
+                                readonly>{{ $opp->NOTE }}</textarea>
+
+                        </td>
+
                     </tr>
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 
     <!-- Tabs -->
     <div class="space-y-6 w-full lg:w-[98%] mx-auto">
-        <div class="flex border-b mb-6">
+        <div class="flex border-b mb-6 overflow-x-auto">
 
-            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('followupTab', this)">Follow Up</button>
-            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('opportunityTab', this)">Edit Opportunity</button>
-            <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('quotationTab', this)">Create Quotation</button>
-            
+            <button
+                class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-xs md:text-base -mb-px border-b-2 font-medium text-blue-600 border-blue-600"
+                onclick="openTab('followupTab', this)">
+                Follow Up
+            </button>
+
+            <button
+                class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-xs md:text-base -mb-px border-b-2 font-medium text-gray-600 border-transparent"
+                onclick="openTab('opportunityTab', this)">
+                Edit Opportunity
+            </button>
+
+            <button
+                class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-xs md:text-base -mb-px border-b-2 font-medium text-gray-600 border-transparent"
+                onclick="openTab('quotationTab', this)">
+                Create Quotation
+            </button>
+
         </div>
 
         <!-- Tab: Edit Opportunity -->
-        <div id="opportunityTab" class="tab-content hidden bg-white p-8 rounded shadow">
+        <div id="opportunityTab" class="tab-content hidden bg-white p-4 md:p-8 rounded shadow">
             <h2 class="text-2xl font-semibold mb-6">Edit Opportunity</h2>
             <form action="{{ route('opportunity.update', $opp->OPPORTUNITY_ID) }}" method="POST">
                 @csrf
@@ -126,7 +560,7 @@
                 <!-- Produk Table -->
                 <div class="mb-6">
                     <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
-                    <table class="w-full border border-gray-400 mt-4 text-sm">
+                    <table id="produk-table-opp" class="w-full border border-gray-400 mt-4 text-sm">
                         <thead>
                             <tr>
                                 <th class="border border-gray-400 p-2 w-[30%]">Nama Produk</th>
@@ -168,7 +602,12 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <button type="button" id="add-row-opp" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
+                    <button
+                        type="button"
+                        id="add-row-opp"
+                        class="add-product-btn mt-2 px-3 py-2 bg-blue-500 text-white rounded">
+                        + Tambah Produk
+                    </button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -205,14 +644,17 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-3">
-                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Simpan</button>
+                <div class="action-buttons flex justify-end space-x-3">
+                    <button type="submit"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                        Simpan
+                    </button>
                 </div>
             </form>
         </div>
 
         <!-- Tab: Create Quotation -->
-        <div id="quotationTab" class="tab-content hidden bg-white p-8 rounded shadow">
+        <div id="quotationTab" class="tab-content hidden bg-white p-4 md:p-8 rounded shadow">
             <h2 class="text-2xl font-semibold mb-6">Create Quotation</h2>
             <form action="{{ route('quotation.store') }}" method="POST">
                 @csrf
@@ -231,7 +673,7 @@
 
                 <div class="mb-6">
                     <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
-                    <table class="w-full border border-gray-400 mt-4 text-sm">
+                    <table id="produk-table-quo" class="w-full border border-gray-400 mt-4 text-sm">
                         <thead>
                             <tr>
                                 <th class="border border-gray-400 p-2 w-[30%]">Nama Produk</th>
@@ -273,7 +715,7 @@
                             @endforeach
                         </tbody>
                     </table>
-                    <button type="button" id="add-row-quo" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
+                    <button type="button" id="add-row-quo" class="add-product-btn mt-2 px-3 py-2 bg-blue-500 text-white rounded">+ Tambah Produk</button>
                 </div>
 
                 <div class="mb-6">
@@ -299,19 +741,25 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-3">
-                    <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                <div class="action-buttons flex justify-end space-x-3">
+                    <button
+                        type="submit"
+                        class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                        Simpan
+                    </button>
                 </div>
+
             </form>
         </div>
 
         <!-- Tab: Follow Up -->
-        <div id="followupTab" class="tab-content block bg-white p-8 rounded shadow">
+        <div id="followupTab" class="tab-content bg-white p-8 rounded shadow">
+
             <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
 
             <form action="{{ route('follow.store') }}" method="POST">
                 @csrf
-                <input type="hidden" name="OPPORTUNITY_ID" value="{{ $opp->OPPORTUNITY_ID }}">
+                <input type="hidden" name="LEAD_ID" value="{{ $opp->lead->LEAD_ID }}">
 
                 <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
                     <thead class="bg-gray-100 text-gray-700 uppercase">
@@ -321,31 +769,62 @@
                             <th class="border border-gray-500 px-3 py-2">KETERANGAN</th>
                         </tr>
                     </thead>
+
                     <tbody id="followup-body">
+
                         @forelse($followups as $fu)
-                            <tr class="odd:bg-white even:bg-gray-50" data-id="{{ $fu->ID_FOLLOW }}">
-                                <td class="border border-gray-400 px-3 py-2">{{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}</td>
-                                <td class="border border-gray-400 px-3 py-2 editable" data-field="RESPON" contenteditable="true">{{ $fu->RESPON }}</td>
-                                <td class="border border-gray-400 px-3 py-2 editable" data-field="KETERANGAN" contenteditable="true">{{ $fu->KETERANGAN }}</td>
-                            </tr>
+
+                        <tr class="odd:bg-white even:bg-gray-50">
+
+                            <td class="border border-gray-400 px-3 py-2">
+                                {{ \Carbon\Carbon::parse($fu->TGL_FOLLOW)->translatedFormat('d F Y') }}
+                            </td>
+
+                            <td class="border border-gray-400 px-3 py-2 editable" contenteditable="true">
+                                {{ $fu->RESPON }}
+                            </td>
+
+                            <td class="border border-gray-400 px-3 py-2 editable" contenteditable="true">
+                                {{ $fu->KETERANGAN }}
+                            </td>
+
+                        </tr>
+
                         @empty
-                            <tr>
-                                <td colspan="3" class="border border-gray-400 px-3 py-2 text-center text-gray-500">BELUM ADA FOLLOW UP</td>
-                            </tr>
+
+                        <tr>
+                            <td colspan="3" class="text-center py-3">
+                                BELUM ADA FOLLOW UP
+                            </td>
+                        </tr>
+
                         @endforelse
+
                     </tbody>
                 </table>
 
-                <button type="button" id="add-row-fu" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">
+                <button type="button"
+                    id="add-row-fu"
+                    class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">
+
                     + Tambah Follow Up
+
                 </button>
 
-                <div class="flex justify-end space-x-3 mt-4">
-                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                <div class="flex justify-end mt-4">
+
+                    <button
+                        type="submit"
+                        class="px-4 py-2 bg-green-600 text-white rounded">
+
                         Simpan Follow Up
+
                     </button>
+
                 </div>
+
             </form>
+
         </div>
 
     </div>
@@ -453,6 +932,21 @@ function initProdukTable($tbody, rowIdxStart) {
         $select.select2({
             placeholder: 'Pilih produk',
             minimumInputLength: 0,
+            width: '100%',
+            templateSelection: function (data) {
+
+                // Desktop tampil normal
+                if (window.innerWidth > 768) {
+                    return data.text;
+                }
+
+                // Mobile dipotong
+                if (data.text && data.text.length > 26) {
+                    return data.text.substring(0, 26) + "...";
+                }
+
+                return data.text;
+            },
             ajax: {
                 url: '{{ route('get.produk.sales') }}',
                 dataType: 'json',

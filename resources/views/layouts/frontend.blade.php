@@ -10,8 +10,18 @@
     @vite('resources/css/app.css')
     <script src="https://unpkg.com/alpinejs" defer></script>
     @yield('css')
+    <style>
+    @media (max-width: 767px){
+        #mobile-nav-gate{
+            display:flex !important;
+        }
+        #mobile-nav-sales{
+            display:flex !important;
+        }
+    }
+    </style>
 </head>
-<body class="bg-gray-100 flex flex-col"
+<body class="bg-gray-100 min-h-screen flex flex-col" 
       x-data="{ sidebarOpen: false, profileOpen: false }">
 
         @if(session('success'))
@@ -51,21 +61,35 @@
         @endif
 
     <!-- Navbar -->
-    <header class="w-full bg-white shadow px-4 py-3 flex justify-between items-center">
-        <div class="flex items-center space-x-3">
+    <header class="flex w-full bg-white shadow px-4 py-3 items-center justify-center sm:justify-between relative">
+        <div class="flex items-center justify-center">
             <!-- Tombol hamburger hanya di mobile -->
-            <button class="md:hidden text-gray-600" @click="sidebarOpen = !sidebarOpen">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M4 6h16M4 12h16M4 18h16"/>
+            @if(Auth::user()->ROLE == 'admin')
+            <button
+                class="md:hidden text-gray-600"
+                @click="sidebarOpen = !sidebarOpen">
+
+                <svg class="w-8 h-8"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 6h16M4 12h16M4 18h16"/>
+
                 </svg>
+
             </button>
+            @endif
             <!-- Logo utama di navbar -->
-            <img src="https://zaintech.co.id/public/icon/logo-h-deks.webp" alt="Logo" class="w-40 h-auto">
+            <img src="https://zaintech.co.id/public/assets/logo/Logo%20Zaintech%20Sukses%20Gemilang-04-1.webp" alt="Logo" class="w-48 h-auto">
         </div>
 
         <!-- Profil kanan -->
-        <div class="relative" x-data="{ profileOpen: false }">
+        <div class="hidden sm:flex relative" x-data="{ profileOpen: false }">
             <button @click="profileOpen = !profileOpen"
                 class="flex items-center space-x-2 focus:outline-none">
                 <!-- Avatar -->
@@ -95,10 +119,16 @@
     </header>
 
     <div class="flex flex-1">
+    
+        @if(Auth::user()->ROLE == 'admin')
+
+        {{-- Sidebar hanya admin --}}
+
+
+        @endif
         <!-- Sidebar ala Filament -->
         <aside
-            class="fixed inset-y-0 left-0 transform bg-white w-64 shadow-lg flex flex-col z-30 transition-transform duration-200 ease-in-out
-                   md:translate-x-0 md:static md:inset-0"
+        class="fixed inset-y-0 left-0 transform bg-white w-64 shadow-lg flex flex-col z-30 transition-transform duration-200 ease-in-out -translate-x-full md:translate-x-0 md:static md:inset-0" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
             :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
 
             <!-- Menu Navigasi -->
@@ -292,12 +322,81 @@
              x-show="sidebarOpen" @click="sidebarOpen=false"></div>
 
         <!-- Content -->
-        <main class="flex-1 p-6 md:ml-0 bg-grey-100">
+        <main class="flex flex-1 p-4 md:p-6 bg-gray-100 pb-24 md:pb-6">
             <div class="w-full bg-white-100">
                 @yield('content')
             </div>
         </main>
     </div>
+
+    @if(Auth::user()->ROLE == 'gate')
+    <div id="mobile-nav-gate"
+        style="display:none;position:sticky;bottom:0;height:70px;background:#fff;border-top:1px solid #e5e7eb;z-index:999999;">
+        <a href="{{ route('dashboard.gate') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ route('inputlead.gate') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>Input</span>
+        </a>
+
+        <a href="{{ route('datalead.gate') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <span>Lead</span>
+        </a>
+
+        <a href="{{ route('profile.show') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#3fa9f3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;margin-bottom:2px;">
+                {{ strtoupper(substr(Auth::user()->NAMA,0,1)) }}
+            </div>
+            <span>Profil</span>
+        </a>
+
+    </div>
+    @endif
+
+    @if(Auth::user()->ROLE == 'sales')
+    <div id="mobile-nav-gate"
+        style="display:none;position:sticky;bottom:0;height:70px;background:#fff;border-top:1px solid #e5e7eb;z-index:999999;">
+        <a href="{{ route('dashboard.sales') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ route('inputlead.sales') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>Input</span>
+        </a>
+
+        <a href="{{ route('datalead.sales') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <span>Lead</span>
+        </a>
+
+        <a href="{{ route('profile.show') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#3fa9f3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;margin-bottom:2px;">
+                {{ strtoupper(substr(Auth::user()->NAMA,0,1)) }}
+            </div>
+            <span>Profil</span>
+        </a>
+
+    </div>
+    @endif
+
     @yield('scripts')
 </body>
 </html>

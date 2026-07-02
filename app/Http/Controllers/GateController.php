@@ -273,7 +273,7 @@ class GateController extends Controller
                 $q->where('CREATOR_ID', Auth::user()->ID_USER);
             })
             ->orderBy('LEAD_ID', 'desc')
-            ->paginate(100)->withQueryString();
+            ->paginate(30)->withQueryString();
     
         // ✅ kalau ajax → hanya balikin tabel
         if ($request->ajax()) {

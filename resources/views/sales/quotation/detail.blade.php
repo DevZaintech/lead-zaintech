@@ -1,5 +1,263 @@
 @extends('layouts.frontend')
 @section('css')
+<style>
+    @media (max-width:768px){
+        .detail-table td{
+
+            padding:10px 12px !important;
+
+            font-size:14px;
+
+        }
+    }
+    @media (max-width: 768px) {
+
+        /* Container */
+
+        #followupTab{
+            padding:16px;
+        }
+
+        #followupTab h2{
+            font-size:24px;
+            margin-bottom:20px;
+        }
+
+        /* Hilangkan header */
+
+        #followupTab thead{
+            display:none;
+        }
+
+        /* Table tetap table di desktop */
+
+        #followupTab table,
+        #followupTab tbody,
+        #followupTab tr,
+        #followupTab td{
+            display:block;
+            width:100%;
+        }
+
+        /* Card */
+
+        #followupTab tr{
+
+            margin-bottom:20px;
+
+            border:1px solid #d1d5db;
+
+            border-radius:10px;
+
+            padding:15px;
+
+            background:white;
+
+        }
+
+        /* td */
+
+        #followupTab td{
+
+            border:none !important;
+
+            padding:0;
+
+            margin-bottom:15px;
+
+        }
+
+        #followupTab td:last-child{
+
+            margin-bottom:0;
+
+        }
+
+        /* Label */
+
+        #followupTab td:nth-child(1)::before{
+
+            content:"Tanggal Follow Up";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        #followupTab td:nth-child(2)::before{
+
+            content:"Respon";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        #followupTab td:nth-child(3)::before{
+
+            content:"Keterangan";
+
+            display:block;
+
+            font-weight:600;
+
+            margin-bottom:6px;
+
+        }
+
+        /* Input */
+
+        #followupTab input[type=date]{
+
+            width:100%;
+
+            padding:10px;
+
+        }
+
+        #followupTab textarea{
+
+            width:100%;
+
+            min-height:90px;
+
+            padding:10px;
+
+            resize:vertical;
+
+        }
+
+        /* Tombol */
+
+        #add-row-fu{
+
+            width:100%;
+
+            margin-top:10px;
+
+            padding:12px;
+
+        }
+
+        #followupTab .flex{
+
+            display:block;
+
+        }
+
+        #followupTab button[type=submit]{
+
+            width:100%;
+
+            margin-top:15px;
+
+            padding:12px;
+
+        }
+
+    }
+
+    @media (max-width:768px){
+
+        /* =========================
+        EDIT QUOTATION MOBILE
+        ========================= */
+
+        #produk-table-edit-quo{
+            width:100%;
+            border:none;
+            border-collapse:collapse;
+        }
+
+        #produk-table-edit-quo thead{
+            display:none;
+        }
+
+        #produk-table-edit-quo,
+        #produk-table-edit-quo tbody,
+        #produk-table-edit-quo tr,
+        #produk-table-edit-quo td{
+            display:block;
+            width:100%;
+            max-width:100%;
+            box-sizing:border-box;
+        }
+
+        #produk-table-edit-quo tr{
+            border:1px solid #d1d5db;
+            border-radius:10px;
+            padding:15px;
+            margin-bottom:20px;
+            background:#fff;
+        }
+
+        #produk-table-edit-quo td{
+            border:none !important;
+            padding:0;
+            margin-bottom:15px;
+        }
+
+        #produk-table-edit-quo td:last-child{
+            margin-bottom:0;
+        }
+
+        #produk-table-edit-quo td:nth-child(1)::before{
+            content:"Nama Produk";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-edit-quo td:nth-child(2)::before{
+            content:"SKU";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-edit-quo td:nth-child(3)::before{
+            content:"Qty";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-edit-quo td:nth-child(4)::before{
+            content:"Price";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-edit-quo td:nth-child(5)::before{
+            content:"Total";
+            display:block;
+            font-weight:600;
+            margin-bottom:6px;
+        }
+
+        #produk-table-edit-quo input,
+        #produk-table-edit-quo select,
+        #produk-table-edit-quo textarea{
+            width:100%;
+            min-height:42px;
+            box-sizing:border-box;
+        }
+
+        #add-row-quo{
+            width:100%;
+        }
+        
+
+    }
+
+</style>
 @endsection
 @section('content')
 
@@ -15,38 +273,53 @@
     </div>
 @endif
 <div class="space-y-6">
-    <div class="w-full max-w-[90%] mx-auto bg-white p-8 rounded shadow space-y-8">
+    <div class="w-full lg:w-[98%] mx-auto bg-white p-4 md:p-8 rounded shadow space-y-6">
+
         <!-- Judul -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-semibold mb-6">Detail Lead</h2>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+
+            <h2 class="text-xl md:text-2xl font-semibold">
+                Detail Lead
+            </h2>
 
             @if($quo->opportunity->lead->CREATOR_ID == Auth::id())
             <a href="{{ route('edit.lead.sales', $quo->opportunity->lead->LEAD_ID) }}"
-            class="inline-flex items-center px-5 py-2.5 bg-green-600 text-white text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
-                <svg xmlns="http://www.w3.org/2000/svg" 
-                    class="w-5 h-5 mr-2" fill="none" 
-                    viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" 
+                class="inline-flex items-center justify-center px-3 md:px-5 py-2 bg-green-600 text-white text-sm md:text-base font-medium rounded-lg shadow-md hover:bg-green-700 transition-all duration-200">
+
+                <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-5 h-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2">
+                    <path stroke-linecap="round"
+                        stroke-linejoin="round"
                         d="M16.862 4.487l1.651-1.651a2.121 2.121 0 113 3l-1.651 1.651m-3-3l-9.193 9.193a4 4 0 00-1.037 1.74l-.397 1.59a.75.75 0 00.91.91l1.59-.397a4 4 0 001.74-1.037l9.193-9.193m-3-3l3 3"/>
                 </svg>
+
                 Edit
             </a>
             @endif
+
         </div>
 
         <!-- Grid Detail -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Kiri -->
-            <table class="w-full border border-gray-300 border-collapse">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+
+            <!-- KIRI -->
+            <table class="detail-table w-full border border-gray-300 border-collapse">
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>QUOTATION ID</b></td>
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/3 border border-gray-300"><b>QUOTATION ID</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $quo->QUO_ID }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>NAMA CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $quo->opportunity->lead->NAMA }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KATEGORI CUSTOMER</b></td>
                         <td class="px-3 py-2 border border-gray-300">
@@ -59,75 +332,111 @@
                             @endif
                         </td>
                     </tr>
-                    
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>LEAD SOURCE</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $quo->opportunity->lead->LEAD_SOURCE }}</td>
                     </tr>
-                   
+
                 </tbody>
             </table>
 
-            <!-- Kanan -->
-            <table class="w-full border border-gray-300 border-collapse">
+            <!-- KANAN -->
+            <table class="detail-table w-full border border-gray-300 border-collapse">
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/3 border border-gray-300"><b>TANGGAL QUOTATION</b></td>
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/3 border border-gray-300"><b>TANGGAL QUOTATION</b></td>
                         <td class="px-3 py-2 border border-gray-300">
                             {{ \Carbon\Carbon::parse($quo->CREATED_AT)->translatedFormat('d F Y') }}
                         </td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>TELEPON</b></td>
                         <td class="px-3 py-2 border border-gray-300">{{ $quo->opportunity->lead->NO_TELP }}</td>
                     </tr>
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>KOTA</b></td>
-                        <td class="px-3 py-2 border border-gray-300">{{ $quo->opportunity->lead->kota->name }}</td>
+                        <td class="px-3 py-2 border border-gray-300">
+                            {{ $quo->opportunity->lead->kota->name }}
+                        </td>
                     </tr>
-                    
+
                     <tr>
                         <td class="bg-gray-100 px-3 py-2 border border-gray-300"><b>STATUS</b></td>
                         <td class="px-3 py-2 border border-gray-300">
-                        <div class="flex items-center space-x-2">
-                            <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $quo->opportunity->lead->stage_class }}">
-                                {{ $quo->opportunity->lead->stage_label }}
-                            </span>
-                        </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center px-2 py-1 rounded text-sm font-medium {{ $quo->opportunity->lead->stage_class }}">
+                                    {{ $quo->opportunity->lead->stage_label }}
+                                </span>
+                            </div>
                         </td>
                     </tr>
+
                 </tbody>
             </table>
+
         </div>
+
         <!-- Catatan -->
-        <div class="mt-6">
-            <table class="w-full border border-gray-300 border-collapse">
+        <div>
+
+            <table class="detail-table w-full border border-gray-300 border-collapse">
+
                 <tbody>
+
                     <tr>
-                        <td class="bg-gray-100 px-3 py-2 w-1/6 border border-gray-300 align-top"><b>CATATAN</b></td>
-                        <td class="px-3 py-2 border border-gray-300">
-                            <textarea class="w-full border-gray-300 rounded-md" rows="2" readonly>{{ $opp->NOTE }}</textarea>
+
+                        <td class="bg-gray-100 px-3 py-2 w-[38%] md:w-1/6 border border-gray-300 align-top">
+                            <b>CATATAN</b>
                         </td>
+
+                        <td class="px-3 py-2 border border-gray-300">
+
+                            <textarea
+                                class="w-full border border-gray-300 rounded-md p-2 bg-gray-50 resize-none"
+                                rows="3"
+                                readonly>{{ $opp->NOTE }}</textarea>
+
+                        </td>
+
                     </tr>
+
                 </tbody>
+
             </table>
+
         </div>
+
     </div>
 
-    <div class="space-y-6">
-        <div class="w-full max-w-[90%] mx-auto bg-white p-8 rounded shadow space-y-8">
-            <!-- Tabs -->
-            <div class="flex border-b mb-6">
 
-                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-blue-600 border-blue-600" onclick="openTab('followupTab', this)">Follow Up</button>
-                <button class="px-4 py-2 -mb-px border-b-2 font-medium text-gray-600 border-transparent" onclick="openTab('quotationTab', this)">Edit Quotation</button>
+        <div class="space-y-6 w-full lg:w-[98%] mx-auto">
+            <!-- Tabs -->
+            <div class="flex border-b mb-6 overflow-x-auto">
+
+                <button
+                    data-tab-button
+                    onclick="openTab('followupTab', this)" 
+                    class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-xs md:text-base -mb-px border-b-2 font-medium text-blue-600 border-blue-600">
+                    Follow Up
+                </button>
+
+                <button
+                    data-tab-button
+                    onclick="openTab('quotationTab', this)"
+                    class="flex-1 whitespace-nowrap px-2 py-2 md:px-4 text-sm md:text-base -mb-px border-b-2 font-medium text-gray-600 border-transparent">
+                    Edit Quotation
+                </button>
                 
             </div>
 
             <!-- Tab Contents -->
-            <div>
+
                 <!-- Edit Quotation Tab -->
-                <div id="quotationTab" class="tab-content hidden">
+                <div id="quotationTab" class="tab-content hidden bg-white p-4 md:p-8 rounded shadow">
                     <h2 class="text-2xl font-semibold mb-6">Edit Quotation</h2>
                     <form action="{{ route('quotation.update') }}" method="POST">
                         @csrf
@@ -146,7 +455,7 @@
 
                         <div class="mb-6">
                             <label class="block text-sm font-medium mb-2">ITEM TABLE</label>
-                            <table class="w-full border border-gray-400 mt-4 text-sm">
+                            <table id="produk-table-edit-quo" class="w-full border border-gray-400 mt-4 text-sm">
                                 <thead>
                                     <tr>
                                         <th class="border border-gray-400 p-2 w-[30%]">Nama Produk</th>
@@ -188,7 +497,7 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                            <button type="button" id="add-row-quo" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">+ Tambah Produk</button>
+                            <button type="button" id="add-row-quo" class="add-product-btn mt-2 px-3 py-2 bg-blue-500 text-white rounded">+ Tambah Produk</button>
                         </div>
 
                         <div class="mb-6">
@@ -213,22 +522,22 @@
                                 <label class="block text-sm font-medium mb-1">
                                     VALID DATE <span class="text-red-500">*</span>
                                 </label>
-                                <div class="flex w-full rounded overflow-hidden border border-gray-400">
+                                <div class="flex w-full rounded overflow-hidden border border-gray-400 valid-date-box">
                                     {{-- Bagian status --}}
                                     @if($quo->VALID_DATE && \Carbon\Carbon::parse($quo->VALID_DATE)->isSameDay(\Carbon\Carbon::today()))
-                                        <div class="w-40 flex items-center justify-center bg-orange-500 text-white text-xs font-semibold px-3">
+                                        <div class="w-40 flex items-center justify-center bg-green-500 text-white text-xs font-semibold px-3 valid-date-status">
                                             EXPIRED TODAY
                                         </div>
                                     @elseif($quo->STATUS === 'OPEN')
-                                        <div class="w-40 flex items-center justify-center bg-green-500 text-white text-xs font-semibold px-3">
+                                        <div class="w-40 flex items-center justify-center bg-green-500 text-white text-xs font-semibold px-3 valid-date-status">
                                             OPEN
                                         </div>
                                     @elseif($quo->STATUS === 'EXPIRED')
-                                        <div class="w-40 flex items-center justify-center bg-red-500 text-white text-xs font-semibold px-3">
+                                        <div class="w-40 flex items-center justify-center bg-green-500 text-white text-xs font-semibold px-3 valid-date-status">
                                             EXPIRED
                                         </div>
                                     @else
-                                        <div class="w-40 flex items-center justify-center bg-gray-400 text-white text-xs font-semibold px-3">
+                                        <div class="w-40 flex items-center justify-center bg-green-500 text-white text-xs font-semibold px-3 valid-date-status">
                                             {{ $quo->STATUS }}
                                         </div>
                                     @endif
@@ -256,21 +565,25 @@
                             </div>
                         </div>
 
-                        <div class="flex justify-end space-x-3">
-                            <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded">Simpan</button>
+                        <div class="action-buttons flex justify-end space-x-3">
+                            <button
+                                type="submit"
+                                class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">
+                                Simpan
+                            </button>
                         </div>
                     </form>
                 </div>
 
                 <!-- Tab Contents -->
-                <div id="followupTab" class="tab-content block">
+                <div id="followupTab" class="tab-content bg-white p-8 rounded shadow">
                     <!-- Paste form Follow Up kamu di sini -->
                     <form action="{{ route('follow.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="OPPORTUNITY_ID" value="{{ $quo->OPPORTUNITY_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600">
 
                         <!-- Tab: Follow Up -->
-                        <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
+                        <table class="w-full table-fixed border-collapse border text-sm mb-4">
                             <thead class="bg-gray-100 text-gray-700 uppercase">
                                 <tr>
                                     <th class="border border-gray-500 px-3 py-2">TANGGAL FU</th>
@@ -301,9 +614,9 @@
                         </div>
                     </form>
                 </div>
-            </div>
+
         </div>
-    </div>
+
 </div>
 
 @endsection
@@ -380,6 +693,21 @@ function initProdukTable($tbody, rowIdxStart, addBtnSelector){
         $select.select2({
             placeholder: 'Pilih produk',
             minimumInputLength: 0,
+            width: '100%',
+            templateSelection: function (data) {
+
+                // Desktop tampil normal
+                if (window.innerWidth > 768) {
+                    return data.text;
+                }
+
+                // Mobile dipotong
+                if (data.text && data.text.length > 26) {
+                    return data.text.substring(0, 26) + "...";
+                }
+
+                return data.text;
+            },
             ajax: {
                 url: '{{ route('get.produk.sales') }}',
                 dataType: 'json',

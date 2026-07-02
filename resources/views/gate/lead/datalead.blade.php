@@ -16,6 +16,26 @@
     option.status-converted   { background:#DCFCE7; color:#166534; } /* hijau */
     option.status-lost        { background:#E5E7EB; color:#374151; } /* abu */
     option.status-norespon    { background:#FEF9C3; color:#854D0E; } /* kuning */
+
+    .desktop-table{
+        display:block;
+    }
+
+    .mobile-card-list{
+        display:none;
+    }
+
+    @media (max-width: 768px){
+
+        .desktop-table{
+            display:none;
+        }
+
+        .mobile-card-list{
+            display:block;
+        }
+    }
+
 </style>
 @endsection
 @section('content')
@@ -36,16 +56,17 @@
 
     {{-- Filter --}}
     <div class="flex flex-wrap gap-2 mb-4 items-center">
-        {{-- Tombol My Lead --}}
-        <button id="myLeadBtn" 
-            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
-            My Lead: On
-        </button>
 
         {{-- Search (paling panjang) --}}
         <input type="text" id="searchInput"
             placeholder="Cari NAMA, NO TELP..."
-            class="flex-1 min-w-[200px] border p-2 rounded">
+            class="w-full md:flex-1 md:min-w-[200px] border p-2 rounded">
+ 
+        {{-- Tombol My Lead --}}
+        <button id="myLeadBtn" 
+            class="w-40 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+            My Lead: On
+        </button>
 
         {{-- Filter Sales --}}
         <select id="filterSales" class="w-40 border p-2 rounded">
