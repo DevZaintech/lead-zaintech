@@ -134,26 +134,45 @@
             <!-- Menu Navigasi -->
             <nav class="flex-1 px-4 py-6 space-y-2">
 
-                {{-- Menu selalu tampil untuk semua --}}
-                <a href="{{ Auth::user()->ROLE == 'admin' ? route('dashboard.admin') :
-                                    (Auth::user()->ROLE == 'gate' ? route('dashboard.gate') :
-                                    (Auth::user()->ROLE == 'sales' ? route('dashboard.sales') :
-                                    route('home'))) }}"
-                    class="flex items-center px-4 py-2 rounded-lg transition
-                    {{ request()->routeIs('dashboard.*') 
-                        ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]' 
-                        : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
-                    {{-- Home Icon --}}
-                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
-                    </svg>
-                    Dashboard
-                </a>
+            @php
+                switch (Auth::user()->ROLE) {
+                    case 'admin':
+                        $dashboardRoute = route('dashboard.admin');
+                        break;
+
+                    case 'gate':
+                    case 'spv':
+                        $dashboardRoute = route('dashboard.gate');
+                        break;
+
+                    case 'sales':
+                        $dashboardRoute = route('dashboard.sales');
+                        break;
+
+                    default:
+                        $dashboardRoute = route('home');
+                        break;
+                }
+            @endphp
+
+            <a href="{{ $dashboardRoute }}"
+                class="flex items-center px-4 py-2 rounded-lg transition
+                {{ request()->routeIs('dashboard.*')
+                    ? 'bg-[#3fa9f3]/10 text-[#3fa9f3] border-l-4 border-[#3fa9f3]'
+                    : 'text-gray-700 hover:bg-[#3fa9f3]/10 hover:text-[#3fa9f3]' }}">
+
+                {{-- Home Icon --}}
+                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" stroke-width="2"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
+                </svg>
+
+                Dashboard
+            </a>
 
                 {{-- Menu khusus Gate --}}
-                @if(Auth::user()->ROLE == 'gate')
+                @if(Auth::user()->ROLE == 'gate' || Auth::user()->ROLE == 'spv')
                     <a href="{{ route('inputlead.gate') }}"
                         class="flex items-center px-4 py-2 rounded-lg transition
                         {{ request()->routeIs('inputlead.gate') 

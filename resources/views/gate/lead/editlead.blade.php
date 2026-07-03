@@ -150,7 +150,7 @@
                     @endif
                 </select>
             </div>
-            <div>
+            <!-- <div>
                 <label for="KATEGORI_CUST" class="block text-gray-700 font-medium mb-1">KATEGORI CUSTOMER <span class="text-red-500">*</span></label>
                 <select name="KATEGORI_CUST" id="KATEGORI_CUST"
                     class="w-full border border-gray-300 rounded px-3 py-2 
@@ -161,7 +161,7 @@
                     <option value="PEMULA" {{ $lead->KATEGORI_CUST == 'PEMULA' ? 'selected' : '' }}>PEMULA</option>
                     
                 </select>
-            </div>
+            </div> -->
             @if($lead->STATUS == 'norespon')
             <div>
                 <label for="STATUS" class="block text-gray-700 font-medium mb-1">STATUS</label>

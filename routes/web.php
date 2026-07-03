@@ -81,7 +81,7 @@ Route::middleware(['auth','role:admin'])->group(function () {
 
 });
 
-Route::middleware(['auth','role:gate'])->group(function () {
+Route::middleware(['auth','role:gate,spv'])->group(function () {
     Route::get('/dashboard/gate', [GateController::class, 'index'])->name('dashboard.gate');
     Route::get('/dashboard/chart-gate', [GateController::class, 'filterChart'])->name('chart.gate');
     Route::get('/inputlead/gate', [GateController::class, 'inputLead'])->name('inputlead.gate');

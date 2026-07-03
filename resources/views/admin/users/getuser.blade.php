@@ -21,6 +21,7 @@
             <select x-model="sortRole" class="border rounded px-3 py-1">
                 <option value="">All</option>
                 <option value="admin">Admin</option>
+                <option value="spv">SPV</option>
                 <option value="gate">Gate</option>
                 <option value="sales">Sales</option>
             </select>
@@ -125,6 +126,7 @@
                     <label class="block text-sm font-medium">Role</label>
                     <select name="ROLE" class="w-full border rounded px-3 py-2" required>
                         <option value="admin">Admin</option>
+                        <option value="spv">SPV</option>
                         <option value="gate">Gate</option>
                         <option value="sales">Sales</option>
                     </select>
@@ -173,6 +175,7 @@
                     <label class="block text-sm font-medium">Role</label>
                     <select name="ROLE" class="w-full border rounded px-3 py-2" required>
                         <option value="admin" :selected="selectedUser.ROLE === 'admin'">Admin</option>
+                        <option value="spv" :selected="selectedUser.ROLE === 'spv'">SPV</option>
                         <option value="gate" :selected="selectedUser.ROLE === 'gate'">Gate</option>
                         <option value="sales" :selected="selectedUser.ROLE === 'sales'">Sales</option>
                     </select>

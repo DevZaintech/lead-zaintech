@@ -15,6 +15,7 @@ class AuthController extends Controller
                 case 'admin':
                     return redirect()->route('dashboard.admin');
                 case 'gate':
+                case 'spv':
                     return redirect()->route('dashboard.gate');
                 case 'sales':
                     return redirect()->route('dashboard.sales');
@@ -50,6 +51,7 @@ class AuthController extends Controller
                     case 'admin':
                         return redirect()->route('dashboard.admin');
                     case 'gate':
+                    case 'spv':
                         return redirect()->route('dashboard.gate');
                     case 'sales':
                         return redirect()->route('dashboard.sales');

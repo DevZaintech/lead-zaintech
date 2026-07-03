@@ -236,7 +236,7 @@ class SalesController extends Controller
         $request->validate([
             'LEAD_SOURCE' => 'required',
             'NO_TELP'     => 'required|numeric|min:10000000', // min 8 digit
-            'KATEGORI_CUST' => 'required',
+            // 'KATEGORI_CUST' => 'required',
         ], [
             'LEAD_SOURCE.required' => 'Sumber Lead wajib dipilih',
             'KATEGORI_CUST.required' => 'Sumber Lead wajib dipilih',

@@ -677,7 +677,7 @@ class AdminController extends Controller
             'NAMA'      => 'required|string|max:255',
             'EMAIL'     => 'required|email|max:255',
             'PASSWORD'  => 'required|string|max:255',
-            'ROLE'      => 'required|in:admin,gate,sales',
+            'ROLE'      => 'required|string',
         ]);
     
         $user = User::find($request->ID_USER);
