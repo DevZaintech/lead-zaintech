@@ -602,11 +602,33 @@
         <!-- Tab: Follow Up -->
         <div id="followupTab" class="tab-content hidden bg-white p-8 rounded shadow">
 
-            <h2 class="text-2xl font-semibold mb-6">Follow Up</h2>
+            <h3 class="text-2xl font-semibold mb-6">Follow Up</h3>
 
             <form action="{{ route('follow.store') }}" method="POST">
                 @csrf
                 <input type="hidden" name="LEAD_ID" value="{{ $lead->LEAD_ID }}">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label for="KATEGORI_CUST" class="block text-gray-700 font-medium mb-1">
+                            KATEGORI CUSTOMER <span class="text-red-500">*</span>
+                        </label>
+
+                        <select
+                            name="KATEGORI_CUST"
+                            id="KATEGORI_CUST"
+                            class="w-full border border-gray-300 rounded px-3 py-2
+                                focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                            required>
+                            <option value="">-- Pilih Satu --</option>
+                            <option value="EXPAND" {{ $lead->KATEGORI_CUST == 'EXPAND' ? 'selected' : '' }}>EXPAND</option>
+                            <option value="PEMULA" {{ $lead->KATEGORI_CUST == 'PEMULA' ? 'selected' : '' }}>PEMULA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <label class="block text-gray-700 font-medium mb-2">
+                    TABEL FOLLOW UP
+                </label>
 
                 <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
                     <thead class="bg-gray-100 text-gray-700 uppercase">

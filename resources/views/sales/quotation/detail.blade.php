@@ -588,8 +588,30 @@
                         @csrf
                         <input type="hidden" name="OPPORTUNITY_ID" value="{{ $quo->OPPORTUNITY_ID }}" readonly class="w-full border border-gray-400 rounded px-3 py-2 bg-gray-100 text-gray-600">
 
-                        <!-- Tab: Follow Up -->
-                        <table class="w-full table-fixed border-collapse border text-sm mb-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div>
+                                <label for="KATEGORI_CUST" class="block text-gray-700 font-medium mb-1">
+                                    KATEGORI CUSTOMER <span class="text-red-500">*</span>
+                                </label>
+
+                                <select
+                                    name="KATEGORI_CUST"
+                                    id="KATEGORI_CUST"
+                                    class="w-full border border-gray-300 rounded px-3 py-2
+                                        focus:outline-none focus:border-blue-500 focus:ring focus:ring-blue-200"
+                                    required>
+                                    <option value="">-- Pilih Satu --</option>
+                                    <option value="EXPAND" {{ $lead->KATEGORI_CUST == 'EXPAND' ? 'selected' : '' }}>EXPAND</option>
+                                    <option value="PEMULA" {{ $lead->KATEGORI_CUST == 'PEMULA' ? 'selected' : '' }}>PEMULA</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <label class="block text-gray-700 font-medium mb-2">
+                            TABEL FOLLOW UP
+                        </label>
+
+                        <table class="w-full table-fixed border-collapse border border-gray-500 text-sm mb-4">
                             <thead class="bg-gray-100 text-gray-700 uppercase">
                                 <tr>
                                     <th class="border border-gray-500 px-3 py-2">TANGGAL FU</th>

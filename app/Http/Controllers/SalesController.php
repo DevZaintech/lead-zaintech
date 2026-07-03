@@ -894,6 +894,17 @@ class SalesController extends Controller
         $opportunityId = $request->input('OPPORTUNITY_ID');
         $leadId        = $request->input('LEAD_ID');
         // dd($leadId );
+        if (!empty($opportunityId)) {
+            $oppdump = Opportunity::where('OPPORTUNITY_ID', $opportunityId)->first();
+            $lead = Lead::where('LEAD_ID', $oppdump->LEAD_ID)->update([
+                'KATEGORI_CUST' => $request->KATEGORI_CUST,
+            ]);
+
+        } elseif (!empty($leadId)) {
+            $lead = Lead::where('LEAD_ID', $leadId)->update([
+                'KATEGORI_CUST' => $request->KATEGORI_CUST,
+            ]);
+        }
     
         if ($request->has('followup')) {
             foreach ($request->followup as $fu) {
@@ -913,6 +924,7 @@ class SalesController extends Controller
                 // pilih pakai OPPORTUNITY_ID atau LEAD_ID
                 if (!empty($opportunityId)) {
                     $data['OPPORTUNITY_ID'] = $opportunityId;
+
                 } elseif (!empty($leadId)) {
                     $data['LEAD_ID'] = $leadId;
                 }

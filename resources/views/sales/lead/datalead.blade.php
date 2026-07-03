@@ -118,78 +118,137 @@
 
 {{-- Ajax --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    // ✅ Fungsi ambil data
-    function fetch_data(url = "{{ route('datalead.sales') }}") {
-        let search    = $('#searchInput').val();
-        let sales     = $('#filterSales').val();
-        let source    = $('#filterSource').val();
-        let status    = $('#filterStatus').val();
-        let startDate = $('#startDate').val();
-        let endDate   = $('#endDate').val();
-        let follow    = $('#filterFollow').val();
-        let kategori    = $('#filterKategori').val();
 
-        $.ajax({
-            url: url, // pakai full URL Laravel (page & filter ikut)
-            data: {
-                search: search,
-                sales: sales,
-                source: source,
-                status: status,
-                startDate: startDate,
-                endDate: endDate,
-                follow: follow,
-                kategori: kategori
-            },
-            success: function(data) {
-                $('#lead_table').html(data);
-            }
-        });
+<script>
+
+    // =============================
+    // Ambil semua filter
+    // =============================
+    function getFilters() {
+        return {
+            search: $('#searchInput').val(),
+            sales: $('#filterSales').val(),
+            source: $('#filterSource').val(),
+            status: $('#filterStatus').val(),
+            startDate: $('#startDate').val(),
+            endDate: $('#endDate').val(),
+            follow: $('#filterFollow').val(),
+            kategori: $('#filterKategori').val()
+        };
     }
 
-    // ✅ Trigger filter/search → selalu reset ke page 1
-    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterFollow, #filterKategori')
-        .on('change keyup', function() {
-            fetch_data("{{ route('datalead.sales') }}"); // reset ke page 1 saat filter berubah
+    // =============================
+    // Simpan filter ke URL
+    // =============================
+    function updateUrl(url = null) {
+
+        let currentUrl = new URL(url || window.location.href);
+        let params = currentUrl.searchParams;
+        let filters = getFilters();
+
+        Object.keys(filters).forEach(function(key){
+
+            if(filters[key]){
+                params.set(key, filters[key]);
+            }else{
+                params.delete(key);
+            }
+
         });
 
-    // ✅ Pagination AJAX (ambil href Laravel)
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        let url = $(this).attr('href'); // URL Laravel sudah ada ?page=2&filter
+        history.replaceState({}, '', currentUrl.pathname + '?' + params.toString());
 
-        let search    = $('#searchInput').val();
-        let sales     = $('#filterSales').val();
-        let source    = $('#filterSource').val();
-        let status    = $('#filterStatus').val();
-        let startDate = $('#startDate').val();
-        let endDate   = $('#endDate').val();
-        let follow    = $('#filterFollow').val();
-        let kategori    = $('#filterKategori').val();
+    }
+
+    // =============================
+    // Ambil filter dari URL
+    // =============================
+    function loadFilterFromUrl(){
+
+        let params = new URLSearchParams(window.location.search);
+
+        if(params.has('search'))
+            $('#searchInput').val(params.get('search'));
+
+        if(params.has('sales'))
+            $('#filterSales').val(params.get('sales'));
+
+        if(params.has('source'))
+            $('#filterSource').val(params.get('source'));
+
+        if(params.has('status'))
+            $('#filterStatus').val(params.get('status'));
+
+        if(params.has('startDate'))
+            $('#startDate').val(params.get('startDate'));
+
+        if(params.has('endDate'))
+            $('#endDate').val(params.get('endDate'));
+
+        if(params.has('follow'))
+            $('#filterFollow').val(params.get('follow'));
+
+        if(params.has('kategori'))
+            $('#filterKategori').val(params.get('kategori'));
+
+    }
+
+    // =============================
+    // AJAX Load Data
+    // =============================
+    function fetch_data(url = "{{ route('datalead.sales') }}") {
+
+        updateUrl(url);
 
         $.ajax({
+
             url: url,
-            data: {
-                search: search,
-                sales: sales,
-                source: source,
-                status: status,
-                startDate: startDate,
-                endDate: endDate,
-                follow: follow,
-                kategori: kategori
-            },
-            success: function(data) {
+            data: getFilters(),
+
+            success:function(data){
+
                 $('#lead_table').html(data);
+
             }
+
         });
+
+    }
+
+    // =============================
+    // Filter berubah
+    // =============================
+    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterFollow, #filterKategori')
+    .on('change keyup', function(){
+
+        fetch_data("{{ route('datalead.sales') }}");
+
     });
 
-    // ✅ Load pertama kali
-    $(document).ready(function () {
-        fetch_data();
+    // =============================
+    // Pagination AJAX
+    // =============================
+    $(document).on('click', '.pagination a', function(e){
+
+        e.preventDefault();
+
+        let url = $(this).attr('href');
+
+        fetch_data(url);
+
     });
+
+    // =============================
+    // Pertama kali halaman dibuka
+    // =============================
+    $(document).ready(function(){
+
+        loadFilterFromUrl();
+
+        fetch_data();
+
+    });
+
 </script>
 
 @endsection
