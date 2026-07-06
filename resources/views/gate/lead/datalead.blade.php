@@ -99,12 +99,13 @@
         {{-- Filter Status --}}
         <select id="filterStatus" class="w-40 border p-2 rounded">
             <option value="">Semua Status</option>
-            <option value="lead" class="status-lead">Cold</option>
-            <option value="opportunity" class="status-opportunity">Warm</option>
-            <option value="quotation" class="status-quotation">Hot</option>
-            <option value="converted" class="status-converted">Deal</option>
-            <option value="lost" class="status-lost">Lost</option>
-            <option value="norespon" class="status-norespon">No Respon</option>
+            <option value="teroper" class="status">Teroper</option>
+            <option value="norespon" class="status">Tidak Teroper</option>
+            <option value="lead" class="status">Cold</option>
+            <option value="opportunity" class="status">Warm</option>
+            <option value="quotation" class="status">Hot</option>
+            <option value="converted" class="status">Deal</option>
+            <option value="lost" class="status">Lost</option>
         </select>
 
         {{-- Filter Tanggal --}}
@@ -118,6 +119,11 @@
             <option value="PEMULA">PEMULA</option>
         </select>
 
+        <a href="#" id="btnExport"
+            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            Export Excel
+        </a>
+
     </div>
 
 
@@ -130,93 +136,190 @@
 
 {{-- Script Live Search + Pagination --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    // ✅ Default My Lead ON
+
+    // =============================
+    // Default
+    // =============================
     let myLead = true;
 
-    function fetch_data(url = "{{ route('datalead.gate') }}") {
-        let search    = $('#searchInput').val();
-        let sales     = $('#filterSales').val();
-        let source    = $('#filterSource').val();
-        let status    = $('#filterStatus').val();
-        let startDate = $('#startDate').val();
-        let endDate   = $('#endDate').val();
-        let kategori    = $('#filterKategori').val();
-
-        $.ajax({
-            url: url,
-            data: {
-                search: search,
-                sales: sales,
-                source: source,
-                status: status,
-                startDate: startDate,
-                endDate: endDate,
-                myLead: myLead,
-                kategori: kategori
-            },
-            success: function(data) {
-                $('#lead_table').html(data);
-            }
-        });
+    // =============================
+    // Ambil semua filter
+    // =============================
+    function getFilters() {
+        return {
+            search: $('#searchInput').val(),
+            sales: $('#filterSales').val(),
+            source: $('#filterSource').val(),
+            status: $('#filterStatus').val(),
+            startDate: $('#startDate').val(),
+            endDate: $('#endDate').val(),
+            kategori: $('#filterKategori').val(),
+            myLead: myLead
+        };
     }
 
-    // trigger filter/search
-    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterKategori')
-        .on('change keyup', function() {
-            fetch_data();
+    // =============================
+    // Simpan filter ke URL
+    // =============================
+    function updateUrl(url = null) {
+
+        let currentUrl = new URL(url || window.location.href);
+        let params = currentUrl.searchParams;
+        let filters = getFilters();
+
+        Object.keys(filters).forEach(function(key){
+
+            if(filters[key] !== '' && filters[key] !== null){
+                params.set(key, filters[key]);
+            }else{
+                params.delete(key);
+            }
+
         });
 
-    // toggle myLead
-    $('#myLeadBtn').on('click', function() {
-        myLead = !myLead;
-        updateMyLeadBtn();
-        fetch_data();
-    });
+        history.replaceState({}, '', currentUrl.pathname + '?' + params.toString());
 
+    }
+
+    // =============================
+    // Ambil filter dari URL
+    // =============================
+    function loadFilterFromUrl(){
+
+        let params = new URLSearchParams(window.location.search);
+
+        if(params.has('search'))
+            $('#searchInput').val(params.get('search'));
+
+        if(params.has('sales'))
+            $('#filterSales').val(params.get('sales'));
+
+        if(params.has('source'))
+            $('#filterSource').val(params.get('source'));
+
+        if(params.has('status'))
+            $('#filterStatus').val(params.get('status'));
+
+        if(params.has('startDate'))
+            $('#startDate').val(params.get('startDate'));
+
+        if(params.has('endDate'))
+            $('#endDate').val(params.get('endDate'));
+
+        if(params.has('kategori'))
+            $('#filterKategori').val(params.get('kategori'));
+
+        if(params.has('myLead'))
+            myLead = params.get('myLead') === 'true';
+
+    }
+
+    // =============================
+    // Update Button
+    // =============================
     function updateMyLeadBtn() {
+
         $('#myLeadBtn')
             .text('My Lead: ' + (myLead ? 'On' : 'Off'))
             .toggleClass('bg-blue-500 text-white', myLead)
             .toggleClass('bg-gray-300', !myLead);
+
     }
 
-    // ✅ Set button & fetch data default pas page load
-    $(document).ready(function () {
-        updateMyLeadBtn();
+    // =============================
+    // AJAX
+    // =============================
+    function fetch_data(url = "{{ route('datalead.gate') }}") {
+
+        updateUrl(url);
+
+        $.ajax({
+
+            url: url,
+            data: getFilters(),
+
+            success:function(data){
+
+                $('#lead_table').html(data);
+
+            }
+
+        });
+
+    }
+
+    // =============================
+    // Filter berubah
+    // =============================
+    $('#searchInput, #filterSales, #filterSource, #filterStatus, #startDate, #endDate, #filterKategori')
+    .on('change keyup', function(){
+
         fetch_data();
+
     });
 
-    // ✅ Pagination pakai full URL dari Laravel + kirim filter aktif
-    $(document).on('click', '.pagination a', function(e) {
-        e.preventDefault();
-        let url = $(this).attr('href'); // sudah ada ?page=2 dari Laravel
+    // =============================
+    // Toggle My Lead
+    // =============================
+    $('#myLeadBtn').on('click', function(){
 
+        myLead = !myLead;
+
+        updateMyLeadBtn();
+
+        fetch_data();
+
+    });
+
+    // =============================
+    // Pagination
+    // =============================
+    $(document).on('click', '.pagination a', function(e){
+
+        e.preventDefault();
+
+        let url = $(this).attr('href');
+
+        fetch_data(url);
+
+    });
+
+    // =============================
+    // Load Pertama
+    // =============================
+    $(document).ready(function(){
+
+        loadFilterFromUrl();
+
+        updateMyLeadBtn();
+
+        fetch_data();
+
+    });
+
+    // Export dengan semua filter
+    $('#btnExport').on('click', function(e) {
+        e.preventDefault();
         let search    = $('#searchInput').val();
         let sales     = $('#filterSales').val();
         let source    = $('#filterSource').val();
-        let status    = $('#filterStatus').val();
         let startDate = $('#startDate').val();
         let endDate   = $('#endDate').val();
-        let kategori    = $('#filterKategori').val();
+        let status    = $('#filterStatus').val();
+        let kategori  = $('#filterKategori').val();
 
-        $.ajax({
-            url: url,
-            data: {
-                search: search,
-                sales: sales,
-                source: source,
-                status: status,
-                startDate: startDate,
-                endDate: endDate,
-                myLead: myLead,
-                kategori: kategori
-            },
-            success: function(data) {
-                $('#lead_table').html(data);
-            }
-        });
+        window.location.href = "{{ route('exportlead.admin') }}" +
+            "?search=" + search +
+            "&sales=" + sales +
+            "&source=" + source +
+            "&startDate=" + startDate +
+            "&endDate=" + endDate +
+            "&status=" + status +
+            "&kategori=" + kategori;
     });
+
 </script>
 
 @endsection

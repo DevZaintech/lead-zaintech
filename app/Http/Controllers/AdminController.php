@@ -638,7 +638,7 @@ class AdminController extends Controller
 
     public function exportLead(Request $request)
     {
-        $filters = $request->only(['search', 'sales', 'source', 'startDate', 'endDate', 'status']);
+        $filters = $request->only(['search', 'sales', 'source', 'startDate', 'endDate', 'status', 'kategori']);
         return Excel::download(new LeadExport($filters), 'lead_export.xlsx');
     }
 
@@ -665,6 +665,7 @@ class AdminController extends Controller
             'ROLE'       => $request->ROLE,
             'CREATED_AT' => Carbon::now(),
             'UPDATED_AT' => Carbon::now(),
+            'STATUS' => 'aktif',
         ]);
 
         return redirect()->back()->with('success', 'User berhasil ditambahkan');

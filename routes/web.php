@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DirekturController;
+use App\Http\Controllers\SPVController;
 use App\Http\Controllers\GateController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\ProfileController;
@@ -33,7 +35,7 @@ Route::get('/', function () {
 });
 
 // Dashboard berdasarkan role
-Route::middleware(['auth','role:admin'])->group(function () {
+Route::middleware(['auth','role:admin,spv,direktur'])->group(function () {
     Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('dashboard.admin');
     Route::get('/dashboard/chart-admin', [AdminController::class, 'filterChart'])->name('chart.admin');
     Route::get('/kategori', [AdminController::class, 'kategoriIndex'])->name('kategori.index');
@@ -77,8 +79,14 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::post('/updateuser/admin', [AdminController::class, 'updateUser'])->name('updateuser.admin');
     Route::post('/nonaktifuser/admin', [AdminController::class, 'nonaktifUser'])->name('nonaktifuser.admin');
     Route::post('/aktifuser/admin', [AdminController::class, 'aktifUser'])->name('aktifuser.admin');
+});
 
+Route::middleware(['auth','role:spv'])->group(function () {
+    Route::get('/dashboard/spv', [SPVController::class, 'index'])->name('dashboard.spv');
+});
 
+Route::middleware(['auth','role:direktur'])->group(function () {
+    Route::get('/dashboard/direktur', [DirekturController::class, 'index'])->name('dashboard.direktur');
 });
 
 Route::middleware(['auth','role:gate,spv'])->group(function () {
@@ -95,7 +103,7 @@ Route::middleware(['auth','role:gate,spv'])->group(function () {
     Route::post('/updatelead/gate', [GateController::class, 'updateLead'])->name('updatelead.gate');
 });
 
-Route::middleware(['auth','role:sales'])->group(function () {
+Route::middleware(['auth','role:sales,direktur'])->group(function () {
     Route::get('/dashboard/sales', [SalesController::class, 'index'])->name('dashboard.sales');
     Route::get('/datalead/sales', [SalesController::class, 'dataLead'])->name('datalead.sales');
     Route::get('/get-kota/sales', [SalesController::class, 'getKota'])->name('get.kota.sales');

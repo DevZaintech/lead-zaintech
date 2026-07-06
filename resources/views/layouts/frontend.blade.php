@@ -140,9 +140,15 @@
                         $dashboardRoute = route('dashboard.admin');
                         break;
 
+                    case 'direktur':
+                        $dashboardRoute = route('dashboard.direktur');
+                        break;
+
                     case 'gate':
-                    case 'spv':
                         $dashboardRoute = route('dashboard.gate');
+                        break;
+                    case 'spv':
+                        $dashboardRoute = route('dashboard.spv');
                         break;
 
                     case 'sales':
@@ -206,7 +212,7 @@
                 @endif
 
                 {{-- Menu khusus Sales --}}
-                @if(Auth::user()->ROLE == 'sales')
+                @if(Auth::user()->ROLE == 'sales' || Auth::user()->ROLE == 'direktur')
 
                     {{-- Input Lead --}}
                     <a href="{{ route('inputlead.sales') }}"
@@ -351,12 +357,21 @@
     @if(Auth::user()->ROLE == 'gate')
     <div id="mobile-nav-gate"
         style="display:none;position:sticky;bottom:0;height:70px;background:#fff;border-top:1px solid #e5e7eb;z-index:999999;">
+        @if(Auth::user()->ROLE == 'gate')
         <a href="{{ route('dashboard.gate') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
             </svg>
             <span>Dashboard</span>
         </a>
+        @elseif(Auth::user()->ROLE == 'spv')
+        <a href="{{ route('dashboard.spv') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+        @endif
 
         <a href="{{ route('inputlead.gate') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -385,12 +400,21 @@
     @if(Auth::user()->ROLE == 'sales')
     <div id="mobile-nav-gate"
         style="display:none;position:sticky;bottom:0;height:70px;background:#fff;border-top:1px solid #e5e7eb;z-index:999999;">
+        @if(Auth::user()->ROLE == 'sales')
         <a href="{{ route('dashboard.sales') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
             </svg>
             <span>Dashboard</span>
         </a>
+        @elseif(Auth::user()->ROLE == 'direktur')
+        <a href="{{ route('dashboard.direktur') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l9-9 9 9M4 10v10h6V14h4v6h6V10"/>
+            </svg>
+            <span>Dashboard</span>
+        </a>
+        @endif
 
         <a href="{{ route('inputlead.sales') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">

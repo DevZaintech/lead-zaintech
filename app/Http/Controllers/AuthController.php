@@ -14,9 +14,12 @@ class AuthController extends Controller
             switch (Auth::user()->ROLE) {
                 case 'admin':
                     return redirect()->route('dashboard.admin');
+                case 'direktur':
+                        return redirect()->route('dashboard.direktur');
                 case 'gate':
-                case 'spv':
                     return redirect()->route('dashboard.gate');
+                case 'spv':
+                    return redirect()->route('dashboard.spv');
                 case 'sales':
                     return redirect()->route('dashboard.sales');
                 default:
@@ -50,9 +53,12 @@ class AuthController extends Controller
                 switch ($user->ROLE) {
                     case 'admin':
                         return redirect()->route('dashboard.admin');
+                    case 'direktur':
+                            return redirect()->route('dashboard.direktur');
                     case 'gate':
-                    case 'spv':
                         return redirect()->route('dashboard.gate');
+                    case 'spv':
+                        return redirect()->route('dashboard.spv');
                     case 'sales':
                         return redirect()->route('dashboard.sales');
                     default:

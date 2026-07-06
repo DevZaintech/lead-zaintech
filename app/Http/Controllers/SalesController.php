@@ -66,9 +66,11 @@ class SalesController extends Controller
     
         $lead = Lead::with(['sub_kategori', 'kota', 'opportunities'])
             ->whereNull('DELETED_AT')
-            ->when($sales, function ($q) use ($sales) {
+            ->when($sales !== null, function ($q) use ($sales) {
                 if ($sales == 'me') {
                     $q->where('ID_USER', auth()->user()->ID_USER);
+                } elseif ($sales == 0) {
+                    $q->whereNotNull('ID_USER');
                 } else {
                     $q->where('ID_USER', $sales);
                 }

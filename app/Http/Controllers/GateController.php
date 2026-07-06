@@ -68,7 +68,7 @@ class GateController extends Controller
     
     public function inputLead()
     {
-        $user = User::where('ROLE', 'sales', 'AND')
+        $user = User::whereIn('ROLE', ['sales','direktur'])
             ->where('STATUS', 'aktif')
              ->whereNull('DELETED_AT')
              ->get();
@@ -265,6 +265,8 @@ class GateController extends Controller
                     $q->where('STATUS', 'lost');
                 } elseif ($status === 'converted') { // Deal
                     $q->where('STATUS', 'converted');
+                } elseif ($status === 'teroper') {
+                    $q->where('STATUS','!=', 'norespon');
                 } elseif ($status === 'norespon') {
                     $q->where('STATUS', 'norespon');
                 }
@@ -327,7 +329,7 @@ class GateController extends Controller
         $lead = Lead::with(['sub_kategori', 'kota', 'user'])
             ->where('LEAD_ID', $lead_id)
             ->firstOrFail();
-        $user = User::where('ROLE', 'sales')
+        $user = User::whereIn('ROLE', ['sales','direktur'])
         ->whereNull('DELETED_AT')
         ->get();
 

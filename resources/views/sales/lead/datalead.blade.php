@@ -51,10 +51,16 @@
         <input type="text" id="searchInput"
             placeholder="Cari NAMA, NO TELP..."
             class="flex-1 min-w-[200px] border p-2 rounded">
+    </div>
+
+    <div class="flex flex-wrap gap-2 mb-4 items-center">
 
         {{-- Filter Sales --}}
         <select id="filterSales" class="w-40 border p-2 rounded">
-            <option value="me" selected>Lead Saya</option>
+            @if(Auth::user()->ROLE == 'direktur')
+            <option value="0">SEMUA SALES</option>
+            @endif
+            <option value="me" selected>{{Auth::user()->NAMA}}</option>
             @foreach($user as $s)
                 <option value="{{ $s->ID_USER }}">{{ $s->NAMA }}</option>
             @endforeach
@@ -107,6 +113,11 @@
             <option value="EXPAND">EXPAND</option>
             <option value="PEMULA">PEMULA</option>
         </select>
+
+        <a href="#" id="btnExport"
+            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            Export Excel
+        </a>
 
     </div>
 
@@ -248,6 +259,28 @@
         fetch_data();
 
     });
+
+    // Export dengan semua filter
+    $('#btnExport').on('click', function(e) {
+        e.preventDefault();
+        let search    = $('#searchInput').val();
+        let sales     = $('#filterSales').val();
+        let source    = $('#filterSource').val();
+        let startDate = $('#startDate').val();
+        let endDate   = $('#endDate').val();
+        let status    = $('#filterStatus').val();
+        let kategori  = $('#filterKategori').val();
+
+        window.location.href = "{{ route('exportlead.admin') }}" +
+            "?search=" + search +
+            "&sales=" + sales +
+            "&source=" + source +
+            "&startDate=" + startDate +
+            "&endDate=" + endDate +
+            "&status=" + status +
+            "&kategori=" + kategori;
+    });
+
 
 </script>
 

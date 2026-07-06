@@ -126,6 +126,7 @@
                     <label class="block text-sm font-medium">Role</label>
                     <select name="ROLE" class="w-full border rounded px-3 py-2" required>
                         <option value="admin">Admin</option>
+                        <option value="direktur">Direktur</option>
                         <option value="spv">SPV</option>
                         <option value="gate">Gate</option>
                         <option value="sales">Sales</option>
@@ -175,6 +176,7 @@
                     <label class="block text-sm font-medium">Role</label>
                     <select name="ROLE" class="w-full border rounded px-3 py-2" required>
                         <option value="admin" :selected="selectedUser.ROLE === 'admin'">Admin</option>
+                        <option value="direktur" :selected="selectedUser.ROLE === 'direktur'">Direktur</option>
                         <option value="spv" :selected="selectedUser.ROLE === 'spv'">SPV</option>
                         <option value="gate" :selected="selectedUser.ROLE === 'gate'">Gate</option>
                         <option value="sales" :selected="selectedUser.ROLE === 'sales'">Sales</option>

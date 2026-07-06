@@ -3,7 +3,8 @@
         <thead class="bg-gray-100">
             <tr>
                 <th class="border p-2 text-center" style="width:3%">NO</th>
-                <th class="border p-2 text-center">TANGGAL</th>
+                <th class="border p-2 text-center">TANGGAL LEAD</th>
+                <th class="border p-2 text-center">TANGGAL DEAL</th>
                 <th class="border p-2 text-center">NAMA/KOTA</th>
                 <!-- <th class="border p-2 text-center">Kota</th> -->
                 <th class="border p-2 text-center">TELP</th>
@@ -25,8 +26,16 @@
                                 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'
                         ];
                         $tanggal = \Carbon\Carbon::parse($item->CREATED_AT);
+                        $deal = \Carbon\Carbon::parse($item->UPDATED_AT);
                     @endphp
                     <td class="border p-2 text-center">{{ $tanggal->format('d') }} {{ $bulanIndo[$tanggal->format('n')] }} {{ $tanggal->format('Y') }}</td>
+                    <td class="border p-2 text-center">
+                        @if($item->STATUS == 'converted')
+                            {{ $deal->format('d') }} {{ $bulanIndo[$deal->format('n')] }} {{ $deal->format('Y') }}
+                        @else
+                            Belum
+                        @endif
+                    </td>
                     <td class="border p-2 text-center">{{ $item->NAMA ?? '-' }} - {{ $item->kota->name ?? '-' }}</td>
                     <!-- <td class="border p-2 text-center">{{ $item->kota->name ?? '-' }}</td> -->
                     <td class="border p-2 text-center">{{ $item->NO_TELP }}</td>

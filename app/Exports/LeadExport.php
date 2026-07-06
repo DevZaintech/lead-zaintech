@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 
 class LeadExport implements FromView, WithStyles
 {
@@ -48,6 +49,10 @@ class LeadExport implements FromView, WithStyles
 
         if (!empty($this->filters['source'])) {
             $query->where('LEAD_SOURCE', $this->filters['source']);
+        }
+
+        if (!empty($this->filters['kategori'])) {
+            $query->where('KATEGORI_CUST', $this->filters['kategori']);
         }
 
         if (!empty($this->filters['startDate']) && !empty($this->filters['endDate'])) {
@@ -95,6 +100,9 @@ class LeadExport implements FromView, WithStyles
 
             } elseif ($status === 'converted') { // Deal
                 $query->where('STATUS', 'converted');
+
+            } elseif ($status === 'teroper') {
+                $query->where('STATUS', '!=', 'norespon');
 
             } elseif ($status === 'norespon') {
                 $query->where('STATUS', 'norespon');
@@ -158,45 +166,53 @@ class LeadExport implements FromView, WithStyles
     public function styles(Worksheet $sheet)
     {
         // Bold header
-        $sheet->getStyle('A1:I1')->getFont()->setBold(true);
-
+        $sheet->getStyle('A1:K1')->getFont()->setBold(true);
+    
         // Border semua data
         $lastRow = $sheet->getHighestRow();
-        $sheet->getStyle("A1:I{$lastRow}")->getBorders()->getAllBorders()
-              ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
+        $sheet->getStyle("A1:K{$lastRow}")
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+    
         // Auto-size kolom
-        foreach (range('A','I') as $col) {
+        foreach (range('A', 'K') as $col) {
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
-
-        // 🎨 Warna STATUS (kolom I)
+    
+        // Format kolom TELP menjadi Text (kolom F)
+        $sheet->getStyle("F2:F{$lastRow}")
+            ->getNumberFormat()
+            ->setFormatCode(NumberFormat::FORMAT_TEXT);
+    
+        // 🎨 Warna STATUS (kolom K)
         for ($row = 2; $row <= $lastRow; $row++) {
-            $status = strtoupper($sheet->getCell("I$row")->getValue());
-
+    
+            $status = strtoupper($sheet->getCell("K{$row}")->getValue());
+    
             $badgeColors = [
-                'COLD'      => 'FF3B82F6',  // biru
-                'WARM'      => 'FFFF7C00',  // oranye
-                'HOT'       => 'FFEF4444',  // merah
-                'DEAL'      => 'FF22C55E',  // hijau
-                'LOST'      => 'FF9CA3AF',  // abu
-                'NO RESPON' => 'FFFACC15',  // kuning
+                'COLD'      => 'FF3B82F6',
+                'WARM'      => 'FFFF7C00',
+                'HOT'       => 'FFEF4444',
+                'DEAL'      => 'FF22C55E',
+                'LOST'      => 'FF9CA3AF',
+                'NO RESPON' => 'FFFACC15',
             ];
-
+    
             $badgeColor = $badgeColors[$status] ?? 'FF000000';
-
-            // ● badge + teks
+    
             $richText = new \PhpOffice\PhpSpreadsheet\RichText\RichText();
+    
             $dot = $richText->createTextRun("● ");
             $dot->getFont()->getColor()->setARGB($badgeColor);
             $dot->getFont()->setBold(true);
-
+    
             $text = $richText->createTextRun($status);
             $text->getFont()->getColor()->setARGB('FF000000');
-
-            $sheet->getCell("I$row")->setValue($richText);
+    
+            $sheet->getCell("K{$row}")->setValue($richText);
         }
-
+    
         return [];
     }
 }

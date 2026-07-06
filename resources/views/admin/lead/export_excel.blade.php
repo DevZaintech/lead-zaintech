@@ -2,13 +2,15 @@
     <thead>
         <tr>
             <th>LEAD ID</th>
-            <th>TANGGAL</th>
+            <th>TANGGAL LEAD</th>
+            <th>TANGGAL DEAL</th>
             <th>NAMA</th>
             <th>KOTA</th>
             <th>TELP</th>
             <th>SALES</th>
             <th>SOURCE</th>
             <th>KEBUTUHAN</th>
+            <th>KATEGORI</th>
             <th>STATUS</th> {{-- Tambah kolom status --}}
         </tr>
     </thead>
@@ -17,12 +19,20 @@
         <tr>
             <td>{{ $item->LEAD_ID }}</td>
             <td>{{ \Carbon\Carbon::parse($item->CREATED_AT)->format('d-m-Y') }}</td>
+            <td>
+                @if($item->STATUS == 'DEAL')
+                    {{ \Carbon\Carbon::parse($item->UPDATED_AT)->format('d-m-Y') }}
+                @else
+                    -
+                @endif
+            </td>
             <td>{{ $item->NAMA }}</td>
             <td>{{ $item->kota->name ?? '-' }}</td>
-            <td>{{ $item->NO_TELP }}</td>
+            <td>{{ '="'.$item->NO_TELP.'"' }}</td>
             <td>{{ $item->user->NAMA ?? '-' }}</td>
             <td>{{ $item->LEAD_SOURCE ?? '-' }}</td>
             <td>{{ $item->sub_kategori->NAMA ?? '-' }}</td>
+            <td>{{ $item->KATEGORI_CUST ?? '-' }}</td>
             <td>
                 @php
                     $statusColor = match($item->STATUS) {
