@@ -119,10 +119,12 @@
             <option value="PEMULA">PEMULA</option>
         </select>
 
+        @if(Auth::user()->ROLE == 'spv')
         <a href="#" id="btnExport"
             class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
             Export Excel
         </a>
+        @endif
 
     </div>
 
