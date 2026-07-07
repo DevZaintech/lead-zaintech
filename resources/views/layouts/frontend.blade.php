@@ -357,6 +357,12 @@
     @if(Auth::user()->ROLE == 'gate' || Auth::user()->ROLE == 'spv')
     <div id="mobile-nav-gate"
         style="display:none;position:sticky;bottom:0;height:70px;background:#fff;border-top:1px solid #e5e7eb;z-index:999999;">
+        <a href="javascript:history.back()" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <span>Back</span>
+        </a>
         @if(Auth::user()->ROLE == 'gate')
         <a href="{{ route('dashboard.gate') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -400,6 +406,12 @@
     @if(Auth::user()->ROLE == 'sales' || Auth::user()->ROLE == 'direktur')
     <div id="mobile-nav-gate"
         style="display:none;position:sticky;bottom:0;height:70px;background:#fff;border-top:1px solid #e5e7eb;z-index:999999;">
+        <a href="javascript:history.back()" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+            </svg>
+            <span>Back</span>
+        </a>
         @if(Auth::user()->ROLE == 'sales')
         <a href="{{ route('dashboard.sales') }}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-decoration:none;color:#374151;font-size:11px;">
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24">
