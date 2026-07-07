@@ -22,7 +22,7 @@
             display:block;
         }
         .filter-kategori {
-            width: 100%;
+            width: 50%;
         }
     }
 </style>
@@ -95,6 +95,7 @@
         </select>
 
         {{-- Filter Follow --}}
+        @if(Auth::user()->ROLE == 'sales')
         <select id="filterFollow" class="w-40 border p-2 rounded">
             <option value="">Follow Ke</option>
             <option value="9">Belum Follow</option>
@@ -102,17 +103,18 @@
             <option value="2">Ke 2</option>
             <option value="3">Ke 3</option>
         </select>
-        
-        {{-- Filter Tanggal --}}
-        <input type="date" id="startDate" class="w-40 border p-2 rounded">
-        <input type="date" id="endDate" class="w-40 border p-2 rounded">
+        @endif
 
         {{-- Filter PEMAIN EXPAND --}}
-        <select id="filterKategori" class="filter-kategori border p-2 rounded">
+        <select id="filterKategori" class="w-40 border p-2 rounded">
             <option value="">Semua Kategori</option>
             <option value="EXPAND">EXPAND</option>
             <option value="PEMULA">PEMULA</option>
         </select>
+        
+        {{-- Filter Tanggal --}}
+        <input type="date" id="startDate" class="w-40 border p-2 rounded">
+        <input type="date" id="endDate" class="w-40 border p-2 rounded">
 
         @if(Auth::user()->ROLE == 'direktur')
         <a href="#" id="btnExport"

@@ -113,7 +113,7 @@
         <input type="date" id="endDate" class="w-40 border p-2 rounded">
 
         {{-- Filter PEMAIN EXPAND --}}
-        <select id="filterKategori" class="filter-kategori border p-2 rounded">
+        <select id="filterKategori" class="w-40 border p-2 rounded">
             <option value="">Semua Kategori</option>
             <option value="EXPAND">EXPAND</option>
             <option value="PEMULA">PEMULA</option>
@@ -121,7 +121,7 @@
 
         @if(Auth::user()->ROLE == 'spv')
         <a href="#" id="btnExport"
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+            class="bg-green-500 hover:bg-green-600 text-white w-40 border p-2 rounded">
             Export Excel
         </a>
         @endif
